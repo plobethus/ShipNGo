@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const claim = document.getElementById("claim");
       const billing = document.getElementById("billing");
       const claimView = document.getElementById("claim-view");
+      const employeeStore = document.getElementById("employee-store");
 
       const routes = document.getElementById("routes");
 
@@ -34,11 +35,13 @@ document.addEventListener("DOMContentLoaded", () => {
           dashboardLink.textContent = "Customer Dashboard";
           claimView.style.display="none";
           routes.style.display="none";
+          employeeStore.style.display = "none";
         } else if (role === "employee") {
           dashboardLink.href = "/pages/employee.html";
           dashboardLink.textContent = "Employee Dashboard";
           shipping.style.display = "none";
           store.style.display="none";
+          employeeStore.style.display = "block";
           faq.style.display="none";
           claim.style.display="none";
           billing.style.display="none";

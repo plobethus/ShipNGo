@@ -1,48 +1,54 @@
 <!-- /ShipNGo/frontend/includes/header.html -->
 <nav>
-    <div class = title-and-dropdown>
-    <a href="/index.html"><h1 class="navbar" style="text-decoration:none;">ShipNGo</h1></a>
-  <!-- Protected nav items, hidden by default -->
-  <ul id="protected-nav" style="display: none;">
-    <li>
-      <a href="#" id="shipping">Shipping</a>
+  <div class = title-and-dropdown>
+  <a href="/index.html"><h1 class="navbar" style="text-decoration:none;">ShipNGo</h1></a>
+<!-- Protected nav items, hidden by default -->
+<ul id="protected-nav" style="display: none;">
+  <li>
+    <a href="#" id="shipping">Shipping</a>
+    <ul class="dropdown">
+      <li><a href="/pages/create-shipment.html">Create a Shipment</a></li>
+      <li><a href="/pages/returns.html">Manage a Return</a></li>
+    </ul>
+  </li>
+  <li>
+    <a href="#" id="store">Store</a>
+    <ul class="dropdown">
+      <li><a href="/pages/store.html">Packing &amp; Shipping Supplies</a></li>
+    </ul>
+  </li>
+  <li>
+    <a href="#" id="employee-store">Check Store</a>
+    <ul class="dropdown">
+      <li><a href="/pages/employeestore.html">Check Store</a></li>
+    </ul>
+  </li>
+  <li>
+    <a href="#" id="support">Support</a>
+    <ul class="dropdown">
+      <li><a id="faq" href="/pages/faq.html">FAQ</a></li>
+      <li><a id="claim" href="/pages/claims.html">File a Claim</a></li>
+      <li><a id="billing" href="/pages/billing.html">Billing &amp; Invoicing</a></li>
+      <li><a id="claim-view" href="/pages/claim-view.html">View Claims</a></li>
+    </ul>
+  </li>
+  <li>
+      <a href="#" id="routes">Routes</a>
       <ul class="dropdown">
-        <li><a href="/pages/create-shipment.html">Create a Shipment</a></li>
-        <li><a href="/pages/returns.html">Manage a Return</a></li>
+        <li><a href="../pages/route_manage.html">Manage Routes</a></li>
       </ul>
+      
     </li>
-    <li>
-      <a href="#" id="store">Store</a>
-      <ul class="dropdown">
-        <li><a href="/pages/store.html">Packing &amp; Shipping Supplies</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#" id="support">Support</a>
-      <ul class="dropdown">
-        <li><a id="faq" href="/pages/faq.html">FAQ</a></li>
-        <li><a id="claim" href="/pages/claims.html">File a Claim</a></li>
-        <li><a id="billing" href="/pages/billing.html">Billing &amp; Invoicing</a></li>
-        <li><a id="claim-view" href="/pages/claim-view.html">View Claims</a></li>
-      </ul>
-    </li>
-    <li>
-        <a href="#" id="routes">Routes</a>
-        <ul class="dropdown">
-          <li><a href="../pages/route_manage.html">Manage Routes</a></li>
-        </ul>
-        
-      </li>
-  </ul>
+</ul>
 </div>
 
-  <div class = "profile">
-    <ul>
-        <a id="dashboard-link" href="#" style="color:white; text-decoration:none;">Dashboard</a> 
-    </ul>
-    <div class="login">
-        <a id="login-btn" href="/pages/login.html" class="btn">Log In</a>
-        <button id="logout-btn" class="btn" style="display: none;">Logout</button>
-    </div>
+<div class = "profile">
+  <ul>
+      <a id="dashboard-link" href="#" style="color:white; text-decoration:none;">Dashboard</a> 
+  </ul>
+  <div class="login">
+      <a id="login-btn" href="/pages/login.html" class="btn">Log In</a>
+      <button id="logout-btn" class="btn" style="display: none;">Logout</button>
   </div>
+</div>
 </nav>
