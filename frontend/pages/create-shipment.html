@@ -16,10 +16,26 @@
     <h1>Create a Shipment</h1>
     <div>
       <form class="shipment-form">
-        <input type="text" id="sender-name" name="sender-name" placeholder="Sender Name" required />
-        <input type="text" id="sender-address" name="sender-address" placeholder="Sender Address" required />
-        <input type="text" id="receiver-name" name="receiver-name" placeholder="Receiver Name" required />
-        <input type="text" id="receiver-address" name="receiver-address" placeholder="Receiver Address" required />
+        <div style="display:flex; flex-direction:row; gap:25px;">
+            <input style="width:90%" type="text" id="sender-Fname" name="sender-Fname" placeholder="Sender First Name (John)" required />
+            <input style="width:90%" type="text" id="sender-Lname" name="sender-Lname" placeholder="Sender Last Name (Smith)" required />
+        </div>
+        <div style="display:flex; flex-direction:row; gap:24px;margin-bottom:25px;">
+            <input type="text" id="sender-address" name="sender-address" placeholder="Address (11111 Apple St.)" required />
+            <input type="text" id="sender-city" name="sender-city" placeholder="City (Houston)" required />
+            <input type="text" id="sender-state" name="sender-state" placeholder="State (TX)" required />
+            <input type="text" id="sender-zipcode" name="sender-zipcode" placeholder="Zipcode (22222)" required />
+        </div>
+        <div style="display:flex; flex-direction:row; gap:25px;">
+            <input style="width:90%" type="text" id="receiver-Fname" name="receiver-Fname" placeholder="Recipient First Name (Jane)" required />
+            <input style="width:90%" type="text" id="receiver-Lname" name="receiver-Lname" placeholder="Recipient Last Name (Doe)" required />
+        </div>
+        <div style="display:flex; flex-direction:row; gap:24px;margin-bottom:25px;">
+            <input type="text" id="receiver-address" name="receiver-address" placeholder="Address (11111 Apple St.)" required />
+            <input type="text" id="receiver-city" name="receiver-city" placeholder="City (Houston)" required />
+            <input type="text" id="receiver-state" name="receiver-state" placeholder="State (TX)" required />
+            <input type="text" id="reciever-zipcode" name="receiver-zipcode" placeholder="Zipcode (22222)" required />
+        </div>
         <input type="number" id="package-weight" name="package-weight" placeholder="Package Weight (lbs)" required />
         <select id="shipping-option" name="shipping-option" required>
           <option value="">Shipping Option</option>
