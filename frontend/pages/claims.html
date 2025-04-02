@@ -17,9 +17,21 @@
     <h1>Support Center</h1>
     <div class="card">
       <form id="support-form">
-        <input type="text" id="name" placeholder="Name" required />
+        <div class="name-inputs">
+          <input type="text" id="first-name" placeholder="First Name" required />
+          <input type="text" id="last-name" placeholder="Last Name" required />
+        </div>
         <input type="email" id="email" placeholder="Email" required />
         <input type="text" id="phone" placeholder="Phone Number" required />
+        <select id="claim-type" required>
+          <option value="" disabled selected>Select Claim Type</option>
+          <option value="delay">Delay</option>
+          <option value="loss">Loss</option>
+          <option value="damage">Damage</option>
+          <option value="theft">Theft</option>
+          <option value="incorrect_delivery">Incorrect Delivery</option>
+          <option value="incomplete">Incomplete</option>
+        </select>
         <textarea id="issue" placeholder="Describe your issue..." required></textarea>
         <button class="submit">Submit</button>
       </form>
