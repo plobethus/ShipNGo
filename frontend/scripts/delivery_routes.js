@@ -22,7 +22,7 @@ async function fetchActiveRoutes() {
 
         const anchor = document.createElement("a")
 
-        anchor.href = "/driver/get_stops/" + route.route_id
+        anchor.href = "/pages/stops.html?route=" + route.route_id
         anchor.innerText = "click"
         
         row.appendChild(document.createElement("td")).appendChild(anchor)

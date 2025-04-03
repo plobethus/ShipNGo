@@ -5,16 +5,27 @@ document.addEventListener("DOMContentLoaded", function () {
   registrationForm.addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    const name = document.getElementById("name").value.trim();
-    const address = document.getElementById("address").value.trim();
+    const Fname = document.getElementById("Fname").value.trim();
+    const Lname = document.getElementById("Lname").value.trim();
+
+    const address_line = document.getElementById("address").value.trim();
+    const city = document.getElementById("city").value.trim();
+    const state = document.getElementById("state").value.trim();
+    const zipcode = document.getElementById("zipcode").value.trim();
+
+    const address = address_line + " " + city + " " + state + " " + zipcode;
+
     const phone = document.getElementById("phone").value.trim();
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
+    
 
-    if (!name || !address || !phone || !email || !password) {
+    if (!Fname || !Lname || !address_line || !city || !state || !zipcode || !phone || !email || !password) {
       document.getElementById("message").textContent = "All fields are required.";
       return;
     }
+
+    const name = Fname + " " + Lname;
 
     try {
       const response = await fetch("/auth/register", {
