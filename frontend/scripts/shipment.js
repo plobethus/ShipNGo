@@ -2,18 +2,28 @@
 document.getElementById("submitShipment").addEventListener("click", function (event) {
   event.preventDefault();
 
-  const senderId = document.getElementById("sender_id").value.trim();
-  const recipientId = document.getElementById("recipient_id").value.trim();
-  const weight = document.getElementById("weight").value.trim();
-  const dimensions = document.getElementById("dimensions").value.trim();
-  const shippingCost = document.getElementById("shipping_cost").value.trim();
-  const deliveryDate = document.getElementById("delivery_date").value.trim();
+  const senderFname = document.getElementById("sender-Fname").value.trim();
+  const senderLname = document.getElementById("sender-Lname").value.trim();
+  const senderStreet = document.getElementById("sender-street").value.trim();
+  const senderCity = document.getElementById("sender-city").value.trim();
+  const senderState = document.getElementById("sender-state").value.trim();
+  const senderZip = document.getElementById("sender-zipcode").value.trim();
 
-  if (!senderId || !recipientId || !weight || !dimensions || !shippingCost || !deliveryDate) {
+  const recieverFname = document.getElementById("reciever-Fname").value.trim();
+  const recieverLname = document.getElementById("receiver-Lname").value.trim();
+  const recieverStreet = document.getElementById("reciever-street").value.trim();
+  const recieverCity = document.getElementById("reciever-city").value.trim();
+  const recieverState = document.getElementById("reciever-state").value.trim();
+  const recieverZip = document.getElementById("reciever-state").value.trim();
+
+  const packWeight = document.getElementById("package-weight").value.trim();
+  const shippingOption = document.getElementById("shipping-option").value.trim();
+
+  if (!senderFname || !senderLname || !senderStreet || !senderCity || !senderState || !senderZip || !recieverFname || !recieverLname || !recieverStreet || !recieverCity || !recieverState || !recieverZip || !packWeight || !shippingOption){
     alert("Please fill in all fields before submitting.");
     return;
   }
-
+ 
   const shipmentData = {
     sender_id: senderId,
     recipient_id: recipientId,
