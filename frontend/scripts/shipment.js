@@ -1,4 +1,7 @@
 // /ShipNGo/frontend/scripts/shipment.js
+const notifCountElem = document.getElementById("notification-count");
+console.log("Notification element:", notifCountElem);
+
 document.getElementById("submitShipment").addEventListener("click", function (event) {
   event.preventDefault();
 
@@ -44,6 +47,12 @@ document.getElementById("submitShipment").addEventListener("click", function (ev
     .then(data => {
       alert("Shipment created successfully!");
       console.log("Server Response:", data);
+
+      const notifCountElem = document.getElementById("notification-count");
+      // Parse the current count (if it's not a number, default to 0)
+      const currentCount = parseInt(notifCountElem.innerText, 10) || 0;
+      notifCountElem.innerText = currentCount + 1;
+
     })
     .catch(error => {
       console.error("Error:", error);
