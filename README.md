@@ -20,7 +20,6 @@ ShipNGo/
 │   ├── server.js                
 │   ├── routes/
 │   ├── controllers/
-│   ├── middleware/
 │   ├── config/
 │   └── .env                    
 │
