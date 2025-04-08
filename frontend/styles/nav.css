@@ -135,6 +135,11 @@ nav {
   .profile{
     display:flex;
     flex-direction:row;
-    color:white;
+    justify-content:center;
+    align-items:center;
+  }
 
+  .title-and-dropdown{
+    display:flex;
+    flex-direction:row;
   }

@@ -12,14 +12,22 @@
   <div id="header-include"></div>
   <script src="/scripts/header.js" defer></script>
 
-  <section class="login-container">
+  <section class="registration-container">
     <div class="login-title">Customer Registration</div>
     <form id="login-form">
-      <input type="text" id="name" name="name" placeholder="Name" required />
-      <input type="text" id="address" name="address" placeholder="Address" required />
-      <input type="text" id="phone" name="phone" placeholder="Phone" required />
-      <input type="text" id="email" name="email" placeholder="Email" required />
-      <input type="password" id="password" name="password" placeholder="Password" required />
+        <div style="display:flex; flex-direction:row; gap:16px;">
+      <input style="width:90%" type="text" id="Fname" name="Fname" placeholder="First Name (John)" required />
+      <input style="width:90%" type="text" id="Lname" name="Lname" placeholder="Last Name (Smith)" required />
+        </div>
+        <div style="display:flex; flex-direction:row; gap:24px;">
+            <input type="text" id="address" name="address" placeholder="Address (11111 Apple St.)" required />
+            <input type="text" id="city" name="city" placeholder="City (Houston)" required />
+            <input type="text" id="state" name="state" placeholder="State (TX)" required />
+            <input type="text" id="zipcode" name="zipcode" placeholder="Zipcode (22222)" required />
+        </div>
+      <input type="text" id="phone" name="phone" placeholder="Phone (1234567890)" required />
+      <input type="text" id="email" name="email" placeholder="Email (email@example.com)" required />
+      <input type="password" id="password" name="password" placeholder="Password (password)" required />
       <button type="submit" class="login-button">Register</button>
     </form>
     <p id="message"></p>

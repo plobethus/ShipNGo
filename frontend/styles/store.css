@@ -1,201 +1,45 @@
 /* ShipNGo/styles/store.css */
 
-/* Reset some default styling */ 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: Arial, sans-serif;
-    color: #333;
-    line-height: 1.6;
-    height: 100vh;
-  }
-  
-  /* Header styling */
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #004080;
-    padding: 20px;
-    color: #fff;
-  }
-  
-  header .logo img {
-    height: 50px;
-  }
-  
-  nav ul {
-    list-style: none;
-    display: flex;
-  }
-  
-  nav ul li {
-    margin-left: 20px;
-  }
-  
-  nav ul li a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  
-  /* Hero Section styling */
-  .hero {
-    background: url('courier-bg.jpg') no-repeat center center/cover;
-    height: 80vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: #fff;
-  }
-  
-  .hero-content {
-    background: rgba(0, 0, 0, 0.5);
-    padding: 40px;
-    border-radius: 8px;
-  }
-  
-  .hero h1 {
-    font-size: 3rem;
-    margin-bottom: 20px;
-  }
-  
-  .hero p {
-    font-size: 1.2rem;
-    margin-bottom: 30px;
-  }
-  
-  .btn {
-    background-color: #ffcc00;
-    color: #004080;
-    padding: 10px 20px;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 4px;
-  }
-  
-  /* Features Section */
-  .features {
-    display: flex;
-    justify-content: space-around;
-    padding: 40px;
-    background-color: #f4f4f4;
-  }
-  
-  .feature {
-    flex: 1;
-    margin: 0 10px;
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .feature h2 {
-    margin-bottom: 10px;
-    color: #004080;
-  }
-  
-  /* Footer styling */
-  footer {
-    background-color: #004080;
-    color: #fff;
-    text-align: center;
-    padding: 20px;
-  }
-  
-  nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: #004080;
-    color: white;
-}
-
-.navbar{
-    margin-right:50px;
-    color: white;
-}
-
-nav ul {
-    list-style: none; 
-    display: flex;
-}
-nav ul li {
-    margin-right: 20px;
-}
-nav ul li a {
-    color: white;
-    text-decoration: none;
-}
-.login {
-    margin-left: auto;
-}
-.login a {
-    color: white;
-    text-decoration: none;
-    padding: 10px 15px;
-    background-color: #ffcc00;
-    border-radius: 5px;
-}
-
-nav ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  gap: 20px;
-}
-nav ul li {
-  position: relative;
-}
-.dropdown {
-  display: none;
-  position: absolute;
-  background: white;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  top: 100%;
-  left: 0;
-  min-width: 200px;
-  z-index: 1000;
-}
-.dropdown li {
-  display: block;
-  padding: 10px;
-  white-space: nowrap;
-}
-.dropdown li a {
-  text-decoration: none;
-  color: black;
-  display: block;
-}
-.dropdown li:hover {
-  background: #f4f4f4;
-}
-nav ul li:hover .dropdown {
-  display: block;
-}
 /* Store styling */
+
+/* Whole item container */
+.items{
+    background-color:#004080;
+    border-radius:25px;
+    margin:32px;
+
+}
+
+/* holds the title for the items div */
+.item-title{
+    display:flex; 
+    justify-content:center; 
+    color:white; 
+    margin-top:16px;
+}
+
+/* contains all of the store_item divs */
+.item-list{
+    background: rgba(255, 255, 255, 0.2); 
+    margin:16px 32px; 
+    border-radius:15px;
+    padding:0px 16px;
+}
+
+/* individual store item */
 .store_item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-direction: row;
-    background-color: #004080;
     color: white;
-    margin: 32px 40px;
-    padding: 16px;
-    gap: 16px;
+    margin: 0px 16px;
+    padding: 8px 0px;
+    gap:70px;
     border-radius: 15px;
-    font-weight: 600;
-    width: 800px;
 }
 
+/* holds the purchase buttons and select */
 .price {
     display: flex;
     justify-content: center;
@@ -204,6 +48,7 @@ nav ul li:hover .dropdown {
     gap: 16px;
 }
 
+/* purchase buttons */
 .cart {
     display: flex;
     justify-content: center;
@@ -218,19 +63,21 @@ nav ul li:hover .dropdown {
     border-radius: 5px;
 }
 
+/* checkout container */
 .checkout {
     display:flex;
     align-items: center;
     flex-direction:column;
     background-color: #004080;
     color: white;
-    width: 700px;
-    height: 465px;
+    width: 650px;
+    height: 500px;
     border-radius: 25px;
     margin: 32px 40px;
     padding:16px;
 }
 
+/* outputs cart total */
 .total{
     display:flex;
     justify-content:center;
@@ -238,13 +85,29 @@ nav ul li:hover .dropdown {
     background: rgba(255, 255, 255, 0.2);
     padding:10px;
     border-radius: 8px;
-    margin-bottom: 15px;
+    margin-bottom: 35px;
     width:95%;
 }
 
+/* holds all of the subitems in checkout div */
+.checkout-items{
+    display:flex;
+    justify-content:center;
+    justify-content:space-between;
+    flex-direction:column;
+    gap:20px;
+    background: rgba(255, 255, 255, 0.2);
+    padding:10px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    width:95%;
+}
+ 
+/* formatting for the whole page */
 .store_page {
     display: flex;
     flex-direction: row;
-    margin:32px 0 ;
+    justify-content:space-between;
+    margin:32px 30px ;
 }
 

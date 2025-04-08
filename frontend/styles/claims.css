@@ -1,187 +1,5 @@
 /* ShipNGo/styles/claims.css */
 
-/* Reset some default styling */ 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: Arial, sans-serif;
-    color: #333;
-    line-height: 1.6;
-    height: 100vh;
-  }
-  
-  /* Header styling */
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #004080;
-    padding: 20px;
-    color: #fff;
-    height:120px;
-  }
-  
-  header .logo img {
-    height: 50px;
-  }
-  
-  nav ul {
-    list-style: none;
-    display: flex;
-  }
-  
-  nav ul li {
-    margin-left: 20px;
-  }
-  
-  nav ul li a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  
-  /* Hero Section styling */
-  .hero {
-    background: url('courier-bg.jpg') no-repeat center center/cover;
-    height: 80vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: #fff;
-  }
-  
-  .hero-content {
-    background: rgba(0, 0, 0, 0.5);
-    padding: 40px;
-    border-radius: 8px;
-  }
-  
-  .hero h1 {
-    font-size: 3rem;
-    margin-bottom: 20px;
-  }
-  
-  .hero p {
-    font-size: 1.2rem;
-    margin-bottom: 30px;
-  }
-  
-  .btn {
-    background-color: #ffcc00;
-    color: #004080;
-    padding: 10px 20px;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 4px;
-  }
-  
-  /* Features Section */
-  .features {
-    display: flex;
-    justify-content: space-around;
-    padding: 40px;
-    background-color: #f4f4f4;
-  }
-  
-  .feature {
-    flex: 1;
-    margin: 0 10px;
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .feature h2 {
-    margin-bottom: 10px;
-    color: #004080;
-  }
-  
-  /* Footer styling */
-  footer {
-    background-color: #004080;
-    color: #fff;
-    text-align: center;
-    padding: 20px;
-  }
-  
-  nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: #004080;
-    color: white;
-}
-
-.navbar{
-    margin-right:50px;
-    color: white;
-}
-
-nav ul {
-    list-style: none; 
-    display: flex;
-}
-nav ul li {
-    margin-right: 20px;
-}
-nav ul li a {
-    color: white;
-    text-decoration: none;
-}
-.login {
-    margin-left: auto;
-}
-.login a {
-    color: white;
-    text-decoration: none;
-    padding: 10px 15px;
-    background-color: #ffcc00;
-    border-radius: 5px;
-}
-
-nav ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  gap: 20px;
-}
-nav ul li {
-  position: relative;
-}
-.dropdown {
-  display: none;
-  position: absolute;
-  background: white;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  top: 100%;
-  left: 0;
-  min-width: 200px;
-  z-index: 1000;
-}
-.dropdown li {
-  display: block;
-  padding: 10px;
-  white-space: nowrap;
-}
-.dropdown li a {
-  text-decoration: none;
-  color: black;
-  display: block;
-}
-.dropdown li:hover {
-  background: #f4f4f4;
-}
-nav ul li:hover .dropdown {
-  display: block;
-}
-
 /* claims styling */
 
 .container { 
@@ -203,13 +21,30 @@ nav ul li:hover .dropdown {
     margin-bottom: 15px;
 }
 
-input, textarea {
+.name-inputs {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.name-inputs input {
+    flex: 1;
+}
+
+input, textarea, select {
     padding: 10px;
     margin: 8px 0;
     border: none;
     border-radius: 5px;
     outline: none;
     font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+select {
+    background-color: white;
+    cursor: pointer;
 }
 
 .submit {
@@ -246,6 +81,7 @@ button:hover {
     border-radius: 5px;
     font-size: 14px;
 }
+
 #support-form{
     display: flex;
     flex-direction: column;

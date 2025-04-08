@@ -21,6 +21,8 @@ const packageRoutes = require("./routes/packageRoutes");
 const shipmentRoutes = require("./routes/shipment");
 const trackingRoutes = require("./routes/tracking");
 
+const driverRoutes = require("./routes/drivers")
+
 const server = http.createServer(async (req, res) => {
   try {
     const parsedUrl = url.parse(req.url, true);
@@ -89,6 +91,7 @@ const server = http.createServer(async (req, res) => {
     // Attach tokenData to req for use in route modules.
     req.tokenData = tokenData;
 
+
     // Now dispatch to protected routes:
     if (pathname.startsWith("/claims")) {
       if (req.method === "GET" && pathname === "/claims") {
@@ -133,6 +136,25 @@ const server = http.createServer(async (req, res) => {
         const parts = pathname.split("/");
         const id = parts[2];
         await shipmentRoutes.getShipmentById(req, res, id);
+        return;
+      }
+    }
+    else if (tokenData.role == "employee" && pathname.startsWith("/driver")){
+      if (req.method === "GET" && pathname === "/driver/get_routes") {
+        await driverRoutes.getActiveRoutesByCurrentEmployee(req, res);
+        return;
+      } else if (req.method === "GET" && pathname.startsWith("/driver/get_stops/")) {
+        const parts = pathname.split("/");
+        const id = parts[3];
+        await driverRoutes.getOrderedStopsForRoute(req, res, id)
+        return;
+      } else if (req.method === "POST" && pathname == "/driver/add_stop") {
+        await driverRoutes.appendStopToRoute(req, res)
+        return;
+      } else if (req.method === "DELETE" && pathname.startsWith("/driver/delete_stop/")) {
+        const parts = pathname.split("/");
+        const id = parts[3];
+        await driverRoutes.deleteStopFromRoute(req, res, id)
         return;
       }
     }

@@ -1,19 +1,32 @@
 // /ShipNGo/frontend/scripts/shipment.js
+const notifCountElem = document.getElementById("notification-count");
+console.log("Notification element:", notifCountElem);
+
 document.getElementById("submitShipment").addEventListener("click", function (event) {
   event.preventDefault();
 
-  const senderId = document.getElementById("sender_id").value.trim();
-  const recipientId = document.getElementById("recipient_id").value.trim();
-  const weight = document.getElementById("weight").value.trim();
-  const dimensions = document.getElementById("dimensions").value.trim();
-  const shippingCost = document.getElementById("shipping_cost").value.trim();
-  const deliveryDate = document.getElementById("delivery_date").value.trim();
+  const senderFname = document.getElementById("sender-Fname").value.trim();
+  const senderLname = document.getElementById("sender-Lname").value.trim();
+  const senderStreet = document.getElementById("sender-street").value.trim();
+  const senderCity = document.getElementById("sender-city").value.trim();
+  const senderState = document.getElementById("sender-state").value.trim();
+  const senderZip = document.getElementById("sender-zipcode").value.trim();
 
-  if (!senderId || !recipientId || !weight || !dimensions || !shippingCost || !deliveryDate) {
+  const recieverFname = document.getElementById("reciever-Fname").value.trim();
+  const recieverLname = document.getElementById("receiver-Lname").value.trim();
+  const recieverStreet = document.getElementById("reciever-street").value.trim();
+  const recieverCity = document.getElementById("reciever-city").value.trim();
+  const recieverState = document.getElementById("reciever-state").value.trim();
+  const recieverZip = document.getElementById("reciever-state").value.trim();
+
+  const packWeight = document.getElementById("package-weight").value.trim();
+  const shippingOption = document.getElementById("shipping-option").value.trim();
+
+  if (!senderFname || !senderLname || !senderStreet || !senderCity || !senderState || !senderZip || !recieverFname || !recieverLname || !recieverStreet || !recieverCity || !recieverState || !recieverZip || !packWeight || !shippingOption){
     alert("Please fill in all fields before submitting.");
     return;
   }
-
+ 
   const shipmentData = {
     sender_id: senderId,
     recipient_id: recipientId,
@@ -34,6 +47,12 @@ document.getElementById("submitShipment").addEventListener("click", function (ev
     .then(data => {
       alert("Shipment created successfully!");
       console.log("Server Response:", data);
+
+      const notifCountElem = document.getElementById("notification-count");
+      // Parse the current count (if it's not a number, default to 0)
+      const currentCount = parseInt(notifCountElem.innerText, 10) || 0;
+      notifCountElem.innerText = currentCount + 1;
+
     })
     .catch(error => {
       console.error("Error:", error);

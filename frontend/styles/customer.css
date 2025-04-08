@@ -2,257 +2,195 @@
 
 /* Reset some default styling */ 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: Arial, sans-serif;
-    color: #333;
-    line-height: 1.6;
-    height: 100vh;
-  }
-  
-  /* Header styling */
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #004080;
-    padding: 20px;
-    color: #fff;
-  }
-  
-  header .logo img {
-    height: 50px;
-  }
-  
-  nav ul {
-    list-style: none;
-    display: flex;
-  }
-  
-  nav ul li {
-    margin-left: 20px;
-  }
-  
-  nav ul li a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  
-  /* Hero Section styling */
-  .hero {
-    background: url('courier-bg.jpg') no-repeat center center/cover;
-    height: 80vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: #fff;
-  }
-  
-  .hero-content {
-    background: rgba(0, 0, 0, 0.5);
-    padding: 40px;
-    border-radius: 8px;
-  }
-  
-  .hero h1 {
-    font-size: 3rem;
-    margin-bottom: 20px;
-  }
-  
-  .hero p {
-    font-size: 1.2rem;
-    margin-bottom: 30px;
-  }
-  
-  .btn {
-    background-color: #ffcc00;
-    color: #004080;
-    padding: 10px 20px;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 4px;
-  }
-  
-  /* Features Section */
-  .features {
-    display: flex;
-    justify-content: space-around;
-    padding: 40px;
-    background-color: #f4f4f4;
-  }
-  
-  .feature {
-    flex: 1;
-    margin: 0 10px;
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .feature h2 {
-    margin-bottom: 10px;
-    color: #004080;
-  }
-  
-  /* Footer styling */
-  footer {
-    background-color: #004080;
-    color: #fff;
-    text-align: center;
-    padding: 20px;
-  }
-  
-  nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: #004080;
-    color: white;
-}
-
-.navbar{
-    margin-right:50px;
-    color: white;
-}
-
-nav ul {
-    list-style: none; 
-    display: flex;
-}
-nav ul li {
-    margin-right: 20px;
-}
-nav ul li a {
-    color: white;
-    text-decoration: none;
-}
-.login {
-    margin-left: auto;
-}
-.login a {
-    color: white;
-    text-decoration: none;
-    padding: 10px 15px;
-    background-color: #ffcc00;
-    border-radius: 5px;
-}
-
-nav ul {
-  list-style: none;
-  padding: 0;
   margin: 0;
-  display: flex;
-  gap: 20px;
+  padding: 0;
+  box-sizing: border-box;
 }
-nav ul li {
-  position: relative;
-}
-.dropdown {
-  display: none;
-  position: absolute;
-  background: white;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  top: 100%;
-  left: 0;
-  min-width: 200px;
-  z-index: 1000;
-}
-.dropdown li {
-  display: block;
-  padding: 10px;
-  white-space: nowrap;
-}
-.dropdown li a {
-  text-decoration: none;
-  color: black;
-  display: block;
-}
-.dropdown li:hover {
-  background: #f4f4f4;
-}
-nav ul li:hover .dropdown {
-  display: block;
+
+body {
+  font-family: Arial, sans-serif;
+  color: #333;
+  line-height: 1.6;
+  height: 100vh;
 }
 
 /* Packages Section */
 /* Packages Section */
 .packages {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    padding: 40px;
-    background-color: #f4f4f4;
-  }
-  
-  /* Individual Package Styling */
-  .package {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    border-left: 5px solid #004080;
-  }
-  
-  .package:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-  }
-  
-  /* Package Header */
-  .package h3 {
-    color: #004080;
-    margin-bottom: 10px;
-    font-size: 1.4rem;
-  }
-  
-  /* Package Details */
-  .package-info {
-    text-align: left;
-    margin-bottom: 15px;
-    font-size: 1rem;
-    color: #555;
-  }
-  
-  .package-info p {
-    margin: 5px 0;
-  }
-  
-  .package-info span {
-    font-weight: bold;
-    color: #004080;
-  }
-  
-  /* Price Styling */
-  .package .price {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #ffcc00;
-    margin-top: 10px;
-  }
-  
-  /* Button Styling */
-  .package .btn {
-    display: inline-block;
-    margin-top: 15px;
-    background-color: #004080;
-    color: #fff;
-    padding: 10px 20px;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 5px;
-    transition: background 0.3s ease-in-out;
-  }
-  
-  .package .btn:hover {
-    background-color: #003366;
-  }
-  
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 40px;
+  background-color: #f4f4f4;
+}
+
+/* Individual Package Styling */
+.package {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  border-left: 5px solid #004080;
+}
+
+.package:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Package Header */
+.package h3 {
+  color: #004080;
+  margin-bottom: 10px;
+  font-size: 1.4rem;
+}
+
+/* Package Details */
+.package-info {
+  text-align: left;
+  margin-bottom: 15px;
+  font-size: 1rem;
+  color: #555;
+}
+
+.package-info p {
+  margin: 5px 0;
+}
+
+.package-info span {
+  font-weight: bold;
+  color: #004080;
+}
+
+/* Price Styling */
+.package .price {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffcc00;
+  margin-top: 10px;
+}
+
+/* Button Styling */
+.package .btn {
+  display: inline-block;
+  margin-top: 15px;
+  background-color: #004080;
+  color: #fff;
+  padding: 10px 20px;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 5px;
+  transition: background 0.3s ease-in-out;
+}
+
+.package .btn:hover {
+  background-color: #003366;
+}
+
+#customer-packages {
+  padding: 20px;
+  background-color: #f9f9fc;
+}
+
+.packages-title {
+  text-align: center;
+  color: #004080;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.packages-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+  justify-content: center;
+}
+
+.package-card {
+  flex: 0 1 calc(33.333% - 20px);
+  min-width: 300px; 
+  max-width: 400px; 
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 64, 128, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 20px; 
+}
+
+.package-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 64, 128, 0.15);
+}
+
+.package-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #004080;
+  color: white;
+  padding: 12px 15px;
+}
+
+.package-id {
+  font-weight: 600;
+}
+
+.package-status {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.package-status.in-transit {
+  background-color: #ffcc00;
+  color: #004080;
+}
+
+.package-status.delivered {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.package-status.pending {
+  background-color: #FF9800;
+  color: white;
+}
+
+.package-details {
+  padding: 15px;
+}
+
+.package-route {
+  margin-bottom: 15px;
+}
+
+.route-from, .route-to, .package-weight {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.route-from i, .route-to i, .package-weight i {
+  margin-right: 10px;
+  color: #004080;
+}
+
+.no-packages, .error-message {
+  text-align: center;
+  color: #666;
+  padding: 40px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 64, 128, 0.1);
+}
+
+.icon-send::before { content: '🚚'; }
+.icon-location::before { content: '📍'; }
+.icon-weight::before { content: '⚖️'; }

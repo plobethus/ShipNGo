@@ -1,0 +1,19 @@
+<!-- /frontend/components/cart.html -->
+<div id="cart-container" style="position: fixed; top: 20px; right: 20px; font-size: 24px; z-index: 100;">
+    <!-- Cart Button -->
+    <button id="cart-button" title="View Shipments" style="background: none; border: none; cursor: pointer; font-size: 24px;">
+      🛒
+      <span id="cart-count">0</span>
+    </button>
+  
+    <!-- Cart Popup -->
+    <div id="cart-popup" style="display: none; position: absolute; top: 40px; right: 0; width: 250px; background: white; border: 1px solid #ccc; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); border-radius: 8px;">
+      <h4 style="margin-top: 0;">Your Shipments</h4>
+      <ul id="cart-items" style="padding-left: 20px; margin: 0; max-height: 200px; overflow-y: auto;">
+        <!-- Shipment items will appear here -->
+        <li>No shipments yet.</li>
+      </ul>
+      <button onclick="document.getElementById('cart-popup').style.display='none'" style="margin-top: 10px;">Close</button>
+    </div>
+  </div>
+  

@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Claims - ShipNGo</title>
+  <link rel="stylesheet" href="../styles/styles.css" />
   <link rel="stylesheet" href="../styles/claims.css" />
   <link rel="stylesheet" href="../styles/nav.css" />
 </head>
@@ -16,9 +17,19 @@
     <h1>Support Center</h1>
     <div class="card">
       <form id="support-form">
-        <input type="text" id="name" placeholder="Name" required />
+        <div class="name-inputs">
+          <input type="text" id="first-name" placeholder="First Name" required />
+          <input type="text" id="last-name" placeholder="Last Name" required />
+        </div>
         <input type="email" id="email" placeholder="Email" required />
         <input type="text" id="phone" placeholder="Phone Number" required />
+        <select id="claim-type" required>
+          <option value="" disabled selected>Select Claim Type</option>
+          <option value="Delayed">Delayed Delivery</option>
+          <option value="Lost">Lost Package</option>
+          <option value="Damaged">Damaged Package</option>
+          <option value="Other">Other Issue</option>
+        </select>
         <textarea id="issue" placeholder="Describe your issue..." required></textarea>
         <button class="submit">Submit</button>
       </form>
