@@ -11,7 +11,15 @@
 <body>
   <!-- Shared header -->
   <div id="header-include"></div>
-  <script src="/scripts/header.js" defer></script>
+  <script src="./scripts/header.js" defer></script>
+
+  <!-- Notification Bell in Navbar -->
+  <div class="nav-icons">
+    <a href="notifications.html" class="notification">
+      <img src="./assets/bell-icon.png" alt="Notifications" class="bell-icon">
+      <span id="notification-count" style="display: none;">0</span>
+    </a>
+  </div>
 
   <section id="tracking" class="tracking">
     <div class="tracking-content">
@@ -30,6 +38,9 @@
     <p>We provide local and international shipping, express delivery, and secure parcel handling.</p>
   </section>
 
+  <!-- Notification Bell in Navbar -->
+  <script src="scripts/notifications.js"></script>
+ 
   <footer>
     <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
   </footer>

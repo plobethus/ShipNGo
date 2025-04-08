@@ -18,6 +18,34 @@ nav {
     text-decoration: none; /* if it's an <a> link */
     margin-right:20px;
   }
+
+  /* Notification Bell Button */
+  .notification-bell {
+    position: absolute;
+    bottom: -50px; /* Adjust based on actual logo size */
+    left: 50%;
+    transform: translateX(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .notification-bell img {
+    width: 30px; /* Adjust size as necessary */
+    height: 30px;
+  }
+
+  .notification-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 5px;
+    font-size: 12px;
+  }
+
   
   /* The main UL elements for your nav lists */
   nav ul {
