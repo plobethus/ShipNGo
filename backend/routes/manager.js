@@ -1,5 +1,5 @@
 /*
- * /ShipNGo/backend/routes/claims.js
+ * /ShipNGo/backend/routes/manager.js
  */
 
 const { sendJson } = require("../helpers");

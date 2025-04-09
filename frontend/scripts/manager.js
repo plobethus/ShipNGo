@@ -1,3 +1,5 @@
+//ShipNGo/frontend/scripts/manager.js
+
 document.addEventListener("DOMContentLoaded", async function () {
     try {
       const response = await fetch("/api/claims");
