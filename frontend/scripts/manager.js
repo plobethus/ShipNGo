@@ -1,11 +1,10 @@
 //ShipNGo/frontend/scripts/manager.js
-
 document.addEventListener("DOMContentLoaded", async function () {
     try {
-      const response = await fetch("/api/claims");
+      const response = await fetch("/api/claims/");
       const data = await response.json();
   
-      const tableBody = document.getElementById("package-table");
+      const tableBody = document.getElementById("complaint-table");
       tableBody.innerHTML = ""; // Clear any existing rows
   
       if (data && data.length > 0) {
