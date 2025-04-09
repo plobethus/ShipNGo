@@ -2,116 +2,148 @@
 
 /* Main nav container */
 nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;  /* brand/logo on left, everything else on right */
-    background-color: #004080;
-    padding: 20px 40px;
-    color: white;
-  }
-  
-  /* Logo or brand text, e.g. ShipNGo */
-  nav .navbar {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #fff;
-    text-decoration: none; /* if it's an <a> link */
-    margin-right:20px;
-  }
-  
-  /* The main UL elements for your nav lists */
-  nav ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;  /* items horizontally aligned */
-    gap: 20px;      /* space between items */
-  }
-  
-  /* Public vs. protected nav lists */
-  .public-nav,
-  #protected-nav {
-    display: flex;
-    align-items: center;
-  }
-  
-  /* Individual nav items */
-  nav ul li {
-    position: relative; /* needed for dropdown positioning */
-  }
-  
-  /* Links in the nav items */
-  nav ul li a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
-    display: block;      /* ensures the link covers the li's area */
-    padding: 5px 0;      /* slight vertical padding */
-  }
-  
-  /* Dropdown sub-menu styling */
-  .dropdown {
-    display: none;
-    position: absolute;
-    background: white;
-    color: black;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    top: 100%;
-    left: 0;
-    min-width: 200px;
-    z-index: 1000;
-  }
-  
-  /* Dropdown items */
-  .dropdown li {
-    padding: 10px;
-    white-space: nowrap;
-  }
-  .dropdown li a {
-    color: black;
-    text-decoration: none;
-    display: block;
-  }
-  
-  /* Show the dropdown on hover */
-  nav ul li:hover .dropdown {
-    display: block;
-  }
-  
-  /* The login container for login/logout buttons */
-  .login {
-    margin-left: auto; /* if you want it pushed far right */
-  }
-  
-  /* Style for both login (a) and logout (button) */
-  .login a,
-  .login button {
-    background-color: #ffcc00;
-    color: #333;
-    border: none;
-    border-radius: 5px;
-    text-decoration: none;
-    padding: 10px 15px;
-    margin-left: 10px;
-    cursor: pointer;
-    font-weight: bold;
-    display: inline-block;
-  }
-  
-  .login a:hover,
-  .login button:hover {
-    background-color: #ffdd22;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: space-between;  /* brand/logo on left, everything else on right */
+  background-color: #004080;
+  padding: 20px 40px;
+  color: white;
+}
 
-  .profile{
-    display:flex;
-    flex-direction:row;
-    justify-content:center;
-    align-items:center;
-  }
+/* Logo or brand text, e.g. ShipNGo */
+nav .navbar {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none; /* if it's an <a> link */
+  margin-right:20px;
+}
 
-  .title-and-dropdown{
-    display:flex;
-    flex-direction:row;
-  }
+/* The main UL elements for your nav lists */
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;  /* items horizontally aligned */
+  gap: 20px;      /* space between items */
+}
+
+/* Public vs. protected nav lists */
+.public-nav,
+#protected-nav {
+  display: flex;
+  align-items: center;
+}
+
+/* Individual nav items */
+nav ul li {
+  position: relative; /* needed for dropdown positioning */
+}
+
+/* Links in the nav items */
+nav ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  display: block;      /* ensures the link covers the li's area */
+  padding: 5px 0;      /* slight vertical padding */
+}
+
+/* Dropdown sub-menu styling */
+.dropdown {
+  display: none;
+  position: absolute;
+  background: white;
+  color: black;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  top: 100%;
+  left: 0;
+  min-width: 200px;
+  z-index: 1000;
+}
+
+/* Dropdown items */
+.dropdown li {
+  padding: 10px;
+  white-space: nowrap;
+}
+.dropdown li a {
+  color: black;
+  text-decoration: none;
+  display: block;
+}
+
+/* Show the dropdown on hover */
+nav ul li:hover .dropdown {
+  display: block;
+}
+
+/* The login container for login/logout buttons */
+.login {
+  margin-left: 10px; /* Space between profile button and login buttons */
+}
+
+/* Style for both login (a) and logout (button) */
+.login a,
+.login button {
+  background-color: #ffcc00;
+  color: #333;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  padding: 10px 15px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.login a:hover,
+.login button:hover {
+  background-color: #ffdd22;
+}
+
+.profile {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.title-and-dropdown {
+  display: flex;
+  flex-direction: row;
+}
+
+/* Auth-only elements should be hidden by default */
+.auth-only-element {
+  display: none !important;
+  visibility: hidden;
+}
+
+/* Profile button styling */
+.profile-nav-button {
+  margin: 0 15px;
+}
+
+.profile-btn {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.profile-btn:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.profile-icon {
+  font-size: 1.1rem;
+  margin-right: 8px;
+}
