@@ -34,8 +34,7 @@ async function updatePackage(req, res, id) {
 }
 
 async function getPackagesCustomer(req, res) {
-  // Assume token verification was done in middleware if needed; here we pass a customerId manually
-  // For demonstration, we extract token data in the main server before calling this function.
+ 
   const customerId = req.tokenData && req.tokenData.customer_id;
   if (!customerId) {
     sendJson(res, 400, { message: "Customer ID missing." });

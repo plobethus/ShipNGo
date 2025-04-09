@@ -15,11 +15,9 @@ const db = require("mysql2").createPool({
   
   async function getAllPackages(filter) {
     let query = `
-      SELECT p.package_id, p.status, p.location, p.weight, p.dimensions, p.address_from, p.address_to,
-             c1.name AS sender_name, c2.name AS receiver_name
+      SELECT p.package_id, p.status, p.location, p.weight, p.dimensions, p.address_from, p.address_to, c1.name AS sender_name, p.receiver_name AS receiver_name
       FROM packages p
       LEFT JOIN customers c1 ON p.sender_id = c1.customer_id
-      LEFT JOIN customers c2 ON p.receiver_id = c2.customer_id
       WHERE 1=1
     `;
     const values = [];
@@ -30,10 +28,6 @@ const db = require("mysql2").createPool({
     if (filter.customerName) {
       query += " AND (c1.name LIKE ? OR c2.name LIKE ?)";
       values.push(`%${filter.customerName}%`, `%${filter.customerName}%`);
-    }
-    if (filter.startDate && filter.endDate) {
-      query += " AND p.created_at BETWEEN ? AND ?";
-      values.push(filter.startDate, filter.endDate);
     }
     if (filter.minWeight) {
       query += " AND p.weight >= ?";
@@ -70,11 +64,15 @@ const db = require("mysql2").createPool({
   }
   
   async function getCustomerPackages(customerId) {
-    const [packages] = await db.execute(
-      "SELECT package_id, sender_id, receiver_id, weight, status, address_from, address_to FROM packages WHERE sender_id = ? OR receiver_id = ?",
-      [customerId, customerId]
-    );
-    return packages;
+    const query = `
+    SELECT package_id, sender_id, weight, status, address_from, address_to, receiver_name
+    FROM packages
+    WHERE sender_id = ? 
+      OR address_to = (SELECT address FROM customers WHERE customer_id = ?)`
+    ;
+    console.log("customerId in route:", customerId);
+  const [packages] = await db.execute(query, [customerId, customerId]);
+  return packages;
   }
   
   module.exports = {
