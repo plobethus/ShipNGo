@@ -22,6 +22,7 @@ const shipmentRoutes = require("./routes/shipment");
 const trackingRoutes = require("./routes/tracking");
 const profileRoutes = require("./routes/profile"); // Added profile routes
 const driverRoutes = require("./routes/drivers");
+const managerRoutes = require("./routes/manager")
 
 const server = http.createServer(async (req, res) => {
   try {
@@ -191,6 +192,14 @@ else if (pathname.startsWith("/api/profile")) {
         return;
       }
     }
+
+    else if (tokenData.role === "manager" && pathname.startsWith("/api/claims/")){
+        if (req.method === "GET" && pathname === "/api/claims/") {
+          await managerRoutes.fetchAllClaims(req, res);
+          return;
+        }
+      }
+
     // If no protected route matched, attempt to serve a static file from the frontend folder.
     else {
       const filePath = path.join(__dirname, "../frontend", pathname);

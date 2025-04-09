@@ -14,6 +14,14 @@ async function fetchAllClaims(req, res) {
   }
 }
 
+// async function fetchSum();
+//     try{
+//         const sum = await getSumTransactions();
+//         sendJson(res,200,sum);
+//     } catch(err){
+//         sendJson(res,500,{ error: err.message});
+//     }
+
 module.exports = {
   fetchAllClaims
 };
