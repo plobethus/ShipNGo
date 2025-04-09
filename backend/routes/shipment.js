@@ -4,6 +4,7 @@
 
 const { sendJson } = require("../helpers");
 const { readJsonBody } = require("../helpers");
+const packageController = require("../controllers/packageController");
 const db = require("mysql2").createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -58,8 +59,23 @@ async function getShipmentById(req, res, id) {
   }
 }
 
+async function createShipment(req, res) {
+  try {
+    const body = await readJsonBody(req);
+    const senderId = req.tokenData.customer_id;
+    const result = await packageController.createPackage({ ...body, sender_id: senderId });
+
+    sendJson(res, 201, { message: "Shipment created", ...result });
+  } catch (err) {
+    console.error("Error creating shipment:", err);
+    sendJson(res, 500, { message: "Failed to create shipment", error: err.message });
+  }
+}
+  
+
 module.exports = {
   createShipment,
   getShipments,
-  getShipmentById
+  getShipmentById,
+  createShipment
 };
