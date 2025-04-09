@@ -30,6 +30,8 @@ document.getElementById("login-form").addEventListener("submit", async (event) =
         window.location.href = "/pages/customer.html";
       } else if (data.role === "employee") {
         window.location.href = "/pages/employee.html";
+      } else if (data.role === "manager"){
+        window.location.href = "/pages/manager.html";
       }
     } else {
       messageElement.innerText = data.message || "Login failed. Please try again.";
