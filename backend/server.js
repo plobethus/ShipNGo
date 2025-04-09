@@ -20,8 +20,8 @@ const deliverpointsRoutes = require("./routes/deliverpoints");
 const packageRoutes = require("./routes/packageRoutes");
 const shipmentRoutes = require("./routes/shipment");
 const trackingRoutes = require("./routes/tracking");
-
-const driverRoutes = require("./routes/drivers")
+const profileRoutes = require("./routes/profile"); // Added profile routes
+const driverRoutes = require("./routes/drivers");
 
 const server = http.createServer(async (req, res) => {
   try {
@@ -68,6 +68,7 @@ const server = http.createServer(async (req, res) => {
       pathname === "/pages/login.html" ||
       pathname === "/pages/customer_registration.html" ||
       pathname === "/pages/trackingpage.html" ||
+      pathname === "/pages/profile.html" ||  
       pathname.endsWith(".css") ||
       pathname.endsWith(".js") ||
       pathname.endsWith(".png") ||
@@ -78,6 +79,17 @@ const server = http.createServer(async (req, res) => {
       const filePath = path.join(__dirname, "../frontend", pathname === "/" ? "index.html" : pathname);
       serveFile(res, filePath);
       return;
+    }
+    else if (pathname === "/api/whoami") {
+      // Simple test endpoint to check authentication and tokenData
+      return sendJson(res, 200, { 
+        success: true, 
+        message: "Authentication working", 
+        data: {
+          tokenData: req.tokenData,
+          message: "If you can see this, authentication is working correctly"
+        }
+      });
     }
 
     // ---- Protected Routes (login required) ----
@@ -139,6 +151,27 @@ const server = http.createServer(async (req, res) => {
         return;
       }
     }
+    // Profile routes - added for customer profile management
+else if (pathname.startsWith("/api/profile")) {
+  // Ensure only customers can access profile routes
+  if (tokenData.role !== "customer") {
+    return sendJson(res, 403, { 
+      success: false, 
+      message: "Access denied. Customer access only." 
+    });
+  }
+  
+  if (req.method === "GET" && pathname === "/api/profile") {
+    await profileRoutes.getProfile(req, res);
+    return;
+  } else if (req.method === "PUT" && pathname === "/api/profile/update") {
+    await profileRoutes.updateProfile(req, res);
+    return;
+  } else if (req.method === "PUT" && pathname === "/api/profile/change-password") {
+    await profileRoutes.changePassword(req, res);
+    return;
+  }
+}
     else if (tokenData.role == "employee" && pathname.startsWith("/driver")){
       if (req.method === "GET" && pathname === "/driver/get_routes") {
         await driverRoutes.getActiveRoutesByCurrentEmployee(req, res);
