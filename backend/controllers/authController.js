@@ -16,7 +16,7 @@ const db = require("mysql2").createPool({
   const jwt = require("jsonwebtoken");
   
   async function login(email, password) {
-    // Check both customers and employees using raw SQL
+    // Check both customers and employees
     const [customerRows] = await db.execute(
       "SELECT customer_id AS id, name, password, 'customer' AS role FROM customers WHERE email = ?",
       [email]
