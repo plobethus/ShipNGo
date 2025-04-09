@@ -41,8 +41,16 @@ document.addEventListener("DOMContentLoaded", () => {
           store.style.display="none";
           faq.style.display="none";
           claim.style.display="none";
-          billing.style.display="none";
-      } 
+          billing.style.display="none";  
+        } else if (role === "manager") {
+          dashboardLink.href = "/pages/manager.html";
+          dashboardLink.textContent = "Manager Dashboard";
+          shipping.style.display = "none";
+          store.style.display="none";
+          faq.style.display="none";
+          claim.style.display="none";
+          billing.style.display="none";  
+        }
     }else {
         // Not logged in: hide protected nav, show login, hide logout
         protectedNav.style.display = "none";

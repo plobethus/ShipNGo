@@ -22,7 +22,7 @@ const db = require("mysql2").createPool({
       [email]
     );
     const [employeeRows] = await db.execute(
-      "SELECT employee_id AS id, name, password, 'employee' AS role FROM employees WHERE email = ?",
+      "SELECT employee_id AS id, name, password, employee_role AS role FROM employees WHERE email = ?",
       [email]
     );
     const rows = customerRows.length ? customerRows : employeeRows;
@@ -37,7 +37,7 @@ const db = require("mysql2").createPool({
     const token = jwt.sign(
       user.role === "customer"
         ? { customer_id: user.id, role: "customer", name: user.name }
-        : { employee_id: user.id, role: "employee", name: user.name },
+        : { employee_id: user.id, role: user.role, name: user.name },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
