@@ -14,6 +14,16 @@ const db = require("mysql2").createPool({
   queueLimit: 0
 }).promise();
 
+// Set MySQL session time zone to Central Time (CST/CDT)
+(async () => {
+  try {
+    await db.query("SET time_zone = '-05:00' ");
+    console.log("✅ MySQL timezone set to America/Chicago");
+  } catch (err) {
+    console.error("❌ Failed to set MySQL timezone:", err);
+  }
+})();
+
 async function createClaim({ firstName, lastName, email, phone, issueType, issueDescription, userId }) {
   // Generate a numeric ticket_id (ensure it's a number)
   const min = 100000;
@@ -46,7 +56,7 @@ async function createClaim({ firstName, lastName, email, phone, issueType, issue
     const claimsSql = `
       INSERT INTO claims 
       (ticket_id, first_name, last_name, email, phone_number, issue_type, reason, customer_id, refund_status, processed_date) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Pending', NOW())
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
     `;
 
     const claimsParams = [
@@ -57,7 +67,8 @@ async function createClaim({ firstName, lastName, email, phone, issueType, issue
       phoneCleaned,
       safeIssueType,
       safeIssueDescription,
-      userId || null
+      userId || null,
+      'pending'
     ];
 
     // Execute the SQL
