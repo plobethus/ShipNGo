@@ -41,18 +41,28 @@ function initializeHeader() {
     if (loginBtn) loginBtn.style.display = "none";
     if (logoutBtn) logoutBtn.style.display = "inline-block";
     
-    // Show profile button using multiple approaches
+    // Only show profile button if user is a customer
     if (profileNavButton) {
-      // Remove all hiding techniques
-      profileNavButton.style.display = "block";
-      profileNavButton.style.visibility = "visible";
-      profileNavButton.classList.remove('auth-only-element');
+      if (role === "customer") {
+        // Remove all hiding techniques for customers only
+        profileNavButton.style.display = "block";
+        profileNavButton.style.visibility = "visible";
+        profileNavButton.classList.remove('auth-only-element');
+      } else {
+        // Keep profile hidden for employees and managers
+        profileNavButton.style.display = "none";
+        profileNavButton.style.visibility = "hidden";
+        profileNavButton.classList.add('auth-only-element');
+      }
     }
     
-    // Show all auth-only elements as a backup approach
+    // Show auth-only elements with special handling
     authOnlyElements.forEach(el => {
-      el.style.display = "block";
-      el.style.visibility = "visible";
+      // Skip the profile button - it's handled separately above
+      if (el.id !== "profile-nav-button") {
+        el.style.display = "block";
+        el.style.visibility = "visible";
+      }
     });
 
     // Set dashboard link based on role
