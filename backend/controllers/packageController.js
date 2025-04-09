@@ -76,9 +76,45 @@ const db = require("mysql2").createPool({
     );
     return packages;
   }
+
+  async function createPackage({
+    sender_id,
+    receiver_name,
+    address_from,
+    address_to,
+    weight,
+    dimensions,
+    shipping_class,
+  
+  }) {
+    const shippingCost = parseFloat((5 + weight * 0.5).toFixed(2)); // Simple cost formula
+  
+    const sql = `
+      INSERT INTO packages
+      (sender_id, receiver_name, weight, dimensions, shipping_class, cost, status, address_from, address_to, location)
+      VALUES (?, ?, ?, ?, ?, ?, 'Pending', ?, ?, ?)
+    `;
+  
+    const values = [
+      sender_id, // Temporary hardcoded sender_id, replace with token-based ID later
+      receiver_name,
+      weight,
+      dimensions,
+      shipping_class.charAt(0).toUpperCase() + shipping_class.slice(1),
+      shippingCost,
+      address_from,
+      address_to,
+      "Origin"
+    ];
+  
+    const [result] = await db.execute(sql, values);
+    return { package_id: result.insertId, cost: shippingCost };
+  }
+  
   
   module.exports = {
     getAllPackages,
     updatePackage,
-    getCustomerPackages
+    getCustomerPackages,
+    createPackage
   };
