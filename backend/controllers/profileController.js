@@ -2,7 +2,7 @@
 * /ShipNGo/backend/controllers/profileController.js
 */
 
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const db = require("mysql2").createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
