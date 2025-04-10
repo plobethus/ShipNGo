@@ -95,26 +95,22 @@ function checkout(){
   }
 
   try{
-  const response = fetch('/checkout', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ items })
-  });
-
-
-
-  const result = response.json();
-
-    if (response.ok) {
-      alert("Purchase successful!");
-      cart = {};
-    } else {
-      alert(`Purchase failed: ${result.error}`);
-    }
+    fetch('/checkout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ items })
+    }).then(res => {
+      if (res.status == 200) {
+        alert("Purchase successful!");
+        cart = {};
+      } 
+    }).catch(err => {
+      alert(`Purchase failed: ${err}`);
+    });
   } catch (err) {
-    alert(`An error occurred: ${err.message}`);
+    alert(`An error occurred...`);
   }
 
   updateCheckout();
