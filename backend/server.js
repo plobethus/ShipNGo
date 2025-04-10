@@ -21,6 +21,9 @@ const packageRoutes = require("./routes/packageRoutes");
 const shipmentRoutes = require("./routes/shipment");
 const trackingRoutes = require("./routes/tracking");
 const profileRoutes = require("./routes/profile"); // Added profile routes
+const shopRoutes = require("./routes/shop");
+
+
 const driverRoutes = require("./routes/drivers");
 const managerRoutes = require("./routes/manager")
 
@@ -41,7 +44,7 @@ const server = http.createServer(async (req, res) => {
       } else if (req.method === "POST" && pathname === "/tracking") {
         await trackingRoutes.updateTracking(req, res);
         return;
-      }
+      } 
     }
     // Auth endpoints are public (login, register, auth/me)
     else if (pathname.startsWith("/auth")) {
@@ -173,6 +176,12 @@ else if (pathname.startsWith("/api/profile")) {
     return;
   }
 }
+    else if (pathname.startsWith("/checkout")) {
+      if (req.method === "POST" && pathname === "/checkout") {
+        await shopRoutes.checkout(req, res);
+        return;
+      }
+    }
     else if (tokenData.role == "employee" && pathname.startsWith("/driver")){
       if (req.method === "GET" && pathname === "/driver/get_routes") {
         await driverRoutes.getActiveRoutesByCurrentEmployee(req, res);
