@@ -25,7 +25,7 @@ document.querySelector(".shipment-form").addEventListener("submit", async functi
   else if (shippingOption === "overnight") eta = "1 Day";
 
   const specialInstructions = document.getElementById("special").value.trim();
-
+  
   if (
     !senderFirstName || !senderLastName || !senderStreet || !senderCity || !senderState || !senderZip ||
     !receiverFirstName || !receiverLastName || !receiverStreet || !receiverCity || !receiverState || !receiverZip ||
@@ -89,7 +89,16 @@ document.querySelector(".shipment-form").addEventListener("submit", async functi
     const data = await response.json();
     if (response.ok) {
       const result = data.package;
-    
+      const discount = data.discount_applied;
+      let discountMsg = " ";
+
+      if (discount){
+        const notificationCount = document.getElementById("notification-count");
+        notificationCount.textContent = "1";
+        notificationCount.style.display = "inline-block";
+        discountMsg = `<p style="color:green;"><strong>🎉 You’ve unlocked a 10% discount on your next shipment!</strong></p>`;
+      }
+  
       const modalContent = `
         <div class="shipment-card">
           <h3>📦 Shipment Details</h3>
@@ -106,6 +115,7 @@ document.querySelector(".shipment-form").addEventListener("submit", async functi
             <li><strong>Status:</strong> ${result.status}</li>
             <li><strong>Location:</strong> ${result.location}</li>
           </ul>
+          ${discountMsg}
         </div>
       `;
     
