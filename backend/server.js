@@ -20,10 +20,11 @@ const deliverpointsRoutes = require("./routes/deliverpoints");
 const packageRoutes = require("./routes/packageRoutes");
 const shipmentRoutes = require("./routes/shipment");
 const trackingRoutes = require("./routes/tracking");
-const shopRoutes = require("./routes/shop");
+const profileRoutes = require("./routes/profile"); // Added profile routesconst shopRoutes = require("./routes/shop");
 
 
-const driverRoutes = require("./routes/drivers")
+const driverRoutes = require("./routes/drivers");
+const managerRoutes = require("./routes/manager")
 
 const server = http.createServer(async (req, res) => {
   try {
@@ -70,6 +71,7 @@ const server = http.createServer(async (req, res) => {
       pathname === "/pages/login.html" ||
       pathname === "/pages/customer_registration.html" ||
       pathname === "/pages/trackingpage.html" ||
+      pathname === "/pages/profile.html" ||  
       pathname.endsWith(".css") ||
       pathname.endsWith(".js") ||
       pathname.endsWith(".png") ||
@@ -80,6 +82,17 @@ const server = http.createServer(async (req, res) => {
       const filePath = path.join(__dirname, "../frontend", pathname === "/" ? "index.html" : pathname);
       serveFile(res, filePath);
       return;
+    }
+    else if (pathname === "/api/whoami") {
+      // Simple test endpoint to check authentication and tokenData
+      return sendJson(res, 200, { 
+        success: true, 
+        message: "Authentication working", 
+        data: {
+          tokenData: req.tokenData,
+          message: "If you can see this, authentication is working correctly"
+        }
+      });
     }
 
     // ---- Protected Routes (login required) ----
@@ -141,6 +154,27 @@ const server = http.createServer(async (req, res) => {
         return;
       }
     }
+    // Profile routes - added for customer profile management
+else if (pathname.startsWith("/api/profile")) {
+  // Ensure only customers can access profile routes
+  if (tokenData.role !== "customer") {
+    return sendJson(res, 403, { 
+      success: false, 
+      message: "Access denied. Customer access only." 
+    });
+  }
+  
+  if (req.method === "GET" && pathname === "/api/profile") {
+    await profileRoutes.getProfile(req, res);
+    return;
+  } else if (req.method === "PUT" && pathname === "/api/profile/update") {
+    await profileRoutes.updateProfile(req, res);
+    return;
+  } else if (req.method === "PUT" && pathname === "/api/profile/change-password") {
+    await profileRoutes.changePassword(req, res);
+    return;
+  }
+}
     else if (pathname.startsWith("/checkout")) {
       if (req.method === "POST" && pathname === "/checkout") {
         await shopRoutes.checkout(req, res);
@@ -166,6 +200,14 @@ const server = http.createServer(async (req, res) => {
         return;
       }
     }
+
+    else if (tokenData.role === "manager" && pathname.startsWith("/api/claims/")){
+        if (req.method === "GET" && pathname === "/api/claims/") {
+          await managerRoutes.fetchAllClaims(req, res);
+          return;
+        }
+      }
+
     // If no protected route matched, attempt to serve a static file from the frontend folder.
     else {
       const filePath = path.join(__dirname, "../frontend", pathname);

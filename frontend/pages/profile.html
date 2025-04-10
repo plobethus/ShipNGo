@@ -1,0 +1,137 @@
+<!-- /ShipNGo/frontend/pages/profile.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile - ShipNGo</title>
+  <link rel="stylesheet" href="../styles/nav.css" />
+  <link rel="stylesheet" href="../styles/profile.css" />
+</head>
+<body>
+  <div id="header-include"></div>
+  <script src="../scripts/header.js" defer></script>
+
+  <div class="container">
+    <div class="profile-header">
+      <h1>My Profile</h1>
+      <a href="customer.html" class="back-btn">Back to Dashboard</a>
+    </div>
+
+    <div class="profile-container">
+      <!-- Profile View Mode -->
+      <div class="profile-view" id="profile-view">
+        <div class="profile-section">
+          <div class="profile-avatar">
+            <span class="avatar-placeholder">👤</span>
+          </div>
+          <div class="profile-name">
+            <h2 id="customer-name">John Doe</h2>
+            <p id="customer-email">john.doe@example.com</p>
+          </div>
+          <button class="edit-profile-btn" id="edit-profile-btn">Edit Profile</button>
+        </div>
+        
+        <div class="profile-details">
+          <div class="detail-group">
+            <h3>Personal Information</h3>
+            <div class="detail-item">
+              <span class="detail-label">Phone Number:</span>
+              <span class="detail-value" id="customer-phone">(555) 123-4567</span>
+            </div>
+          </div>
+          
+          <div class="detail-group">
+            <h3>Shipping Information</h3>
+            <div class="detail-item">
+              <span class="detail-label">Default Address:</span>
+              <span class="detail-value" id="customer-address">123 Shipping Lane, Delivery City, DC 12345</span>
+            </div>
+          </div>
+          
+          <div class="detail-group">
+            <h3>Account Settings</h3>
+            <div class="detail-item">
+              <span class="detail-label">Password:</span>
+              <span class="detail-value">••••••••</span>
+              <button class="change-password-btn" id="change-password-btn">Change Password</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Profile Edit Mode -->
+      <div class="profile-edit" id="profile-edit">
+        <h2>Edit Your Profile</h2>
+        <form id="edit-profile-form">
+          <div class="form-columns">
+            <div class="form-column">
+              <div class="form-group">
+                <label for="edit-name">Full Name</label>
+                <input type="text" id="edit-name" name="name" placeholder="Your full name">
+              </div>
+              
+              <div class="form-group">
+                <label for="edit-email">Email Address</label>
+                <input type="email" id="edit-email" name="email" placeholder="Your email address">
+              </div>
+              
+              <div class="form-group">
+                <label for="edit-phone">Phone Number</label>
+                <input type="tel" id="edit-phone" name="phone" placeholder="Your phone number">
+              </div>
+            </div>
+            
+            <div class="form-column">
+              <div class="form-group">
+                <label for="edit-address">Default Address</label>
+                <textarea id="edit-address" name="address" placeholder="Your shipping address"></textarea>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-buttons">
+            <button type="submit" class="save-btn">Save Changes</button>
+            <button type="button" class="cancel-btn" id="cancel-edit">Cancel</button>
+          </div>
+        </form>
+      </div>
+      
+      <!-- Password Change Mode -->
+      <div class="password-edit" id="password-edit">
+        <h2>Change Your Password</h2>
+        <form id="password-form">
+          <div class="form-column">
+            <div class="form-group">
+              <label for="current-password">Current Password</label>
+              <input type="password" id="current-password" name="currentPassword" placeholder="Your current password">
+            </div>
+            
+            <div class="form-group">
+              <label for="new-password">New Password</label>
+              <input type="password" id="new-password" name="newPassword" placeholder="Your new password">
+              <span class="info-text">Password must be at least 8 characters long</span>
+            </div>
+            
+            <div class="form-group">
+              <label for="confirm-password">Confirm New Password</label>
+              <input type="password" id="confirm-password" name="confirmPassword" placeholder="Confirm your new password">
+            </div>
+          </div>
+          
+          <div class="form-buttons">
+            <button type="submit" class="save-btn">Change Password</button>
+            <button type="button" class="cancel-btn" id="cancel-password">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
+  </footer>
+  
+  <script src="../scripts/profile.js"></script>
+</body>
+</html>

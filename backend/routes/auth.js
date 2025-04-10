@@ -3,7 +3,7 @@
 */
 
 const path = require("path");
-const { sendJson, serveFile } = require("../helpers");
+const { sendJson, serveFile}  = require("../helpers");
 const authController = require("../controllers/authController");
 
 async function login(req, res) {
@@ -41,19 +41,9 @@ async function authMe(req, res) {
   }
 }
 
-function serveDashboard(req, res) {
-  let fileToServe = "";
-  if (req.url === "/auth/dashboard/customer") {
-    fileToServe = path.join(__dirname, "../../frontend/pages/dashboard/customer.html");
-  } else {
-    fileToServe = path.join(__dirname, "../../frontend/pages/dashboard/employee.html");
-  }
-  serveFile(res, fileToServe);
-}
 
 module.exports = {
   login,
   register,
   authMe,
-  serveDashboard
 };

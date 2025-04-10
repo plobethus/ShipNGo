@@ -15,8 +15,7 @@ const db = require("mysql2").createPool({
   
   async function getAllPackages(filter) {
     let query = `
-      SELECT p.package_id, p.status, p.location, p.weight, p.dimensions, p.address_from, p.address_to,
-             c1.name AS sender_name
+      SELECT p.package_id, p.status, p.location, p.weight, p.dimensions, p.address_from, p.address_to, c1.name AS sender_name, p.receiver_name AS receiver_name
       FROM packages p
       LEFT JOIN customers c1 ON p.sender_id = c1.customer_id
       WHERE 1=1
@@ -29,10 +28,6 @@ const db = require("mysql2").createPool({
     if (filter.customerName) {
       query += " AND (c1.name LIKE ? OR c2.name LIKE ?)";
       values.push(`%${filter.customerName}%`, `%${filter.customerName}%`);
-    }
-    if (filter.startDate && filter.endDate) {
-      query += " AND p.created_at BETWEEN ? AND ?";
-      values.push(filter.startDate, filter.endDate);
     }
     if (filter.minWeight) {
       query += " AND p.weight >= ?";
@@ -69,15 +64,55 @@ const db = require("mysql2").createPool({
   }
   
   async function getCustomerPackages(customerId) {
-    const [packages] = await db.execute(
-      "SELECT package_id, sender_id, weight, status, address_from, address_to FROM packages WHERE sender_id = ?",
-      [customerId, customerId]
-    );
-    return packages;
+    const query = `
+    SELECT package_id, sender_id, weight, status, address_from, address_to, receiver_name
+    FROM packages
+    WHERE sender_id = ? 
+      OR address_to = (SELECT address FROM customers WHERE customer_id = ?)`
+    ;
+    console.log("customerId in route:", customerId);
+  const [packages] = await db.execute(query, [customerId, customerId]);
+  return packages;
   }
+
+  async function createPackage({
+    sender_id,
+    receiver_name,
+    address_from,
+    address_to,
+    weight,
+    dimensions,
+    shipping_class,
+  
+  }) {
+    const shippingCost = parseFloat((5 + weight * 0.5).toFixed(2)); // Simple cost formula
+  
+    const sql = `
+      INSERT INTO packages
+      (sender_id, receiver_name, weight, dimensions, shipping_class, cost, status, address_from, address_to, location)
+      VALUES (?, ?, ?, ?, ?, ?, 'Pending', ?, ?, ?)
+    `;
+  
+    const values = [
+      sender_id, // Temporary hardcoded sender_id, replace with token-based ID later
+      receiver_name,
+      weight,
+      dimensions,
+      shipping_class.charAt(0).toUpperCase() + shipping_class.slice(1),
+      shippingCost,
+      address_from,
+      address_to,
+      "Origin"
+    ];
+  
+    const [result] = await db.execute(sql, values);
+    return { package_id: result.insertId, cost: shippingCost };
+  }
+  
   
   module.exports = {
     getAllPackages,
     updatePackage,
-    getCustomerPackages
+    getCustomerPackages,
+    createPackage
   };

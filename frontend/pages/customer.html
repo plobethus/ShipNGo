@@ -5,13 +5,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Customer Dashboard - ShipNGo</title>
-  <link rel="stylesheet" href="../styles/customer.css" />
-  <script src="../scripts/dashboard.js" defer></script>
   <link rel="stylesheet" href="../styles/nav.css" />
+  <link rel="stylesheet" href="../styles/customer.css" />
 </head>
 <body>
   <div id="header-include"></div>
-  <script src="/scripts/header.js" defer></script>
+  <script src="../scripts/header.js" defer></script>
+
+  <div class="notification-container">
+    <button class="notification-btn" id="notification-btn" title="Notifications">
+      🔔
+      <span class="notification-count" id="notification-count">0</span>
+    </button>
+  </div>  
 
   <div class="worker_input" id="customer-packages">
     <h2>Your Packages</h2>
@@ -38,7 +44,7 @@
     <footer>
       <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
     </footer>
-    </div>
+  </div>
   <script src="../scripts/customer.js"></script>
 </body>
 </html>

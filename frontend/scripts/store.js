@@ -20,10 +20,16 @@ document.addEventListener("DOMContentLoaded", function () {
       const quantityChange = parseInt(this.dataset.amount, 10);
       const quantitySelect = parentDiv.querySelector("select");
       const quantityMultiplier = parseInt(quantitySelect.value, 10);
-      
+
       updateCart(itemName, itemPrice, quantityChange * quantityMultiplier);
     });
   });
+
+  // Handle checkout
+  const checkoutButton = document.getElementById("checkout-button");
+  if (checkoutButton) {
+    checkoutButton.addEventListener("click", handleCheckout);
+  }
 });
 
 function updateCart(item, price, quantity) {
@@ -41,27 +47,30 @@ function updateCheckout() {
   let totalItems = 0;
   let totalCost = 0;
 
-  // Update specific item quantities and costs
-  
+  const itemMap = {
+    'Envelope': { elementId: 'tot-env', costId: 'env-cost' },
+    'Boxes': { elementId: 'tot-box', costId: 'box-cost' },
+    'Tape': { elementId: 'tot-tape', costId: 'tape-cost' },
+    'Stamps': { elementId: 'tot-stamp', costId: 'stamp-cost' },
+    'Label': { elementId: 'tot-label', costId: 'label-cost' }
+  };
 
-  // Reset all item-specific quantities and costs
   for (const key in itemMap) {
     document.getElementById(itemMap[key].elementId).textContent = '0';
     document.getElementById(itemMap[key].costId).textContent = '0.00';
   }
 
-  // Update cart with specific item quantities and costs
   for (const item in cart) {
     if (cart[item].quantity > 0) {
       const itemDetails = itemMap[item];
       if (itemDetails) {
         const itemQuantity = cart[item].quantity;
         const itemCost = (itemQuantity * cart[item].price).toFixed(2);
-        
+
         document.getElementById(itemDetails.elementId).textContent = itemQuantity;
         document.getElementById(itemDetails.costId).textContent = itemCost;
       }
-      
+
       totalItems += cart[item].quantity;
       totalCost += cart[item].quantity * cart[item].price;
     }
@@ -77,15 +86,16 @@ function checkout(){
 
   for (const item in cart) {
     items.push({category:item, quantity:cart[item].quantity})
-    cart[item].quantity = 0;
-    
-    delete cart[item];
+  
   };
 
-  
-  console.log(items);
-  
-  fetch('/checkout', {
+  if (items.length === 0) {
+    alert("Your cart is empty.");
+    return;
+  }
+
+  try{
+  const response = fetch('/checkout', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -95,5 +105,19 @@ function checkout(){
 
 
 
+  const result = await response.json();
+
+    if (response.ok) {
+      alert("Purchase successful!");
+      cart = {};
+    } else {
+      alert(`Purchase failed: ${result.error}`);
+    }
+  } catch (err) {
+    alert(`An error occurred: ${err.message}`);
+  }
+
   updateCheckout();
+
+
 }

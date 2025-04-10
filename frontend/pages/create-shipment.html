@@ -10,6 +10,12 @@
 </head>
 <body>
   <div id="header-include"></div>
+  <div class="notification-container">
+    <button class="notification-btn" id="notification-btn" title="Notifications">
+      🔔
+      <span class="notification-count" id="notification-count">0</span>
+    </button>
+  </div>
   <script src="/scripts/header.js" defer></script>
 
   <div class="shipment-container">
@@ -21,7 +27,7 @@
             <input style="width:90%" type="text" id="sender-Lname" name="sender-Lname" placeholder="Sender Last Name (Smith)" required />
         </div>
         <div style="display:flex; flex-direction:row; gap:24px;margin-bottom:25px;">
-            <input type="text" id="sender-address" name="sender-address" placeholder="Address (11111 Apple St.)" required />
+            <input type="text" id="sender-street" name="sender-street" placeholder="Street (11111 Apple St.)" required />
             <input type="text" id="sender-city" name="sender-city" placeholder="City (Houston)" required />
             <input type="text" id="sender-state" name="sender-state" placeholder="State (TX)" required />
             <input type="text" id="sender-zipcode" name="sender-zipcode" placeholder="Zipcode (22222)" required />
@@ -31,14 +37,14 @@
             <input style="width:90%" type="text" id="receiver-Lname" name="receiver-Lname" placeholder="Recipient Last Name (Doe)" required />
         </div>
         <div style="display:flex; flex-direction:row; gap:24px;margin-bottom:25px;">
-            <input type="text" id="receiver-address" name="receiver-address" placeholder="Address (11111 Apple St.)" required />
+            <input type="text" id="receiver-street" name="receiver-street" placeholder="Street (11111 Apple St.)" required />
             <input type="text" id="receiver-city" name="receiver-city" placeholder="City (Houston)" required />
             <input type="text" id="receiver-state" name="receiver-state" placeholder="State (TX)" required />
-            <input type="text" id="reciever-zipcode" name="receiver-zipcode" placeholder="Zipcode (22222)" required />
+            <input type="text" id="receiver-zipcode" name="receiver-zipcode" placeholder="Zipcode (22222)" required />
         </div>
         <input type="number" id="package-weight" name="package-weight" placeholder="Package Weight (lbs)" required />
         <select id="shipping-option" name="shipping-option" required>
-          <option value="">Shipping Option</option>
+          <option id = "shipping-option"value="">Shipping Option</option>
           <option value="standard">Standard (5-7 Days)</option>
           <option value="express">Express (2-3 Days)</option>
           <option value="overnight">Overnight</option>

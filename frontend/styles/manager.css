@@ -1,0 +1,54 @@
+.manager-container{
+    display:flex;
+    flex-direction:column;
+    margin:64px 0px;
+    gap:64px;
+
+}
+
+.container{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:8px;
+    width:80%;
+    margin:0 auto;
+    border-radius:15px;
+    background-color: #004080;
+}
+
+.total-container{
+    width:90%; 
+    height:60%; 
+    margin:32px; 
+    border-radius: 15px;
+    background:rgba(255, 255, 255, 0.2);
+}
+
+#complaint-container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    width:98%;
+    margin-top:16px;
+    background:rgba(255, 255, 255, 0.2);
+    color:white;
+    border-radius:15px;
+    border-collapse: collapse;
+}
+
+table{
+    text-align:center;
+}
+
+th, td {
+    border: 1px solid white;
+    padding:4px;
+    margin: 0px auto;
+  }
+
+.title{
+    color:white;
+    font-size:28px;
+}
+
