@@ -16,6 +16,23 @@
       <span class="notification-count" id="notification-count">0</span>
     </button>
   </div>
+
+  <div id="shipmentModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button" id="closeModal">&times;</span>
+      <h3>📦 Shipment Created!</h3>
+      <div id="modal-shipment-details"></div>
+    </div>
+  </div>
+
+  <!-- Price Modal -->
+  <div id="priceModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button" id="closePriceModal">&times;</span>
+      <div id="price-summary"></div>
+      <button id="confirmShipmentBtn" class="btn"></button>
+    </div>
+  </div>
   <script src="/scripts/header.js" defer></script>
 
   <div class="shipment-container">

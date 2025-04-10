@@ -65,7 +65,22 @@ async function createShipment(req, res) {
     const senderId = req.tokenData.customer_id;
     const result = await packageController.createPackage({ ...body, sender_id: senderId });
 
-    sendJson(res, 201, { message: "Shipment created", ...result });
+    sendJson(res, 201, { 
+      message: "Shipment created",
+      package: {
+        package_id: result.package_id,
+        sender_name: body.sender_name,
+        receiver_name: body.receiver_name,
+        address_from: body.address_from,
+        address_to: body.address_to,
+        weight: body.weight,
+        shipping_class: body.shipping_class,
+        cost: result.cost,
+        status: "Pending",
+        location: body.address_to
+      }
+    });
+    
   } catch (err) {
     console.error("Error creating shipment:", err);
     sendJson(res, 500, { message: "Failed to create shipment", error: err.message });

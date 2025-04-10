@@ -1,5 +1,3 @@
-console.log("📦 shipment.js loaded");
-
 document.querySelector(".shipment-form").addEventListener("submit", async function (event) {
   event.preventDefault();
   console.log("🚀 Submit button clicked!");
@@ -20,6 +18,12 @@ document.querySelector(".shipment-form").addEventListener("submit", async functi
 
   const weight = parseFloat(document.getElementById("package-weight").value.trim());
   const shippingOption = document.getElementById("shipping-option").value.trim();
+  
+  //set eta 
+  let eta = "5-7 Days";
+  if (shippingOption === "express") eta = "2-3 Days";
+  else if (shippingOption === "overnight") eta = "1 Day";
+
   const specialInstructions = document.getElementById("special").value.trim();
 
   if (
@@ -31,6 +35,17 @@ document.querySelector(".shipment-form").addEventListener("submit", async functi
     return;
   }
 
+  let baseCost = 5 + weight * 0.5;
+  let multiplier = 1;
+
+  if (shippingOption === "express") {
+    multiplier = 1.2;
+  } else if (shippingOption === "overnight") {
+    multiplier = 1.5;
+  }
+  const cost = (baseCost * multiplier).toFixed(2);
+
+
   const shipmentData = {
     sender_name: `${senderFirstName} ${senderLastName}`,
     receiver_name: `${receiverFirstName} ${receiverLastName}`,
@@ -39,9 +54,29 @@ document.querySelector(".shipment-form").addEventListener("submit", async functi
     weight,
     dimensions: "10x10x10", // Optional, placeholder for now
     shipping_class: shippingOption,
-    instructions: specialInstructions
+    instructions: specialInstructions,
+    cost
   };
 
+  // 💸 Show price modal first
+  document.getElementById("price-summary").innerHTML = `
+    <p><strong>Sender:</strong> ${shipmentData.sender_name}</p>
+    <p><strong>Receiver:</strong> ${shipmentData.receiver_name}</p>
+    <p><strong>Shipping:</strong> ${shippingOption.toUpperCase()}</p>
+    <p><strong>Weight:</strong> ${weight} lbs</p>
+    <p><strong>Total Cost:</strong> <strong style="color:#2ecc71;">$${cost}</strong></p>
+  `;
+
+  const confirmBtn = document.getElementById("confirmShipmentBtn");
+  confirmBtn.textContent = `Proceed to Checkout ($${cost})`;
+
+  // Show price modal
+  document.getElementById("priceModal").style.display = "block";
+
+  // 🟢 Add event listener to the "Proceed" button
+  confirmBtn.onclick = async () => {
+    document.getElementById("priceModal").style.display = "none";
+  
   try {
     const response = await fetch("/shipment", {
       method: "POST",
@@ -53,13 +88,59 @@ document.querySelector(".shipment-form").addEventListener("submit", async functi
 
     const data = await response.json();
     if (response.ok) {
-      alert("Shipment created successfully!");
-      console.log("Server Response:", data);
-    } else {
+      const result = data.package;
+    
+      const modalContent = `
+        <div class="shipment-card">
+          <h3>📦 Shipment Details</h3>
+          <ul>
+            <li><strong>Package ID:</strong> ${result.package_id}</li>
+            <li><strong>Sender:</strong> ${result.sender_name}</li>
+            <li><strong>Receiver:</strong> ${result.receiver_name}</li>
+            <li><strong>From:</strong> ${result.address_from}</li>
+            <li><strong>To:</strong> ${result.address_to}</li>
+            <li><strong>Weight:</strong> ${result.weight} lbs</li>
+            <li><strong>Shipping Class:</strong> ${result.shipping_class}</li>
+            <li><strong>Estimated Delivery:</strong> ${eta}</li>
+            <li><strong>Cost:</strong> $${result.cost}</li>
+            <li><strong>Status:</strong> ${result.status}</li>
+            <li><strong>Location:</strong> ${result.location}</li>
+          </ul>
+        </div>
+      `;
+    
+      //document.getElementById("shipment-result").innerHTML = output;
+      document.getElementById("modal-shipment-details").innerHTML = modalContent;
+      document.getElementById("shipmentModal").style.display = "block";
+      document.querySelector(".shipment-form").reset();
+     } else {
       alert(data.message || "Failed to create shipment.");
-    }
-  } catch (err) {
-    console.error("Error:", err);
-    alert("Network error. Try again later.");
+     }
+
+   } catch (err) {
+     console.error("🚨 Error submitting shipment:", err);
+     alert("An error occurred while submitting the shipment.");
+   }
+ };
+});
+
+  document.getElementById("closePriceModal").addEventListener("click", () => {
+  document.getElementById("priceModal").style.display = "none"; 
+});
+
+window.addEventListener("click", (e) => {
+  if (e.target === document.getElementById("priceModal")) {
+    document.getElementById("priceModal").style.display = "none";
+  }
+});
+
+
+document.getElementById("closeModal").addEventListener("click", () => {
+  document.getElementById("shipmentModal").style.display = "none";
+});
+
+window.addEventListener("click", (e) => {
+  if (e.target === document.getElementById("shipmentModal")) {
+    document.getElementById("shipmentModal").style.display = "none";
   }
 });

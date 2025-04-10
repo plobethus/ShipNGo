@@ -102,7 +102,7 @@ const db = require("mysql2").createPool({
       shippingCost,
       address_from,
       address_to,
-      "Origin"
+      address_to
     ];
   
     const [result] = await db.execute(sql, values);
