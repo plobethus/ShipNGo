@@ -105,7 +105,7 @@ function checkout(){
 
 
 
-  const result = await response.json();
+  const result = response.json();
 
     if (response.ok) {
       alert("Purchase successful!");
