@@ -4,7 +4,8 @@
 
 const { sendJson } = require("../helpers");
 const { getAllClaims } = require("../controllers/managerController");
-
+const { getSumTransactions } = require("../controllers/managerController")
+ 
 async function fetchAllClaims(req, res) {
   try {
     const claims = await getAllClaims();
@@ -14,14 +15,16 @@ async function fetchAllClaims(req, res) {
   }
 }
 
-// async function fetchSum();
-//     try{
-//         const sum = await getSumTransactions();
-//         sendJson(res,200,sum);
-//     } catch(err){
-//         sendJson(res,500,{ error: err.message});
-//     }
+async function fetchSum(req, res){
+    try{
+        const sum = await getSumTransactions();
+        sendJson(res,200,sum);
+    } catch(err){
+        sendJson(res,500,{ error: err.message});
+    }
+}
 
 module.exports = {
-  fetchAllClaims
+  fetchAllClaims,
+  fetchSum
 };

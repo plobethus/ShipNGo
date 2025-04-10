@@ -17,7 +17,11 @@
     background-color: #004080;
 }
 
-.total-container{
+#total-container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:24px;
     width:90%; 
     height:60%; 
     margin:32px; 
