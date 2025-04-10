@@ -206,8 +206,11 @@ else if (pathname.startsWith("/api/profile")) {
         if (req.method === "GET" && pathname === "/api/claims/") {
           await managerRoutes.fetchAllClaims(req, res);
           return;
-        }
-      }
+    }   else if (req.method === "GET" && pathname === "/api/claims/sum") {
+            await managerRoutes.fetchSum(req,res);
+            return;
+    }
+}
 
     // If no protected route matched, attempt to serve a static file from the frontend folder.
     else {

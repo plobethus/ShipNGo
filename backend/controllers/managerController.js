@@ -19,10 +19,11 @@ const db = require("mysql2").createPool({
   }
 
   async function getSumTransactions(){
-    const sum = await db.query("Select SUM(total_cost) FROM supplytransactions")
-    return sum;
+    const [rows] = await db.query("SELECT SUM(total_cost) AS total_sum FROM supplytransactions");
+    return rows;
   }
   
   module.exports = {
-    getAllClaims
+    getAllClaims,
+    getSumTransactions
   };
