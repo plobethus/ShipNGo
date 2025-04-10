@@ -22,8 +22,8 @@ async function getTracking(req, res, trackingId) {
 async function updateTracking(req, res) {
   try {
     const body = await readJsonBody(req);
-    const { package_id, warehouse_location, post_office_location, status, route_id, date } = body;
-    await trackingController.updateTracking(package_id, warehouse_location, post_office_location, date, status, route_id);
+    const { package_id, warehouse_location, post_office_location, status, date } = body;
+    await trackingController.updateTracking(package_id, warehouse_location, post_office_location, date, status,);
     sendJson(res, 200, { message: "Tracking updated successfully" });
   } catch (err) {
     sendJson(res, 500, { message: err.message });

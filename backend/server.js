@@ -20,6 +20,8 @@ const deliverpointsRoutes = require("./routes/deliverpoints");
 const packageRoutes = require("./routes/packageRoutes");
 const shipmentRoutes = require("./routes/shipment");
 const trackingRoutes = require("./routes/tracking");
+const shopRoutes = require("./routes/shop");
+
 
 const driverRoutes = require("./routes/drivers")
 
@@ -40,7 +42,7 @@ const server = http.createServer(async (req, res) => {
       } else if (req.method === "POST" && pathname === "/tracking") {
         await trackingRoutes.updateTracking(req, res);
         return;
-      }
+      } 
     }
     // Auth endpoints are public (login, register, auth/me)
     else if (pathname.startsWith("/auth")) {
@@ -136,6 +138,12 @@ const server = http.createServer(async (req, res) => {
         const parts = pathname.split("/");
         const id = parts[2];
         await shipmentRoutes.getShipmentById(req, res, id);
+        return;
+      }
+    }
+    else if (pathname.startsWith("/checkout")) {
+      if (req.method === "POST" && pathname === "/checkout") {
+        await shopRoutes.checkout(req, res);
         return;
       }
     }

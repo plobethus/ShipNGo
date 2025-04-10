@@ -34,8 +34,9 @@
                 </div>
             </div> 
 
+            
        <div class="store_item" data-name="Box" data-price="1.99">
-         <div>Boxes ($1.99 each) 📦</div>
+         <div>Box ($1.99 each) 📦</div>
          <div class="price">
            <button class="cart" data-amount="1">Add</button>
            <button class="cart" data-amount="-1">Remove</button>
@@ -74,7 +75,7 @@
         </div>
 
         <div class="store_item" data-name="Box" data-price="1.99">
-            <div>Label ($1.99 each) 🏷</div>
+            <div>Labels ($1.99 each) 🏷</div>
             <div class="price">
               <button class="cart" data-amount="1">Add</button>
               <button class="cart" data-amount="-1">Remove</button>
@@ -105,8 +106,9 @@
                 <div>Cost: $<span id="env-cost">0.00</span></div>
             </div>
        </div>
+      
 
-       <div id="num-boxes" class="store_item">
+       <div id="num-box" class="store_item">
             <div>Boxes 📦</div>
             <div style="display:flex; flex-direction:row; gap:20px;">
                 <div>Items: <span id="tot-box">0</span></div>
@@ -114,7 +116,7 @@
             </div>
         </div>
 
-        <div id="num-tapes" class="store_item">
+        <div id="num-tape" class="store_item">
             <div>Tape 🧻</div>
             <div style="display:flex; flex-direction:row; gap:20px;">
                 <div>Items: <span id="tot-tape">0</span></div>
@@ -122,7 +124,7 @@
             </div>
         </div>
 
-        <div id="num-stamps" class="store_item">
+        <div id="num-stamp" class="store_item">
             <div>Stamps 🏴󠁧󠁢󠁳󠁣󠁴󠁿</div>
             <div style="display:flex; flex-direction:row; gap:20px;">
                 <div>Items: <span id="tot-stamp">0</span></div>
@@ -137,6 +139,11 @@
                 <div>Cost: $<span id="label-cost">0.00</span></div>
             </div>
         </div>
+        </div>
+
+
+        <div style="margin-top: 20px; text-align: center;">
+          <button onclick="checkout()" style="padding: 10px 20px; font-size: 16px;">Checkout</button>
         </div>
 
      </div>
