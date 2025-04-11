@@ -89,15 +89,28 @@ document.querySelector(".shipment-form").addEventListener("submit", async functi
     const data = await response.json();
     if (response.ok) {
       const result = data.package;
+      
       const discount = data.discount_applied;
-      let discountMsg = " ";
+      const nextDiscount = data.next_discount_unlocked;
+      let costDisplay = `<li><strong>Total Cost:</strong> <strong style="color:#2ecc71;">$${result.cost}</strong></li>`;
 
-      if (discount){
-        const notificationCount = document.getElementById("notification-count");
-        notificationCount.textContent = "1";
-        notificationCount.style.display = "inline-block";
-        discountMsg = `<p style="color:green;"><strong>🎉 You’ve unlocked a 10% discount on your next shipment!</strong></p>`;
-      }
+      let discountMsg = "";
+
+    if (discount >= 10) {
+      const originalCost = (result.cost / 0.9).toFixed(2); // reverse-calculate original price
+      discountMsg += `<p style="color:green;"><strong>✅ You just received a 10% discount!</strong></p>`;
+      costDisplay = `
+       <li><strong>Original Cost:</strong> <s style="color:red;">$${originalCost}</s></li>
+       <li><strong>Discounted Cost:</strong> <strong style="color:#2ecc71;">$${result.cost}</strong></li>
+      `;
+    }
+
+    if (nextDiscount) {
+      const notificationCount = document.getElementById("notification-count");
+      notificationCount.textContent = "1";
+      notificationCount.style.display = "inline-block";
+      discountMsg += `<p style="color:blue;"><strong>🎁 You’ve unlocked a 10% discount on your next shipment!</strong></p>`;
+    }
   
       const modalContent = `
         <div class="shipment-card">
@@ -111,7 +124,7 @@ document.querySelector(".shipment-form").addEventListener("submit", async functi
             <li><strong>Weight:</strong> ${result.weight} lbs</li>
             <li><strong>Shipping Class:</strong> ${result.shipping_class}</li>
             <li><strong>Estimated Delivery:</strong> ${eta}</li>
-            <li><strong>Cost:</strong> $${result.cost}</li>
+            ${costDisplay}
             <li><strong>Status:</strong> ${result.status}</li>
             <li><strong>Location:</strong> ${result.location}</li>
           </ul>

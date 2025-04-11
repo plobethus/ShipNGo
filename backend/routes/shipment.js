@@ -20,15 +20,34 @@ async function createShipment(req, res) {
   try {
     const body = await readJsonBody(req);
     const senderId = req.tokenData.customer_id;
+
+    let baseCost = 5 + body.weight * 0.5;
+    let multiplier = 1;
+    if (body.shipping_class === "express") multiplier = 1.2;
+    else if (body.shipping_class === "overnight") multiplier = 1.5;
+    
+    let cost = baseCost * multiplier;
+    cost = parseFloat(cost.toFixed(2));
+    body.cost = cost;
     
     const result = await packageController.createPackage({ ...body, sender_id: senderId });
 
-    const [rows] = await db.query(
-      "SELECT discount_percentage FROM customers WHERE customer_id = ?",
+    // STEP 3: Re-check customer data after trigger runs
+    const [updatedRows] = await db.query(
+      "SELECT discount_percentage, package_count FROM customers WHERE customer_id = ?",
       [senderId]
     );
-    const discount = rows[0]?.discount_percentage || 0;
+    const discount = updatedRows[0]?.discount_percentage || 0;
+    const updatedCount = updatedRows[0]?.package_count || 0;
 
+    // STEP 4: Apply discount if active
+    if (discount >= 10) {
+      cost = parseFloat((cost * 0.9).toFixed(2));
+      await db.query("UPDATE customers SET discount_percentage = 0 WHERE customer_id = ?", [senderId]);
+    }
+
+    const nextDiscountUnlocked = (updatedCount % 3 === 2);
+ 
     sendJson(res, 201, { 
       message: "Shipment created",
       package: {
@@ -39,11 +58,13 @@ async function createShipment(req, res) {
         address_to: body.address_to,
         weight: body.weight,
         shipping_class: body.shipping_class,
-        cost: result.cost,
+        cost,
         status: "Pending",
         location: body.address_to
       },
-      discount_applied: discount
+      discount_applied: discount,
+      next_discount_unlocked: nextDiscountUnlocked
+
     });
     
   } catch (err) {
