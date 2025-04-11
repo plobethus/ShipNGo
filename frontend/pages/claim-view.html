@@ -1,30 +1,57 @@
-<!-- /ShipNGo/frontend/pages/route_manage.html -->
+<!-- /ShipNGo/frontend/pages/login.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tracking - ShipNGo</title>
-  <link rel="stylesheet" href="../styles/styles.css" />
-  <link rel="stylesheet" href="../styles/nav.css"/>
-  <link rel="stylesheet" href="../styles/routes.css"/>
+  <title>Login - ShipNGo</title>
+  <link rel="stylesheet" href="../styles/managerclaims.css"/>
+  <link rel="stylesheet" href="../styles/styles.css">
+  <link rel="stylesheet" href="../styles/nav.css" />
 </head>
 <body>
   <div id="header-include"></div>
   <script src="/scripts/header.js" defer></script>
 
-  
-<div>
-  <section id="services" class="services">
-    <h3>Our Services</h3>
-    <p>We provide local and international shipping, express delivery, and secure parcel handling.</p>
-  </section>
-  
-  <footer>
-    <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
-  </footer>
+    <div class = "manager-container">
+        
+        <div class="container">
+            <h2 style="color:white;">Customer Claims</h2>
+            <div id="complaint-container">
+                <!-- Stores all of the claim tickets and displays them to the manager-->
+                <table>
+                    <thead>
+                      <tr>
+                        <th>Ticket ID</th>
+                        <th>Issue Type</th>
+                        <th>Processed Date</th>
+                        <th>Phone Number</th>
+                        <th>Email</th>
+                        <th>Reason</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Customer ID</th>
+                        <th>Refund Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="complaint-table"></tbody>
+                  </table>
+            </div>
+        </div>
     </div>
-</div>
 
+
+  <div>
+    <section id="services" class="services">
+      <h3>Our Services</h3>
+      <p>We provide local and international shipping, express delivery, and secure parcel handling.</p>
+    </section>
+    
+    <footer>
+      <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
+    </footer>
+      </div>
+
+  <script src="../scripts/manager.js"></script>
 </body>
 </html>

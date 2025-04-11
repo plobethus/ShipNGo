@@ -6,11 +6,12 @@ document.getElementById("support-form").addEventListener("submit", async functio
   const lastName = document.getElementById("last-name").value.trim();
   const email = document.getElementById("email").value.trim();
   const phone = document.getElementById("phone").value.trim();
+  const package_id = document.getElementById("package-id").value.trim();
   const claimType = document.getElementById("claim-type").value;
   const issue = document.getElementById("issue").value.trim(); // stored as 'reason' in the DB
 
   if (!firstName || !lastName || !email || !phone || !claimType || !issue) {
-    alert("Please fill in all fields.");
+    alert("Please fill in all required fields.");
     return;
   }
 
@@ -22,6 +23,7 @@ document.getElementById("support-form").addEventListener("submit", async functio
   console.log("lastName:", lastName);
   console.log("email:", email);
   console.log("phone:", phone);
+  console.log("package_id:", package_id);
   console.log("claimType:", claimType);
   console.log("issue:", issue);
   console.log("======================================");
@@ -35,7 +37,8 @@ document.getElementById("support-form").addEventListener("submit", async functio
         lastName,
         name,
         email, 
-        phone, 
+        phone,
+        package_id, // Added package ID
         claimType,
         reason: issue 
       })
@@ -104,7 +107,7 @@ async function loadSupportTickets() {
   const ticketList = document.getElementById("ticket-list");
   
   // Display loading state
-  ticketList.innerHTML = "<tr><td colspan='3'>Loading tickets...</td></tr>";
+  ticketList.innerHTML = "<tr><td colspan='4'>Loading tickets...</td></tr>";
 
   try {
     const response = await fetch("/claims");
@@ -112,7 +115,7 @@ async function loadSupportTickets() {
     console.log("Ticket data received:", data);
 
     if (!response.ok) {
-      ticketList.innerHTML = `<tr><td colspan="3">${data.message || "Error loading tickets."}</td></tr>`;
+      ticketList.innerHTML = `<tr><td colspan="4">${data.message || "Error loading tickets."}</td></tr>`;
       return;
     }
 
@@ -120,7 +123,7 @@ async function loadSupportTickets() {
     ticketList.innerHTML = "";
     
     if (!data.claims || data.claims.length === 0) {
-      ticketList.innerHTML = "<tr class='empty-row'><td colspan='3'>No support tickets yet.</td></tr>";
+      ticketList.innerHTML = "<tr class='empty-row'><td colspan='4'>No support tickets yet.</td></tr>";
       // Update statistics with zeros
       updateStatistics([]);
       return;
@@ -141,7 +144,7 @@ async function loadSupportTickets() {
     filterTickets();
   } catch (error) {
     console.error("Error loading tickets:", error);
-    ticketList.innerHTML = "<tr><td colspan='3'>Error loading tickets.</td></tr>";
+    ticketList.innerHTML = "<tr><td colspan='4'>Error loading tickets.</td></tr>";
     // Update statistics with zeros in case of error
     updateStatistics([]);
   }
@@ -253,7 +256,7 @@ function filterTickets() {
   
   // Display filtered tickets or empty state
   if (filteredTickets.length === 0) {
-    ticketList.innerHTML = "<tr class='empty-row'><td colspan='3'>No tickets match your filter criteria.</td></tr>";
+    ticketList.innerHTML = "<tr class='empty-row'><td colspan='4'>No tickets match your filter criteria.</td></tr>";
   } else {
     displayTickets(filteredTickets);
   }
@@ -275,6 +278,10 @@ function displayTickets(tickets) {
     const typeCell = document.createElement("td");
     typeCell.textContent = formatClaimType(claim.issue_type);
     
+    // Format package ID cell
+    const packageIdCell = document.createElement("td");
+    packageIdCell.textContent = claim.package_id || "N/A";
+    
     // Format status cell
     const statusCell = document.createElement("td");
     statusCell.textContent = claim.refund_status || "N/A";
@@ -290,6 +297,7 @@ function displayTickets(tickets) {
     // Append cells to row
     tr.appendChild(dateCell);
     tr.appendChild(typeCell);
+    tr.appendChild(packageIdCell);
     tr.appendChild(statusCell);
     
     // Append row to table
@@ -322,6 +330,7 @@ function showTicketDetails(claim) {
       <p><strong>Customer:</strong> ${fullName}</p>
       <p><strong>Email:</strong> ${claim.email || "N/A"}</p>
       <p><strong>Phone:</strong> ${claim.phone_number || "N/A"}</p>
+      <p><strong>Package ID:</strong> ${claim.package_id || "N/A"}</p>
       <p><strong>Claim Type:</strong> ${formatClaimType(claim.issue_type)}</p>
       <p><strong>Status:</strong> ${claim.refund_status || "N/A"}</p>
       <p><strong>Processed Date:</strong> ${formatDate(claim.processed_date)}</p>
