@@ -1,13 +1,5 @@
-const db = require("mysql2").createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
-    ssl: { rejectUnauthorized: true },
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-}).promise();
+//ShipNGo/backend/controllers/shopController
+const db = require("../db"); 
 
 //Items being {category:str, quantity:int}, category can be enum('Envelope','Box','Tape','Stamps','Labels')
 async function performCheckout(user, items){

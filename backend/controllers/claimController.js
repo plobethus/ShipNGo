@@ -1,18 +1,6 @@
-/*
-* /ShipNGo/backend/controllers/claimController.js
-* Updated to handle package_id field and complete bypass of customersupport table
-*/
+//ShipNGo/backend/controllers/claimController.js
 
-const db = require("mysql2").createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
-  ssl: { rejectUnauthorized: true },
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-}).promise();
+const db = require("../db"); 
 
 // Set MySQL session time zone to Central Time (CST/CDT)
 (async () => {
