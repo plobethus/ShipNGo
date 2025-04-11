@@ -23,6 +23,7 @@
         </div>
         <input type="email" id="email" placeholder="Email" required />
         <input type="text" id="phone" placeholder="Phone Number" required />
+        <input type="number" id="package-id" placeholder="Package ID (if applicable)" />
         <select id="claim-type" required>
           <option value="" disabled selected>Select Claim Type</option>
           <option value="Delayed">Delayed Delivery</option>
@@ -97,12 +98,13 @@
           <tr>
             <th>Date</th>
             <th>Type</th>
+            <th>Package ID</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody id="ticket-list">
           <tr class="empty-row">
-            <td colspan="3">No support tickets yet.</td>
+            <td colspan="4">No support tickets yet.</td>
           </tr>
         </tbody>
       </table>
