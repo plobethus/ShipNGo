@@ -1,5 +1,15 @@
 let cart = {};
 
+const itemMap = {
+  'Envelope': { elementId: 'tot-env', costId: 'env-cost' },
+  'Box': { elementId: 'tot-box', costId: 'box-cost' },
+  'Tape': { elementId: 'tot-tape', costId: 'tape-cost' },
+  'Stamps': { elementId: 'tot-stamp', costId: 'stamp-cost' },
+  'Labels': { elementId: 'tot-label', costId: 'label-cost' }
+};
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
   const buttons = document.querySelectorAll(".cart");
   buttons.forEach(button => {
@@ -70,43 +80,40 @@ function updateCheckout() {
   document.getElementById("total-cost").textContent = totalCost.toFixed(2);
 }
 
-async function handleCheckout() {
-  const itemsToPurchase = [];
+function checkout(){
+  let items = []
 
-  for (const itemName in cart) {
-    const { quantity } = cart[itemName];
-    if (quantity > 0) {
-      itemsToPurchase.push({
-        name: itemName,
-        quantity: quantity
-      });
-    }
-  }
 
-  if (itemsToPurchase.length === 0) {
+  for (const item in cart) {
+    items.push({category:item, quantity:cart[item].quantity})
+  
+  };
+
+  if (items.length === 0) {
     alert("Your cart is empty.");
     return;
   }
 
-  try {
-    const response = await fetch("/purchase", {
-      method: "POST",
+  try{
+    fetch('/checkout', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(itemsToPurchase)
+      body: JSON.stringify({ items })
+    }).then(res => {
+      if (res.status == 200) {
+        alert("Purchase successful!");
+        cart = {};
+      } 
+    }).catch(err => {
+      alert(`Purchase failed: ${err}`);
     });
-
-    const result = await response.json();
-
-    if (response.ok) {
-      alert("Purchase successful!");
-      cart = {};
-      updateCheckout();
-    } else {
-      alert(`Purchase failed: ${result.error}`);
-    }
   } catch (err) {
-    alert(`An error occurred: ${err.message}`);
+    alert(`An error occurred...`);
   }
+
+  updateCheckout();
+
+
 }

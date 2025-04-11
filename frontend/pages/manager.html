@@ -8,45 +8,41 @@
   <link rel="stylesheet" href="../styles/manager.css"/>
   <link rel="stylesheet" href="../styles/styles.css">
   <link rel="stylesheet" href="../styles/nav.css" />
+  <style>
+    .welcome-box {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #004080;
+      color: white;
+      width: 60%;
+      margin: 32px auto;
+      padding: 40px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    .welcome-box h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    
+    .welcome-box p {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+    }
+  </style>
 </head>
 <body>
   <div id="header-include"></div>
   <script src="/scripts/header.js" defer></script>
 
-    <div class = "manager-container">
-        <div class="container">
-            <h2 style="color:white">Total Revenues</h2>
-
-            <!-- Stores the total revenue -->
-            <div class="total-container">  
-            </div>
-        </div>
-
-        <div class="container">
-            <h2 style="color:white;">Customer Claims</h2>
-            <div id="complaint-container">
-                <!-- Stores all of the claim tickets and displays them to the manager-->
-                <table>
-                    <thead>
-                      <tr>
-                        <th>Ticket ID</th>
-                        <th>Issue Type</th>
-                        <th>Processed Date</th>
-                        <th>Phone Number</th>
-                        <th>Email</th>
-                        <th>Reason</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Customer ID</th>
-                        <th>Refund Status</th>
-                      </tr>
-                    </thead>
-                    <tbody id="complaint-table"></tbody>
-                  </table>
-            </div>
-        </div>
-    </div>
-
+  <div class="welcome-box">
+    <h1>Welcome Manager!</h1>
+    <p>Access your shipping management dashboard and tools here.</p>
+  </div>
 
   <div>
     <section id="services" class="services">
@@ -57,7 +53,7 @@
     <footer>
       <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
     </footer>
-      </div>
+  </div>
 
   <script src="../scripts/manager.js"></script>
 </body>
