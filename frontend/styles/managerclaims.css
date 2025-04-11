@@ -1,58 +1,191 @@
-.manager-container{
-    display:flex;
-    flex-direction:column;
-    margin:64px 0px;
-    gap:64px;
+/* ShipNGo/frontend/styles/managerclaims.css */
 
-}
-
-.container{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding:8px;
-    width:80%;
-    margin:0 auto;
-    border-radius:15px;
-    background-color: #004080;
-}
-
-#total-container{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:24px;
-    width:90%; 
-    height:60%; 
-    margin:32px; 
-    border-radius: 15px;
-    background:rgba(255, 255, 255, 0.2);
-}
-
-#complaint-container{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    width:98%;
-    margin-top:16px;
-    background:rgba(255, 255, 255, 0.2);
-    color:white;
-    border-radius:15px;
-    border-collapse: collapse;
-}
-
-table{
-    text-align:center;
-}
-
-th, td {
-    border: 1px solid white;
-    padding:4px;
-    margin: 0px auto;
+.manager-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    background-color: #f4f7fa;
+    min-height: 100vh;
   }
-
-.title{
-    color:white;
-    font-size:28px;
-}
-
+  
+  .container {
+    background-color: #0a4275;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .container h2 {
+    margin-top: 0;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  #complaint-container {
+    background-color: #fff;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  
+  /* Tab Styles */
+  .tab-container {
+    display: flex;
+    border-bottom: 2px solid #0a4275;
+    margin-bottom: 20px;
+  }
+  
+  .tab {
+    padding: 12px 24px;
+    background-color: #e6eef5;
+    color: #0a4275;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 8px 8px 0 0;
+    margin-right: 4px;
+    transition: all 0.3s ease;
+  }
+  
+  .tab:hover {
+    background-color: #ccddf1;
+  }
+  
+  .tab.active {
+    background-color: #0a4275;
+    color: white;
+  }
+  
+  .tab-content {
+    display: none;
+  }
+  
+  .tab-content.active {
+    display: block;
+  }
+  
+  /* Table Styles */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+  
+  thead {
+    background-color: #0a4275;
+    color: white;
+  }
+  
+  th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  tbody tr:hover {
+    background-color: #f1f5fb;
+  }
+  
+  /* Action Buttons */
+  .action-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    margin-right: 5px;
+  }
+  
+  .approve-btn {
+    background-color: #2ecc71;
+    color: white;
+  }
+  
+  .approve-btn:hover {
+    background-color: #27ae60;
+  }
+  
+  .reject-btn {
+    background-color: #e74c3c;
+    color: white;
+  }
+  
+  .reject-btn:hover {
+    background-color: #c0392b;
+  }
+  
+  /* Notification Styles */
+  .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 4px;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    animation: slideIn 0.3s ease-out forwards;
+  }
+  
+  .success {
+    background-color: #2ecc71;
+  }
+  
+  .error {
+    background-color: #e74c3c;
+  }
+  
+  @keyframes slideIn {
+    0% {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  /* Empty state */
+  .no-data {
+    text-align: center;
+    padding: 30px;
+    color: #777;
+    font-style: italic;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 1024px) {
+    table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    
+    .tab {
+      padding: 10px 16px;
+      font-size: 14px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .manager-container {
+      padding: 10px;
+    }
+    
+    .tab-container {
+      flex-wrap: wrap;
+    }
+    
+    .tab {
+      flex-grow: 1;
+      text-align: center;
+      margin-bottom: 5px;
+    }
+  }
