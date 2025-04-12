@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login - ShipNGo</title>
-  <link rel="stylesheet" href="../styles/manager.css"/>
+  <link rel="stylesheet" href="../styles/financereport.css"/>
   <link rel="stylesheet" href="../styles/styles.css">
   <link rel="stylesheet" href="../styles/nav.css" />
 </head>
@@ -12,15 +12,42 @@
   <div id="header-include"></div>
   <script src="../scripts/header.js" defer></script>
 
-    <div class = "manager-container">
-        <div class="container"style="width:40%;height:300px;">
-            <h2 style="color:white">Total Supplies Revenue</h2>
 
-            <!-- Stores the total revenue -->
-            <div id="total-container" style="color:white;">  
+        <!-- supply transaction reports -->
+        <div class = "manager-container">
+            <div class = "filter">
+                <h2>Supply Transaction Filters</h2>
+                <div class="filter-boxes">
+                    <input type="text" id="filter-name" placeholder="Filter by Name">
+                    <input type="text" id="filter-item" placeholder="Filter by Item">
+                    <input type="date" id="filter-date" placeholder="Filter by Date">
+                </div>
+            </div>
+
+            <div class="container">
+                <h2 style="color:white">Supply Transactions Report</h2>
+
+                <div id="total-container" style="color:white;"></div>
+
+                <div style="width:90%; height:500px;">
+                    <canvas id="myBarChart"></canvas>
+                </div>
+
+                <table style="margin-top:20px;">
+                    <thead>
+                        <tr>
+                            <th>Transaction Id</th>
+                            <th>Customer Name</th>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Total Cost</th>
+                            <th>Purchase Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="finance-table"></tbody>
+                </table>
             </div>
         </div>
-    </div>
 
   <div>
     <section id="services" class="services">
@@ -33,6 +60,10 @@
     </footer>
       </div>
 
-  <script src="../scripts/manager.js"></script>
+  <script src="../scripts/financialreport.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="path/to/yourChartScript.js"></script>
+
+
 </body>
 </html>

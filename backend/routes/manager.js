@@ -4,7 +4,6 @@
 
 const { sendJson } = require("../helpers");
 const { getAllClaims } = require("../controllers/managerController");
-const { getSumTransactions } = require("../controllers/managerController")
  
 async function fetchAllClaims(req, res) {
   try {
