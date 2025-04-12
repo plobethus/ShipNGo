@@ -6,45 +6,45 @@ const profileController = require("../controllers/profileController");
 async function getProfile(req, res) {
   try {
     console.log("getProfile route hit, tokenData:", req.tokenData);
-    
+
     if (!req.tokenData) {
       console.log("No token data found");
-      return sendJson(res, 401, { 
-        success: false, 
-        message: "Unauthorized. Authentication token missing or invalid." 
+      return sendJson(res, 401, {
+        success: false,
+        message: "Unauthorized. Authentication token missing or invalid."
       });
     }
-    
+
     const customerId = req.tokenData.customer_id;
     console.log("Customer ID from token:", customerId);
-    
+
     if (req.tokenData.role !== "customer") {
       console.log("Non-customer role attempted to access profile:", req.tokenData.role);
-      return sendJson(res, 403, { 
-        success: false, 
-        message: "Access denied. Customer access only." 
+      return sendJson(res, 403, {
+        success: false,
+        message: "Access denied. Customer access only."
       });
     }
-    
+
     if (!customerId) {
       console.log("No customer ID in token data");
-      return sendJson(res, 401, { 
-        success: false, 
-        message: "Unauthorized. Valid customer login required." 
+      return sendJson(res, 401, {
+        success: false,
+        message: "Unauthorized. Valid customer login required."
       });
     }
-    
+
     const profileData = await profileController.getCustomerProfile(customerId);
     console.log("Profile data retrieved successfully");
-    
-    sendJson(res, 200, { 
-      success: true, 
-      data: profileData 
+
+    sendJson(res, 200, {
+      success: true,
+      data: profileData
     });
   } catch (err) {
     console.error("Error in getProfile:", err.message);
-    sendJson(res, 500, { 
-      success: false, 
+    sendJson(res, 500, {
+      success: false,
       message: err.message || "An error occurred while fetching profile data."
     });
   }
@@ -53,39 +53,39 @@ async function getProfile(req, res) {
 async function updateProfile(req, res) {
   try {
     const customerId = req.tokenData.customer_id;
-    
+
     if (!customerId) {
-      return sendJson(res, 401, { 
-        success: false, 
-        message: "Unauthorized. Valid customer login required." 
+      return sendJson(res, 401, {
+        success: false,
+        message: "Unauthorized. Valid customer login required."
       });
     }
-    
+
     const profileData = await readJsonBody(req);
-    
+
     if (!profileData) {
-      return sendJson(res, 400, { 
-        success: false, 
+      return sendJson(res, 400, {
+        success: false,
         message: "No profile data provided."
       });
     }
-    
+
     const result = await profileController.updateCustomerProfile(customerId, profileData);
-    
+
     if (result.affectedRows === 0) {
-      return sendJson(res, 400, { 
-        success: false, 
+      return sendJson(res, 400, {
+        success: false,
         message: "No changes made to profile."
       });
     }
-    
-    sendJson(res, 200, { 
-      success: true, 
-      message: "Profile updated successfully." 
+
+    sendJson(res, 200, {
+      success: true,
+      message: "Profile updated successfully."
     });
   } catch (err) {
-    sendJson(res, 500, { 
-      success: false, 
+    sendJson(res, 500, {
+      success: false,
       message: err.message || "An error occurred while updating profile."
     });
   }
@@ -94,50 +94,50 @@ async function updateProfile(req, res) {
 async function changePassword(req, res) {
   try {
     const customerId = req.tokenData.customer_id;
-    
+
     if (!customerId) {
-      return sendJson(res, 401, { 
-        success: false, 
-        message: "Unauthorized. Valid customer login required." 
+      return sendJson(res, 401, {
+        success: false,
+        message: "Unauthorized. Valid customer login required."
       });
     }
-    
+
     const passwordData = await readJsonBody(req);
-    
+
     if (!passwordData || !passwordData.currentPassword || !passwordData.newPassword) {
-      return sendJson(res, 400, { 
-        success: false, 
+      return sendJson(res, 400, {
+        success: false,
         message: "Current password and new password are required."
       });
     }
-    
+
     if (passwordData.newPassword.length < 8) {
-      return sendJson(res, 400, { 
-        success: false, 
+      return sendJson(res, 400, {
+        success: false,
         message: "New password must be at least 8 characters long."
       });
     }
-    
+
     const success = await profileController.changeCustomerPassword(
-      customerId, 
-      passwordData.currentPassword, 
+      customerId,
+      passwordData.currentPassword,
       passwordData.newPassword
     );
-    
+
     if (!success) {
-      return sendJson(res, 400, { 
-        success: false, 
+      return sendJson(res, 400, {
+        success: false,
         message: "Current password is incorrect."
       });
     }
-    
-    sendJson(res, 200, { 
-      success: true, 
-      message: "Password changed successfully." 
+
+    sendJson(res, 200, {
+      success: true,
+      message: "Password changed successfully."
     });
   } catch (err) {
-    sendJson(res, 500, { 
-      success: false, 
+    sendJson(res, 500, {
+      success: false,
       message: err.message || "An error occurred while changing password."
     });
   }

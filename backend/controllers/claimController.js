@@ -1,6 +1,6 @@
 //ShipNGo/backend/controllers/claimController.js
 
-const db = require("../db"); 
+const db = require("../db");
 
 (async () => {
   try {
@@ -24,7 +24,7 @@ async function createClaim({ firstName, lastName, email, phone, package_id, issu
   const safePackageId = package_id !== undefined ? package_id : null;
 
   const validIssueTypes = ['Lost', 'Delayed', 'Damaged', 'Other'];
-  let safeIssueType = issueType || "Other"; 
+  let safeIssueType = issueType || "Other";
 
   if (!validIssueTypes.includes(safeIssueType)) {
     console.log(`Warning: Invalid issue type "${safeIssueType}", defaulting to "Other"`);
@@ -36,7 +36,7 @@ async function createClaim({ firstName, lastName, email, phone, package_id, issu
   try {
     console.log("BYPASSING customersupport table completely - inserting directly to claims");
     console.log("Package ID to be inserted:", safePackageId);
-    
+
     const claimsSql = `
       INSERT INTO claims 
       (ticket_id, first_name, last_name, email, phone_number, package_id, issue_type, reason, customer_id, refund_status, processed_date) 
@@ -80,7 +80,7 @@ async function checkTableStructure() {
       console.log(`- ${col.Field}: ${col.Type} ${col.Null === 'NO' ? 'NOT NULL' : 'NULL'} ${col.Default ? `DEFAULT ${col.Default}` : ''}`);
     });
 
-   
+
     const [claimsColumns] = await db.execute("DESCRIBE claims");
     console.log("claims table structure:");
     claimsColumns.forEach(col => {
