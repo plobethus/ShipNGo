@@ -10,7 +10,7 @@ async function checkout(req, res) {
         const body = await readJsonBody(req);
 
 
-       
+
 
 
         if (!Array.isArray(body.items)) {

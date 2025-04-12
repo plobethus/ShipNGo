@@ -1,10 +1,10 @@
 //ShipNGo/backend/controllers/managerClaimsController.js
- 
-const db = require("../db"); 
-  
+
+const db = require("../db");
+
 async function getAllClaims() {
-    try {
-      const query = `
+  try {
+    const query = `
         SELECT 
           c.ticket_id, 
           c.issue_type, 
@@ -26,14 +26,14 @@ async function getAllClaims() {
         ORDER BY 
           c.processed_date DESC
       `;
-      
-      const [rows] = await db.query(query);
-      return rows;
-    } catch (error) {
-      console.error("Database error in getAllClaims:", error);
-      throw error;
-    }
+
+    const [rows] = await db.query(query);
+    return rows;
+  } catch (error) {
+    console.error("Database error in getAllClaims:", error);
+    throw error;
   }
+}
 
 async function getClaimsWithoutPackages() {
   try {
@@ -53,7 +53,7 @@ async function getClaimsWithoutPackages() {
       ORDER BY 
         c.processed_date DESC
     `;
-    
+
     const [rows] = await db.query(query);
     return rows;
   } catch (error) {
@@ -84,20 +84,20 @@ async function updateClaimStatus(ticketId, status) {
       SET refund_status = ? 
       WHERE ticket_id = ?
     `;
-    
+
     const [result] = await db.query(query, [status, ticketId]);
-    
+
     if (result.affectedRows === 0) {
       throw new Error('Claim not found');
     }
-    
+
     return { success: true, message: 'Status updated successfully' };
   } catch (error) {
     console.error("Database error in updateClaimStatus:", error);
     throw error;
   }
 }
-  
+
 module.exports = {
   getAllClaims,
   getClaimsWithoutPackages,

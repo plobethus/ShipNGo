@@ -22,11 +22,11 @@ async function updatePackage(req, res, id) {
   try {
     const body = await readJsonBody(req);
     if (req.tokenData && req.tokenData.employee_id) {
-      await db.execute("SET @employee_id = ?", [req.tokenData.employee_id]); 
+      await db.execute("SET @employee_id = ?", [req.tokenData.employee_id]);
     } else {
-      await db.execute("SET @employee_id = NULL"); 
+      await db.execute("SET @employee_id = NULL");
     }
-    
+
     const affected = await packageController.updatePackage(id, body);
     if (affected === 0) {
       sendJson(res, 404, { message: "Package not found or no changes made." });
@@ -56,11 +56,11 @@ async function createPackage(req, res) {
   try {
     const body = await readJsonBody(req);
     const senderId = req.tokenData.customer_id;
-    const result = await packageController.createPackage({ 
-      ...body, 
-      sender_id: senderId 
+    const result = await packageController.createPackage({
+      ...body,
+      sender_id: senderId
     });
-    
+
     sendJson(res, 201, {
       message: "Shipment created",
       package: result.package,
