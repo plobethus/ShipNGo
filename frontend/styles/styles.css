@@ -347,7 +347,7 @@ select {
 }
 
 /* billing styling*/
-#billing {
+#billing-container{
   display: flex;
   justify-content: space-between;
   width: 800px;

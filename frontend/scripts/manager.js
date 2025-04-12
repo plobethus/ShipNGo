@@ -17,6 +17,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     } catch (err) {
       console.error("Error fetching sum of transactions:", err);
     }
+
+    
+
   
     try {
       const response = await fetch("/api/claims/");

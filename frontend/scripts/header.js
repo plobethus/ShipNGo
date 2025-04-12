@@ -22,9 +22,8 @@ function initializeHeader() {
   const profileNavButton = document.getElementById("profile-nav-button");
   const shipping = document.getElementById("shipping");
   const store = document.getElementById("store");
-  const faq = document.getElementById("faq");
-  const claim = document.getElementById("claim");
-  const billing = document.getElementById("billing");
+  const supportone = document.getElementById("support-one")
+  const supporttwo = document.getElementById("support-two")
   const claimView = document.getElementById("claim-view");
   const routes = document.getElementById("routes");
 
@@ -72,24 +71,22 @@ function initializeHeader() {
       if (role === "customer") {
         dashboardLink.href = "/pages/customer.html";
         dashboardLink.textContent = "Customer Dashboard";
-        if (claimView) claimView.style.display = "none";
+        if (supporttwo) supporttwo.style.display = "none";
         if (routes) routes.style.display = "none";
+
       } else if (role === "employee") {
         dashboardLink.href = "/pages/employee.html";
         dashboardLink.textContent = "Employee Dashboard";
+        if (supportone) supportone.style.display = "none";
         if (shipping) shipping.style.display = "none";
         if (store) store.style.display = "none";
-        if (faq) faq.style.display = "none";
-        if (claim) claim.style.display = "none";
-        if (billing) billing.style.display = "none";  
+        
       } else if (role === "manager") {
         dashboardLink.href = "/pages/manager.html";
         dashboardLink.textContent = "Manager Dashboard";
+        if (supportone) supportone.style.display = "none";
         if (shipping) shipping.style.display = "none";
         if (store) store.style.display = "none";
-        if (faq) faq.style.display = "none";
-        if (claim) claim.style.display = "none";
-        if (billing) billing.style.display = "none";  
       }
     }
   } else {
