@@ -13,13 +13,13 @@ async function fetchAllClaims(req, res) {
   }
 }
 
-async function fetchSum(req, res){
-    try{
-        const sum = await getSumTransactions();
-        sendJson(res,200,sum);
-    } catch(err){
-        sendJson(res,500,{ error: err.message});
-    }
+async function fetchSum(req, res) {
+  try {
+    const sum = await getSumTransactions();
+    sendJson(res, 200, sum);
+  } catch (err) {
+    sendJson(res, 500, { error: err.message });
+  }
 }
 
 
@@ -32,6 +32,17 @@ async function updateClaimStatus(req, res, ticketId){
     sendJson(res,500,{ error: err.message});
   }
 }
+
+async function updateClaimStatus(req, res, ticketId){
+  try{
+    const {status} = await readJsonBody(req);
+    await updateClaimStatusController(ticketId, status);
+    sendJson(res,200);
+  } catch(err){
+    sendJson(res,500,{ error: err.message});
+  }
+}
+
 
 
 module.exports = {

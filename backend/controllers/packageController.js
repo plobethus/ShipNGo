@@ -1,9 +1,9 @@
 //ShipNGo/backend/controllers/packageController.js
 
-const db = require("../db"); 
+const db = require("../db");
 
 async function getAllPackages(filter) {
- 
+
   let query = `
     SELECT 
       p.package_id,                               
@@ -40,9 +40,9 @@ async function getAllPackages(filter) {
   LEFT JOIN locations l ON t.location = l.location_id
     WHERE 1=1
   `;
-  
+
   const values = [];
-  if (filter.status) {                                      
+  if (filter.status) {
     query += `
       AND (
         SELECT t2.new_status
@@ -52,10 +52,10 @@ async function getAllPackages(filter) {
         LIMIT 1
       ) = ?
     `;
-    values.push(filter.status);                              
+    values.push(filter.status);
   }
-  if (filter.customerName) {                                
-    query += " AND c1.name LIKE ?";  
+  if (filter.customerName) {
+    query += " AND c1.name LIKE ?";
     values.push(`%${filter.customerName}%`);
   }
   if (filter.minWeight) {
@@ -70,27 +70,27 @@ async function getAllPackages(filter) {
     query += " AND (p.address_from LIKE ? OR p.address_to LIKE ?)";
     values.push(`%${filter.address}%`, `%${filter.address}%`);
   }
-  
-  if (filter.startDate) {                                 
-    query += " AND p.created_at >= ?";                  
-    values.push(filter.startDate);                      
+
+  if (filter.startDate) {
+    query += " AND p.created_at >= ?";
+    values.push(filter.startDate);
   }
-  if (filter.endDate) {                                   
-    query += " AND p.created_at <= ?";                   
-    values.push(filter.endDate);                       
+  if (filter.endDate) {
+    query += " AND p.created_at <= ?";
+    values.push(filter.endDate);
   }
-  
+
   const [packages] = await db.execute(query, values);
   return packages;
 }
-  
+
 async function updatePackage(id, data) {
   let query = "UPDATE packages SET ";
   const updates = [];
   const values = [];
-  
-  if (data.status) {                        
-    updates.push("status = ?");             
+
+  if (data.status) {
+    updates.push("status = ?");
     values.push(data.status);
   }
   if (data.location) {
@@ -109,18 +109,18 @@ async function updatePackage(id, data) {
     updates.push("address_to = ?");
     values.push(data.address_to);
   }
-  
+
   if (updates.length === 0) {
     throw new Error("No valid fields provided to update.");
   }
-  
+
   query += updates.join(", ") + " WHERE package_id = ?";
   values.push(id);
-  
+
   const [result] = await db.execute(query, values);
   return result.affectedRows;
 }
-  
+
 async function getCustomerPackages(customerId) {
   const query = `
     SELECT 
@@ -148,7 +148,7 @@ async function getCustomerPackages(customerId) {
   const [packages] = await db.execute(query, [customerId, customerId]);
   return packages;
 }
-  
+
 async function createPackage({
   sender_id,
   sender_name,
@@ -160,7 +160,7 @@ async function createPackage({
   shipping_class,
 }) {
   const shippingCost = parseFloat((5 + weight * 0.5).toFixed(2));
-  
+
 
   const sql = `
     INSERT INTO packages
@@ -175,18 +175,18 @@ async function createPackage({
     shipping_class.charAt(0).toUpperCase() + shipping_class.slice(1),
     shippingCost,
     address_from,
-    address_to   
+    address_to
   ];
-  
+
   const [result] = await db.execute(sql, values);
-  
+
 
   const [rows] = await db.execute(
     "SELECT discount_percentage FROM customers WHERE customer_id = ?",
     [sender_id]
   );
   const discount = rows[0]?.discount_percentage || 0;
-  
+
   return {
     package: {
       package_id: result.insertId,
@@ -197,20 +197,20 @@ async function createPackage({
       weight,
       shipping_class,
       cost: shippingCost,
-      status: "Pending",             
+      status: "Pending",
       location: address_to,
-      created_at: new Date()         
+      created_at: new Date()
     },
     discount_applied: discount
   };
 }
-  
+
 async function deletePackage(id) {
   const query = "DELETE FROM packages WHERE package_id = ?";
   const [result] = await db.execute(query, [id]);
   return result.affectedRows;
 }
-  
+
 module.exports = {
   getAllPackages,
   updatePackage,

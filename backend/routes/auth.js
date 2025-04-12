@@ -3,7 +3,7 @@
 */
 
 const path = require("path");
-const { sendJson, serveFile}  = require("../helpers");
+const { sendJson, serveFile } = require("../helpers");
 const authController = require("../controllers/authController");
 
 async function login(req, res) {

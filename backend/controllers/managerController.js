@@ -24,3 +24,4 @@ async function updateClaimStatusController(ticket_id, status) {
     getAllClaims,
     updateClaimStatusController
   };
+
