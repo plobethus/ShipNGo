@@ -23,9 +23,9 @@ const trackingRoutes = require("./routes/tracking");
 const profileRoutes = require("./routes/profile"); // Added profile routes
 const shopRoutes = require("./routes/shop");
 
-
 const driverRoutes = require("./routes/drivers");
-const managerRoutes = require("./routes/manager")
+const managerRoutes = require("./routes/manager");
+const financeRoutes = require("./routes/financialreport");
 
 const server = http.createServer(async (req, res) => {
   try {
@@ -207,7 +207,10 @@ else if (pathname.startsWith("/api/profile")) {
           await managerRoutes.fetchAllClaims(req, res);
           return;
     }   else if (req.method === "GET" && pathname === "/api/claims/sum") {
-            await managerRoutes.fetchSum(req,res);
+            await financeRoutes.fetchSumTransactions(req,res);
+            return;
+    }   else if(req.method === "GET" && pathname === "/api/claims/trans"){
+            await financeRoutes.fetchAllTransactions(req,res);
             return;
     }
 }
