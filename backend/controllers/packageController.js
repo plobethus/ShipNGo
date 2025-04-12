@@ -1,156 +1,195 @@
 //ShipNGo/backend/controllers/packageController.js
 
-
 const db = require("../db"); 
-  
-  async function getAllPackages(filter) {
-    let query = `
-      SELECT p.package_id, p.status, p.location, p.weight, p.dimensions, p.address_from, p.address_to, c1.name AS sender_name, p.receiver_name AS receiver_name
-      FROM packages p
+
+async function getAllPackages(filter) {
+ 
+  let query = `
+    SELECT 
+      p.package_id,                               
+      p.weight,                                   
+      p.dimensions,                               
+      p.address_from,                             
+      p.address_to,                               
+      p.created_at,                              
+      c1.name AS sender_name,                     
+      p.receiver_name,                           
+      l.location_id,                             
+      l.location_name,                            
+      l.manager_of_location,                     
+      l.hours_open,                               
+      (
+        SELECT t.new_status                      
+        FROM package_tracking_log t
+        WHERE t.package_id = p.package_id
+        ORDER BY t.changed_at DESC
+        LIMIT 1
+      ) AS latest_status                     
+    FROM packages p
       LEFT JOIN customers c1 ON p.sender_id = c1.customer_id
-      WHERE 1=1
+      LEFT JOIN locations l ON p.location = l.location_id   
+    WHERE 1=1
+  `;
+  
+  const values = [];
+  if (filter.status) {                                      
+    query += `
+      AND (
+        SELECT t2.new_status
+        FROM package_tracking_log t2
+        WHERE t2.package_id = p.package_id
+        ORDER BY t2.changed_at DESC
+        LIMIT 1
+      ) = ?
     `;
-    const values = [];
-    if (filter.status) {
-      query += " AND p.status = ?";
-      values.push(filter.status);
-    }
-    if (filter.customerName) {
-      query += " AND (c1.name LIKE ? OR c2.name LIKE ?)";
-      values.push(`%${filter.customerName}%`, `%${filter.customerName}%`);
-    }
-    if (filter.minWeight) {
-      query += " AND p.weight >= ?";
-      values.push(filter.minWeight);
-    }
-    if (filter.maxWeight) {
-      query += " AND p.weight <= ?";
-      values.push(filter.maxWeight);
-    }
-    if (filter.address) {
-      query += " AND (p.address_from LIKE ? OR p.address_to LIKE ?)";
-      values.push(`%${filter.address}%`, `%${filter.address}%`);
-    }
-    const [packages] = await db.execute(query, values);
-    return packages;
+    values.push(filter.status);                              
+  }
+  if (filter.customerName) {                                
+    query += " AND c1.name LIKE ?";  
+    values.push(`%${filter.customerName}%`);
+  }
+  if (filter.minWeight) {
+    query += " AND p.weight >= ?";
+    values.push(filter.minWeight);
+  }
+  if (filter.maxWeight) {
+    query += " AND p.weight <= ?";
+    values.push(filter.maxWeight);
+  }
+  if (filter.address) {
+    query += " AND (p.address_from LIKE ? OR p.address_to LIKE ?)";
+    values.push(`%${filter.address}%`, `%${filter.address}%`);
   }
   
-  async function updatePackage(id, data) {
-    let query = "UPDATE packages SET ";
-    const updates = [];
-    const values = [];
-    
-    if (data.status) {
-      updates.push("status = ?");
-      values.push(data.status);
-    }
-    if (data.location) {
-      updates.push("location = ?");
-      values.push(data.location);
-    }
-    if (data.weight) {
-      updates.push("weight = ?");
-      values.push(data.weight);
-    }
-    if (data.address_from) {
-      updates.push("address_from = ?");
-      values.push(data.address_from);
-    }
-    if (data.address_to) {
-      updates.push("address_to = ?");
-      values.push(data.address_to);
-    }
-    
-    if (updates.length === 0) {
-      throw new Error("No valid fields provided to update.");
-    }
-    
-    query += updates.join(", ") + " WHERE package_id = ?";
-    values.push(id);
-  
-    const [result] = await db.execute(query, values);
-    return result.affectedRows;
+  if (filter.startDate) {                                 
+    query += " AND p.created_at >= ?";                  
+    values.push(filter.startDate);                      
+  }
+  if (filter.endDate) {                                   
+    query += " AND p.created_at <= ?";                   
+    values.push(filter.endDate);                       
   }
   
-  async function getCustomerPackages(customerId) {
-    const query = `
+  const [packages] = await db.execute(query, values);
+  return packages;
+}
+  
+async function updatePackage(id, data) {
+  let query = "UPDATE packages SET ";
+  const updates = [];
+  const values = [];
+  
+  if (data.status) {                        
+    updates.push("status = ?");             
+    values.push(data.status);
+  }
+  if (data.location) {
+    updates.push("location = ?");
+    values.push(data.location);
+  }
+  if (data.weight) {
+    updates.push("weight = ?");
+    values.push(data.weight);
+  }
+  if (data.address_from) {
+    updates.push("address_from = ?");
+    values.push(data.address_from);
+  }
+  if (data.address_to) {
+    updates.push("address_to = ?");
+    values.push(data.address_to);
+  }
+  
+  if (updates.length === 0) {
+    throw new Error("No valid fields provided to update.");
+  }
+  
+  query += updates.join(", ") + " WHERE package_id = ?";
+  values.push(id);
+  
+  const [result] = await db.execute(query, values);
+  return result.affectedRows;
+}
+  
+async function getCustomerPackages(customerId) {
+  const query = `
     SELECT package_id, sender_id, weight, status, address_from, address_to, receiver_name
     FROM packages
     WHERE sender_id = ? 
-      OR address_to = (SELECT address FROM customers WHERE customer_id = ?)`
-    ;
-    console.log("customerId in route:", customerId);
+      OR address_to = (SELECT address FROM customers WHERE customer_id = ?)
+  `;
+  console.log("customerId in route:", customerId);
   const [packages] = await db.execute(query, [customerId, customerId]);
   return packages;
-  }
-  async function createPackage({
+}
+  
+async function createPackage({
+  sender_id,
+  sender_name,
+  receiver_name,
+  address_from,
+  address_to,
+  weight,
+  dimensions,
+  shipping_class,
+}) {
+  const shippingCost = parseFloat((5 + weight * 0.5).toFixed(2));
+  
+
+  const sql = `
+    INSERT INTO packages
+      (sender_id, receiver_name, weight, dimensions, shipping_class, cost, status, address_from, address_to, location, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, 'Pending', ?, ?, ?, NOW())
+  `;
+  const values = [
     sender_id,
-    sender_name, // new: include sender_name if you want to return it in the response
     receiver_name,
-    address_from,
-    address_to,
     weight,
     dimensions,
-    shipping_class,
-  }) {
-    // Calculate shipping cost (simple formula)
-    const shippingCost = parseFloat((5 + weight * 0.5).toFixed(2));
+    shipping_class.charAt(0).toUpperCase() + shipping_class.slice(1),
+    shippingCost,
+    address_from,
+    address_to,
+    address_to   
+  ];
   
-    const sql = `
-      INSERT INTO packages
-        (sender_id, receiver_name, weight, dimensions, shipping_class, cost, status, address_from, address_to, location)
-      VALUES (?, ?, ?, ?, ?, ?, 'Pending', ?, ?, ?)
-    `;
-    const values = [
-      sender_id,
+  const [result] = await db.execute(sql, values);
+  
+
+  const [rows] = await db.execute(
+    "SELECT discount_percentage FROM customers WHERE customer_id = ?",
+    [sender_id]
+  );
+  const discount = rows[0]?.discount_percentage || 0;
+  
+  return {
+    package: {
+      package_id: result.insertId,
+      sender_name,
       receiver_name,
-      weight,
-      dimensions,
-      shipping_class.charAt(0).toUpperCase() + shipping_class.slice(1),
-      shippingCost,
       address_from,
       address_to,
-      address_to  
-    ];
-  
-    const [result] = await db.execute(sql, values);
-  
-
-    const [rows] = await db.execute(
-      "SELECT discount_percentage FROM customers WHERE customer_id = ?",
-      [sender_id]
-    );
-    const discount = rows[0]?.discount_percentage || 0;
-  
-    return {
-      package: {
-        package_id: result.insertId,
-        sender_name,
-        receiver_name,
-        address_from,
-        address_to,
-        weight,
-        shipping_class,
-        cost: shippingCost,
-        status: "Pending",
-        location: address_to
-      },
-      discount_applied: discount
-    };
-  }
-
-  
-  async function deletePackage(id) {
-    const query = "DELETE FROM packages WHERE package_id = ?";
-    const [result] = await db.execute(query, [id]);
-    return result.affectedRows;
-  }
-  
-  
-  module.exports = {
-    getAllPackages,
-    updatePackage,
-    getCustomerPackages,
-    createPackage,
-    deletePackage
+      weight,
+      shipping_class,
+      cost: shippingCost,
+      status: "Pending",             
+      location: address_to,
+      created_at: new Date()         
+    },
+    discount_applied: discount
   };
+}
+  
+async function deletePackage(id) {
+  const query = "DELETE FROM packages WHERE package_id = ?";
+  const [result] = await db.execute(query, [id]);
+  return result.affectedRows;
+}
+  
+module.exports = {
+  getAllPackages,
+  updatePackage,
+  getCustomerPackages,
+  createPackage,
+  deletePackage
+};
