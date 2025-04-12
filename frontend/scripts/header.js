@@ -87,6 +87,13 @@ function initializeHeader() {
         if (supportone) supportone.style.display = "none";
         if (shipping) shipping.style.display = "none";
         if (store) store.style.display = "none";
+        if (faq) faq.style.display = "none";
+        if (claim) claim.style.display = "none";
+        if (billing) billing.style.display = "none";  
+        const managerStatusLi = document.getElementById("manager-status");
+        if (managerStatusLi) {
+        managerStatusLi.style.display = "block";
+  }
       }
     }
   } else {

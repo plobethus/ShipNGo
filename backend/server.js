@@ -20,8 +20,9 @@ const deliverpointsRoutes = require("./routes/deliverpoints");
 const packageRoutes = require("./routes/packageRoutes");
 const shipmentRoutes = require("./routes/shipment");
 const trackingRoutes = require("./routes/tracking");
-const profileRoutes = require("./routes/profile"); // Added profile routes
+const profileRoutes = require("./routes/profile"); 
 const shopRoutes = require("./routes/shop");
+const statusRoutes = require("./routes/status");
 
 const driverRoutes = require("./routes/drivers");
 const managerRoutes = require("./routes/manager");
@@ -155,6 +156,13 @@ const server = http.createServer(async (req, res) => {
         return;
       }
     }
+    else if (pathname.startsWith("/status")) {
+      if (req.method === "GET" && pathname === "/status") {
+        await statusRoutes.status(req, res);
+        return;
+      }
+    }
+      
     // Profile routes - added for customer profile management
 else if (pathname.startsWith("/api/profile")) {
   // Ensure only customers can access profile routes
