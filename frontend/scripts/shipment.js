@@ -17,6 +17,13 @@ document.querySelector(".shipment-form").addEventListener("submit", async functi
   const receiverZip = document.getElementById("receiver-zipcode").value.trim();
 
   const weight = parseFloat(document.getElementById("package-weight").value.trim());
+  
+  // Get package dimensions
+  const length = parseFloat(document.getElementById("package-length").value.trim());
+  const width = parseFloat(document.getElementById("package-width").value.trim());
+  const height = parseFloat(document.getElementById("package-height").value.trim());
+  const dimensions = `${length}x${width}x${height}`;
+  
   const shippingOption = document.getElementById("shipping-option").value.trim();
   
   //set eta 
@@ -29,7 +36,7 @@ document.querySelector(".shipment-form").addEventListener("submit", async functi
   if (
     !senderFirstName || !senderLastName || !senderStreet || !senderCity || !senderState || !senderZip ||
     !receiverFirstName || !receiverLastName || !receiverStreet || !receiverCity || !receiverState || !receiverZip ||
-    !weight || !shippingOption
+    !weight || !shippingOption || !length || !width || !height
   ) {
     alert("Please fill in all fields before submitting.");
     return;
@@ -52,7 +59,7 @@ document.querySelector(".shipment-form").addEventListener("submit", async functi
     address_from: `${senderStreet}, ${senderCity}, ${senderState} ${senderZip}`,
     address_to: `${receiverStreet}, ${receiverCity}, ${receiverState} ${receiverZip}`,
     weight,
-    dimensions: "10x10x10", // Optional, placeholder for now
+    dimensions: dimensions, // Use the dimensions from the form
     shipping_class: shippingOption,
     instructions: specialInstructions,
     cost
@@ -64,6 +71,7 @@ document.querySelector(".shipment-form").addEventListener("submit", async functi
     <p><strong>Receiver:</strong> ${shipmentData.receiver_name}</p>
     <p><strong>Shipping:</strong> ${shippingOption.toUpperCase()}</p>
     <p><strong>Weight:</strong> ${weight} lbs</p>
+    <p><strong>Dimensions:</strong> ${dimensions} cm</p>
     <p><strong>Total Cost:</strong> <strong style="color:#2ecc71;">$${cost}</strong></p>
   `;
 
@@ -89,31 +97,53 @@ document.querySelector(".shipment-form").addEventListener("submit", async functi
     const data = await response.json();
     if (response.ok) {
       const result = data.package;
+      
       const discount = data.discount_applied;
-      let discountMsg = " ";
 
-      if (discount){
-        const notificationCount = document.getElementById("notification-count");
-        notificationCount.textContent = "1";
-        notificationCount.style.display = "inline-block";
-        discountMsg = `<p style="color:green;"><strong>🎉 You’ve unlocked a 10% discount on your next shipment!</strong></p>`;
-      }
+      const nextDiscount = data.next_discount_unlocked;
+      let costDisplay = `<li><strong>Total Cost:</strong> <strong style="color:#2ecc71;">$${result.cost}</strong></li>`;
+
+      let discountMsg = "";
+
+    if (discount >= 10) {
+      const originalCost = (result.cost / 0.9).toFixed(2); // reverse-calculate original price
+      discountMsg += `<p style="color:green;"><strong>✅ You just received a 10% discount!</strong></p>`;
+      costDisplay = `
+       <li><strong>Original Cost:</strong> <s style="color:red;">$${originalCost}</s></li>
+       <li><strong>Discounted Cost:</strong> <strong style="color:#2ecc71;">$${result.cost}</strong></li>
+      `;
+    }
+
+    if (nextDiscount) {
+      const notificationCount = document.getElementById("notification-count");
+      notificationCount.textContent = "1";
+      notificationCount.style.display = "inline-block";
+      discountMsg += `<p style="color:blue;"><strong>🎁 You’ve unlocked a 10% discount on your next shipment!</strong></p>`;
+    }
   
+      // Store original shipment data in case we need to supplement the response
       const modalContent = `
         <div class="shipment-card">
           <h3>📦 Shipment Details</h3>
           <ul>
             <li><strong>Package ID:</strong> ${result.package_id}</li>
-            <li><strong>Sender:</strong> ${result.sender_name}</li>
-            <li><strong>Receiver:</strong> ${result.receiver_name}</li>
-            <li><strong>From:</strong> ${result.address_from}</li>
-            <li><strong>To:</strong> ${result.address_to}</li>
-            <li><strong>Weight:</strong> ${result.weight} lbs</li>
-            <li><strong>Shipping Class:</strong> ${result.shipping_class}</li>
+            <li><strong>Sender:</strong> ${result.sender_name || shipmentData.sender_name}</li>
+            <li><strong>Receiver:</strong> ${result.receiver_name || shipmentData.receiver_name}</li>
+            <li><strong>From:</strong> ${result.address_from || shipmentData.address_from}</li>
+            <li><strong>To:</strong> ${result.address_to || shipmentData.address_to}</li>
+            <li><strong>Weight:</strong> ${result.weight || shipmentData.weight} lbs</li>
+            <li><strong>Dimensions:</strong> ${dimensions} cm</li>
+            <li><strong>Shipping Class:</strong> ${result.shipping_class || shipmentData.shipping_class}</li>
             <li><strong>Estimated Delivery:</strong> ${eta}</li>
-            <li><strong>Cost:</strong> $${result.cost}</li>
+
+            ${costDisplay}
             <li><strong>Status:</strong> ${result.status}</li>
             <li><strong>Location:</strong> ${result.location}</li>
+
+            <li><strong>Cost:</strong> ${result.cost || shipmentData.cost}</li>
+            <li><strong>Status:</strong> ${result.status || "Pending"}</li>
+            <li><strong>Location:</strong> ${result.location || shipmentData.address_to}</li>
+
           </ul>
           ${discountMsg}
         </div>

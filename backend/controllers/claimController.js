@@ -1,18 +1,6 @@
-/*
-* /ShipNGo/backend/controllers/claimController.js
-* Complete bypass of customersupport table
-*/
+//ShipNGo/backend/controllers/claimController.js
 
-const db = require("mysql2").createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
-  ssl: { rejectUnauthorized: true },
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-}).promise();
+const db = require("../db"); 
 
 // Set MySQL session time zone to Central Time (CST/CDT)
 (async () => {
@@ -24,7 +12,7 @@ const db = require("mysql2").createPool({
   }
 })();
 
-async function createClaim({ firstName, lastName, email, phone, issueType, issueDescription, userId }) {
+async function createClaim({ firstName, lastName, email, phone, package_id, issueType, issueDescription, userId }) {
   // Generate a numeric ticket_id (ensure it's a number)
   const min = 100000;
   const max = 999999;
@@ -36,6 +24,8 @@ async function createClaim({ firstName, lastName, email, phone, issueType, issue
   const safeLastName = lastName || "";
   const safeEmail = email || "";
   const phoneCleaned = phone ? phone.replace(/\D/g, '') : '';
+  // Fix for packageId: check if it's undefined rather than falsy to handle 0 correctly
+  const safePackageId = package_id !== undefined ? package_id : null;
 
   // Map to valid ENUM values based on the actual database schema
   const validIssueTypes = ['Lost', 'Delayed', 'Damaged', 'Other'];
@@ -51,12 +41,13 @@ async function createClaim({ firstName, lastName, email, phone, issueType, issue
 
   try {
     console.log("BYPASSING customersupport table completely - inserting directly to claims");
+    console.log("Package ID to be inserted:", safePackageId);
     
-    // Only insert into claims table
+    // Only insert into claims table - now including package_id field
     const claimsSql = `
       INSERT INTO claims 
-      (ticket_id, first_name, last_name, email, phone_number, issue_type, reason, customer_id, refund_status, processed_date) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+      (ticket_id, first_name, last_name, email, phone_number, package_id, issue_type, reason, customer_id, refund_status, processed_date) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
     `;
 
     const claimsParams = [
@@ -65,6 +56,7 @@ async function createClaim({ firstName, lastName, email, phone, issueType, issue
       safeLastName,
       safeEmail,
       phoneCleaned,
+      safePackageId,
       safeIssueType,
       safeIssueDescription,
       userId || null,

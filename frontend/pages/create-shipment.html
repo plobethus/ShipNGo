@@ -60,6 +60,15 @@
             <input type="text" id="receiver-zipcode" name="receiver-zipcode" placeholder="Zipcode (22222)" required />
         </div>
         <input type="number" id="package-weight" name="package-weight" placeholder="Package Weight (lbs)" required />
+        
+        <!-- New Package Dimensions Section -->
+        <div style="display:flex; flex-direction:row; gap:24px;margin-bottom:10px;">
+            <input type="number" id="package-length" name="package-length" placeholder="Length (cm)" required />
+            <input type="number" id="package-width" name="package-width" placeholder="Width (cm)" required />
+            <input type="number" id="package-height" name="package-height" placeholder="Height (cm)" required />
+        </div>
+        <p style="text-align:left; font-size:12px; margin-top:-5px; margin-bottom:10px; color:#e0e0e0;">Enter package dimensions in centimeters</p>
+        
         <select id="shipping-option" name="shipping-option" required>
           <option id = "shipping-option"value="">Shipping Option</option>
           <option value="standard">Standard (5-7 Days)</option>

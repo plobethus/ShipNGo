@@ -23,6 +23,7 @@
         </div>
         <input type="email" id="email" placeholder="Email" required />
         <input type="text" id="phone" placeholder="Phone Number" required />
+        <input type="number" id="package-id" placeholder="Package ID (if applicable)" />
         <select id="claim-type" required>
           <option value="" disabled selected>Select Claim Type</option>
           <option value="Delayed">Delayed Delivery</option>
@@ -34,11 +35,82 @@
         <button class="submit">Submit</button>
       </form>
     </div>
-    <div class="card">
-      <h2>Past Support Tickets</h2>
-      <ul id="ticket-list">
-        <li class="empty">No support tickets yet.</li>
-      </ul>
+  </div>
+  
+  <div class="tickets-container">
+    <h2>Past Support Tickets</h2>
+    
+    <!-- Statistics Container - Table-like Layout -->
+    <div class="stats-container">
+      <div class="stats-header">
+        <h3>Ticket Statistics</h3>
+      </div>
+      <table class="stats-table">
+        <tr>
+          <td class="stat-label">Total Tickets</td>
+          <td class="stat-value" id="total-tickets">0</td>
+          <td class="stat-spacer"></td>
+          <td class="stat-label">Delayed Delivery</td>
+          <td class="stat-value" id="delayed-tickets">0</td>
+          <td class="stat-spacer"></td>
+          <td class="stat-label">Lost Package</td>
+          <td class="stat-value" id="lost-tickets">0</td>
+          <td class="stat-spacer"></td>
+          <td class="stat-label">Damaged Package</td>
+          <td class="stat-value" id="damaged-tickets">0</td>
+          <td class="stat-spacer"></td>
+          <td class="stat-label">Other Issue</td>
+          <td class="stat-value" id="other-tickets">0</td>
+        </tr>
+      </table>
+    </div>
+    
+    <div class="filter-section">
+      <div class="filter-row">
+        <div class="filter-group">
+          <label for="date-from">Date From:</label>
+          <input type="date" id="date-from">
+        </div>
+        <div class="filter-group">
+          <label for="date-to">Date To:</label>
+          <input type="date" id="date-to">
+        </div>
+        <div class="filter-group">
+          <label for="filter-type">Claim Type:</label>
+          <select id="filter-type">
+            <option value="all">All Types</option>
+            <option value="Lost">Lost Package</option>
+            <option value="Delayed">Delayed Delivery</option>
+            <option value="Damaged">Damaged Package</option>
+            <option value="Other">Other Issue</option>
+          </select>
+        </div>
+      </div>
+      <div class="filter-actions">
+        <button id="apply-filters" class="filter-btn">Apply Filters</button>
+        <button id="reset-filters" class="filter-btn reset-btn">Reset</button>
+      </div>
+    </div>
+    
+    <div class="ticket-table-container">
+      <table id="ticket-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Package ID</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="ticket-list">
+          <tr class="empty-row">
+            <td colspan="4">No support tickets yet.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ticket-info">
+      <p>Click on any ticket to view details</p>
     </div>
   </div>
 
