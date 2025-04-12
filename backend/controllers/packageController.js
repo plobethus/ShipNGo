@@ -16,18 +16,28 @@ async function getAllPackages(filter) {
       p.receiver_name,                           
       l.location_id,                             
       l.location_name,                            
-      l.manager_of_location,                     
-      l.hours_open,                               
+      l.manager_id,                     
+      l.opening_time,
+      l.closing_time,                               
       (
-        SELECT t.new_status                      
+        SELECT t.status                      
         FROM package_tracking_log t
         WHERE t.package_id = p.package_id
         ORDER BY t.changed_at DESC
         LIMIT 1
       ) AS latest_status                     
     FROM packages p
-      LEFT JOIN customers c1 ON p.sender_id = c1.customer_id
-      LEFT JOIN locations l ON p.location = l.location_id   
+    LEFT JOIN customers c1 ON p.sender_id = c1.customer_id
+    LEFT JOIN (
+    SELECT t1.*
+    FROM package_tracking_log t1
+    JOIN (
+      SELECT package_id, MAX(changed_at) AS max_changed_at
+      FROM package_tracking_log
+      GROUP BY package_id
+    ) t2 ON t1.package_id = t2.package_id AND t1.changed_at = t2.max_changed_at
+  ) t ON p.package_id = t.package_id
+  LEFT JOIN locations l ON t.location = l.location_id
     WHERE 1=1
   `;
   

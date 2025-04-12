@@ -6,15 +6,13 @@ const db = require("../db");
     const query = `
       SELECT 
         th.package_id,
-        w.address AS warehouse_location,
-        p.address AS post_office_address,
+        w.address AS location_address,
         th.status,
-        th.updated_at
-      FROM trackinghistory th
-      LEFT JOIN warehouses w ON th.warehouse_location = w.ware_id
-      LEFT JOIN postoffices p ON th.post_office_location = p.post_id
+        th.changed_at
+      FROM package_tracking_log th
+      LEFT JOIN locations w ON th.location = w.location_id
       WHERE th.package_id = ?
-      ORDER BY th.updated_at DESC;
+      ORDER BY th.changed_at DESC;
     `;
     const [rows] = await db.execute(query, [package_id]);
     return rows;
@@ -22,7 +20,7 @@ const db = require("../db");
   
   async function updateTracking(package_id, warehouse_location, post_office_location, date, status, route_id) {
     await db.execute(
-      "INSERT INTO trackinghistory (package_id, warehouse_location, post_office_location, date, status, updated_at, route_id) VALUES (?, ?, ?, ?, ?, NOW(), ?)",
+      "INSERT INTO package_tracking_log (package_id, warehouse_location, post_office_location, date, status, updated_at, route_id) VALUES (?, ?, ?, ?, ?, NOW(), ?)",
       [package_id, warehouse_location, post_office_location, date, status, route_id]
     );
   }
