@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Login - ShipNGo</title>
   <link rel="stylesheet" href="../styles/manager.css"/>
   <link rel="stylesheet" href="../styles/styles.css">
@@ -35,8 +36,16 @@
     }
   </style>
 </head>
+<script src="../scripts/alerts.js" defer></script>
 <body>
+  
   <div id="header-include"></div>
+
+  <!-- Notification Button -->
+  <div class="alert-container">
+    <button id="alert-btn" class="alert-button">🔔 Alerts</button>
+    <div id="alert-dropdown" class="alert-dropdown" style="display: none;"></div>
+  </div>
   <script src="/scripts/header.js" defer></script>
 
   <div class="welcome-box">

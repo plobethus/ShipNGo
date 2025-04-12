@@ -402,3 +402,39 @@ select {
   cursor: pointer;
 }
 
+
+.alert-container {
+  position: relative;
+  display: inline-block;
+  margin: 10px;
+}
+
+.alert-button {
+  background-color: #ff4d4f;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.alert-dropdown {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 300px;
+  padding: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  z-index: 1000;
+}
+
+.alert-dropdown p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+

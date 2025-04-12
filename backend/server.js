@@ -25,7 +25,11 @@ const statusRoutes = require("./routes/status");
 
 const driverRoutes = require("./routes/drivers");
 const managerRoutes = require("./routes/manager");
+
+const alertsRoutes = require('./routes/alerts');
+
 const financeRoutes = require("./routes/financialreport");
+
 
 const server = http.createServer(async (req, res) => {
   try {
@@ -94,6 +98,11 @@ const server = http.createServer(async (req, res) => {
           message: "If you can see this, authentication is working correctly"
         }
       });
+    }
+
+    if (pathname === "/api/alerts" && req.method === "GET") {
+      await alertsRoutes.getAlerts(req, res);
+      return;
     }
 
     // ---- Protected Routes (login required) ----
