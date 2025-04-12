@@ -1,8 +1,8 @@
 //ShipNGo/backend/routes/manager.js
 
 
-const { sendJson } = require("../helpers");
-const { getAllClaims } = require("../controllers/managerController");
+const { sendJson, readJsonBody } = require("../helpers");
+const { getAllClaims, updateClaimStatusController } = require("../controllers/managerController");
  
 async function fetchAllClaims(req, res) {
   try {
@@ -22,7 +22,20 @@ async function fetchSum(req, res){
     }
 }
 
+
+async function updateClaimStatus(req, res, ticketId){
+  try{
+    const {status} = await readJsonBody(req);
+    await updateClaimStatusController(ticketId, status);
+    sendJson(res,200);
+  } catch(err){
+    sendJson(res,500,{ error: err.message});
+  }
+}
+
+
 module.exports = {
   fetchAllClaims,
-  fetchSum
+  fetchSum,
+  updateClaimStatus
 };
