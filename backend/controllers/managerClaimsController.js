@@ -1,4 +1,4 @@
-//ShipNGo/backend/controllers/managerController.js
+//ShipNGo/backend/controllers/managerClaimsController.js
  
 const db = require("../db"); 
   

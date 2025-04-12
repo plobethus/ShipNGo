@@ -22,8 +22,6 @@ const trackingRoutes = require("./routes/tracking");
 const profileRoutes = require("./routes/profile"); 
 const shopRoutes = require("./routes/shop");
 const statusRoutes = require("./routes/status");
-const postOfficeRoutes = require("./routes/postOffices");
-
 
 const driverRoutes = require("./routes/drivers");
 const managerRoutes = require("./routes/manager");
@@ -213,26 +211,25 @@ else if (pathname.startsWith("/api/profile")) {
         return;
       }
     }
-    else if ((tokenData.role == "employee" || tokenData.role == "manager") && pathname.startsWith("/postoffice")){
-      if (req.method === "GET" && pathname === "/postoffice/get_all") {
-        await postOfficeRoutes.getAllOffices(req, res);
-        console.log("office got!")
-        return;
-      }
-    }
 
     else if (tokenData.role === "manager" && pathname.startsWith("/api/claims/")){
-        if (req.method === "GET" && pathname === "/api/claims/") {
-          await managerRoutes.fetchAllClaims(req, res);
+      if (req.method === "GET" && pathname === "/api/claims/") {
+        await managerRoutes.fetchAllClaims(req, res);
+        return;
+      } else if (req.method === "PUT" && pathname.match(/^\/api\/claims\/[^\/]+\/status$/)) {
+        // Extract the ticketId from the URL
+        const parts = pathname.split("/");
+        const ticketId = parts[3]; // Extract ticketId from the URL pattern
+        await managerRoutes.updateClaimStatus(req, res, ticketId);
+        return;
+      } else if (req.method === "GET" && pathname === "/api/claims/sum") {
+          await financeRoutes.fetchSumTransactions(req,res);
           return;
-    }   else if (req.method === "GET" && pathname === "/api/claims/sum") {
-            await financeRoutes.fetchSumTransactions(req,res);
-            return;
-    }   else if(req.method === "GET" && pathname === "/api/claims/trans"){
-            await financeRoutes.fetchAllTransactions(req,res);
-            return;
-    }
-}
+      } else if(req.method === "GET" && pathname === "/api/claims/trans"){
+          await financeRoutes.fetchAllTransactions(req,res);
+          return;
+      }
+  }
 
     // If no protected route matched, attempt to serve a static file from the frontend folder.
     else {
