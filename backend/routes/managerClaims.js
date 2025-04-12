@@ -4,14 +4,13 @@
 
 const express = require("express");
 const router = express.Router();
-const managerController = require("./managerClaims");
+const managerController = require("../controllers/managerController");
 
 // Claims routes
-router.get("/api/claims/", managerController.fetchAllClaims);
-router.get("/api/claims/without-packages", managerController.fetchClaimsWithoutPackages);
-router.get("/api/transactions/sum", managerController.fetchSum);
+router.get("/api/claims/", managerController.getAllClaims);
+router.get("/api/transactions/sum", managerController.getSumTransactions);
 
-// Update the status update route to use the new controller function
+// Update the status update route
 router.put("/api/claims/:ticketId/status", async (req, res) => {
   try {
     const { ticketId } = req.params;
