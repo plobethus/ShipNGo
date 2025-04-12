@@ -18,7 +18,7 @@ const db = require("../db");
     return rows;
   }
   
-  async function updateTracking(package_id, warehouse_location, post_office_location, date, status, route_id) {
+  async function updateTracking(package_id, location_id, date, status, route_id) {
     await db.execute(
       "INSERT INTO package_tracking_log (package_id, warehouse_location, post_office_location, date, status, updated_at, route_id) VALUES (?, ?, ?, ?, ?, NOW(), ?)",
       [package_id, warehouse_location, post_office_location, date, status, route_id]

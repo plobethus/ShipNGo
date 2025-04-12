@@ -123,7 +123,7 @@ async function updatePackage(id, data) {
   
 async function getCustomerPackages(customerId) {
   const query = `
-    SELECT package_id, sender_id, weight, status, address_from, address_to, receiver_name
+    SELECT package_id, sender_id, weight, address_from, address_to, receiver_name
     FROM packages
     WHERE sender_id = ? 
       OR address_to = (SELECT address FROM customers WHERE customer_id = ?)
@@ -148,8 +148,8 @@ async function createPackage({
 
   const sql = `
     INSERT INTO packages
-      (sender_id, receiver_name, weight, dimensions, shipping_class, cost, status, address_from, address_to, location, created_at)
-    VALUES (?, ?, ?, ?, ?, ?, 'Pending', ?, ?, ?, NOW())
+      (sender_id, receiver_name, weight, dimensions, shipping_class, cost, address_from, address_to, location, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
   `;
   const values = [
     sender_id,
