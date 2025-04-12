@@ -18,7 +18,6 @@ const authRoutes = require("./routes/auth");
 const claimsRoutes = require("./routes/claims");
 const deliverpointsRoutes = require("./routes/deliverpoints");
 const packageRoutes = require("./routes/packageRoutes");
-const shipmentRoutes = require("./routes/shipment");
 const trackingRoutes = require("./routes/tracking");
 const profileRoutes = require("./routes/profile"); 
 const shopRoutes = require("./routes/shop");
@@ -132,6 +131,9 @@ const server = http.createServer(async (req, res) => {
       if (req.method === "GET" && pathname === "/packages/dashboard/employee") {
         await packageRoutes.getPackagesEmployee(req, res, parsedUrl.query);
         return;
+      } else if (req.method === "POST" && pathname === "/packages") {
+        await packageRoutes.createPackage(req, res);
+        return;
       } else if (req.method === "PUT" && pathname.startsWith("/packages/")) {
         const parts = pathname.split("/");
         const id = parts[2];
@@ -140,19 +142,10 @@ const server = http.createServer(async (req, res) => {
       } else if (req.method === "GET" && pathname === "/packages/customer") {
         await packageRoutes.getPackagesCustomer(req, res);
         return;
-      }
-    }
-    else if (pathname.startsWith("/shipment")) {
-      if (req.method === "POST" && pathname === "/shipment") {
-        await shipmentRoutes.createShipment(req, res);
-        return;
-      } else if (req.method === "GET" && pathname === "/shipment") {
-        await shipmentRoutes.getShipments(req, res);
-        return;
-      } else if (req.method === "GET" && pathname.startsWith("/shipment/")) {
+      } else if (req.method === "DELETE" && pathname.startsWith("/packages/")) {
         const parts = pathname.split("/");
         const id = parts[2];
-        await shipmentRoutes.getShipmentById(req, res, id);
+        await packageRoutes.deletePackage(req, res, id);
         return;
       }
     }
