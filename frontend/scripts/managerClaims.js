@@ -19,11 +19,12 @@ document.addEventListener("DOMContentLoaded", async function () {
       return new Date(b.processed_date || 0) - new Date(a.processed_date || 0);
     });
     
-    // Identify package claims
+    // Identify package claims and non-package claims
     const packageClaims = allClaimsData.filter(claim => claim.package_id);
+    const nonPackageClaims = allClaimsData.filter(claim => !claim.package_id);
     
-    // Update dashboard statistics
-    updateDashboardStats(allClaimsData);
+    // Update dashboard statistics for all claims initially
+    updateDashboardStats(allClaimsData, "all");
     
     // Display claims in tables
     if (allClaimsData.length > 0) {
@@ -43,17 +44,20 @@ document.addEventListener("DOMContentLoaded", async function () {
     // Set up filter button event listeners
     setupAllFilters();
     
+    // Set up tab switching with statistics update
+    setupTabSwitching(allClaimsData, packageClaims, nonPackageClaims);
+    
   } catch (err) {
     console.error("Error loading claims:", err);
     document.getElementById("complaint-table").innerHTML = `<tr><td colspan="8" style="text-align:center;color:red;">Error loading claims data</td></tr>`;
     document.getElementById("package-claims-table").innerHTML = `<tr><td colspan="8" style="text-align:center;color:red;">Error loading package claims data</td></tr>`;
-    updateDashboardStats([]);
+    updateDashboardStats([], "all");
   }
   
   // ===== Dashboard Statistics Functions =====
   
-  // Update dashboard statistics
-  function updateDashboardStats(claimsData) {
+  // Update dashboard statistics based on current tab and data
+  function updateDashboardStats(claimsData, tabType) {
     if (!Array.isArray(claimsData) || claimsData.length === 0) {
       document.getElementById("total-claims-count").textContent = "0";
       document.getElementById("pending-claims-count").textContent = "0";
@@ -76,10 +80,66 @@ document.addEventListener("DOMContentLoaded", async function () {
     // Calculate resolution rate
     const resolutionRate = totalClaims > 0 ? Math.round((resolvedClaims / totalClaims) * 100) : 0;
     
-    // Update UI
+    // Update dashboard title based on tab
+    const statsTitle = document.querySelector(".stats-container");
+    if (statsTitle) {
+      const statCards = statsTitle.querySelectorAll(".stat-card");
+      
+      // Update titles based on tab type
+      if (statCards.length >= 3) {
+        // Update stat titles based on tab type
+        if (tabType === "package") {
+          statCards[0].querySelector(".stat-title").textContent = "Package Claims";
+          statCards[1].querySelector(".stat-title").textContent = "Pending Package Claims";
+          statCards[2].querySelector(".stat-title").textContent = "Package Resolution Rate";
+        } else if (tabType === "no-package") {
+          statCards[0].querySelector(".stat-title").textContent = "Non-Package Claims";
+          statCards[1].querySelector(".stat-title").textContent = "Pending Non-Package Claims";
+          statCards[2].querySelector(".stat-title").textContent = "Non-Package Resolution Rate";
+        } else {
+          statCards[0].querySelector(".stat-title").textContent = "Total Claims";
+          statCards[1].querySelector(".stat-title").textContent = "Pending Claims";
+          statCards[2].querySelector(".stat-title").textContent = "Resolution Rate";
+        }
+      }
+    }
+    
+    // Update UI with values
     document.getElementById("total-claims-count").textContent = totalClaims;
     document.getElementById("pending-claims-count").textContent = pendingClaims;
     document.getElementById("resolution-rate").textContent = `${resolutionRate}%`;
+  }
+  
+  // ===== Tab Switching Function =====
+  
+  // Set up tab switching with statistics update
+  function setupTabSwitching(allClaimsData, packageClaims, nonPackageClaims) {
+    const tabs = document.querySelectorAll('.tab');
+    const contents = document.querySelectorAll('.tab-content');
+    
+    tabs.forEach(tab => {
+      tab.addEventListener('click', function() {
+        // Remove active class from all tabs and contents
+        tabs.forEach(t => t.classList.remove('active'));
+        contents.forEach(c => c.classList.remove('active'));
+        
+        // Add active class to clicked tab
+        this.classList.add('active');
+        
+        // Get corresponding content ID and activate it
+        const contentId = this.id.replace('-tab', '-content');
+        document.getElementById(contentId).classList.add('active');
+        
+        // Update dashboard stats based on active tab
+        if (this.id === "all-claims-tab") {
+          updateDashboardStats(allClaimsData, "all");
+        } else if (this.id === "package-claims-tab") {
+          updateDashboardStats(packageClaims, "package");
+        } else if (this.id === "no-package-claims-tab") {
+          updateDashboardStats(nonPackageClaims, "no-package");
+        }
+      });
+    });
   }
   
   // ===== Filter Setup Functions =====
@@ -146,7 +206,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
         
         displayAllClaims(filteredClaims);
-        updateDashboardStats(filteredClaims);
+        
+        // Update dashboard with filtered claims
+        const activeTab = document.querySelector('.tab.active');
+        if (activeTab && activeTab.id === "all-claims-tab") {
+          updateDashboardStats(filteredClaims, "all");
+        }
       });
     }
     
@@ -159,7 +224,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         document.getElementById("issue-type-filter").value = "";
         
         displayAllClaims(allClaimsData);
-        updateDashboardStats(allClaimsData);
+        
+        // Reset dashboard for all claims tab
+        const activeTab = document.querySelector('.tab.active');
+        if (activeTab && activeTab.id === "all-claims-tab") {
+          updateDashboardStats(allClaimsData, "all");
+        }
       });
     }
     
@@ -180,6 +250,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
         
         displayPackageClaims(filteredClaims);
+        
+        // Update dashboard with filtered package claims
+        const activeTab = document.querySelector('.tab.active');
+        if (activeTab && activeTab.id === "package-claims-tab") {
+          updateDashboardStats(filteredClaims, "package");
+        }
       });
     }
     
@@ -193,6 +269,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         
         const packageClaims = allClaimsData.filter(claim => claim.package_id);
         displayPackageClaims(packageClaims);
+        
+        // Reset dashboard for package claims tab
+        const activeTab = document.querySelector('.tab.active');
+        if (activeTab && activeTab.id === "package-claims-tab") {
+          updateDashboardStats(packageClaims, "package");
+        }
       });
     }
   }
@@ -352,53 +434,52 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
   
   // Load claims without packages
-  // Load claims without packages
-async function loadClaimsWithoutPackages() {
-  const tableBody = document.getElementById("no-package-claims-table");
-  if (!tableBody) return;
-  
-  try {
-    // Show loading state
-    tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Loading claims without packages...</td></tr>`;
+  async function loadClaimsWithoutPackages() {
+    const tableBody = document.getElementById("no-package-claims-table");
+    if (!tableBody) return;
     
-    // Fetch data from API
-    const response = await fetch("/api/claims/without-packages");
-    
-    // Check if response is ok
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    
-    const claims = await response.json();
-    
-    tableBody.innerHTML = "";
-    
-    if (Array.isArray(claims) && claims.length > 0) {
-      claims.forEach(claim => {
-        const row = document.createElement("tr");
-        row.classList.add("clickable-row");
-        
-        // Add click event to show claim details
-        row.addEventListener("click", () => {
-          showClaimDetails(claim);
+    try {
+      // Show loading state
+      tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Loading claims without packages...</td></tr>`;
+      
+      // Fetch data from API
+      const response = await fetch("/api/claims/without-packages");
+      
+      // Check if response is ok
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      
+      const claims = await response.json();
+      
+      tableBody.innerHTML = "";
+      
+      if (Array.isArray(claims) && claims.length > 0) {
+        claims.forEach(claim => {
+          const row = document.createElement("tr");
+          row.classList.add("clickable-row");
+          
+          // Add click event to show claim details
+          row.addEventListener("click", () => {
+            showClaimDetails(claim);
+          });
+          
+          row.innerHTML = `
+            <td>${claim.ticket_id || ""}</td>
+            <td>${formatClaimType(claim.issue_type) || ""}</td>
+            <td>${formatDate(claim.processed_date)}</td>
+            <td>${claim.first_name || ""} ${claim.last_name || ""}</td>
+          `;
+          tableBody.appendChild(row);
         });
-        
-        row.innerHTML = `
-          <td>${claim.ticket_id || ""}</td>
-          <td>${formatClaimType(claim.issue_type) || ""}</td>
-          <td>${formatDate(claim.processed_date)}</td>
-          <td>${claim.first_name || ""} ${claim.last_name || ""}</td>
-        `;
-        tableBody.appendChild(row);
-      });
-    } else {
-      tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No claims without packages found</td></tr>`;
+      } else {
+        tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No claims without packages found</td></tr>`;
+      }
+    } catch (err) {
+      console.error("Error loading claims without packages:", err);
+      tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:red;">Error loading claims data: ${err.message}</td></tr>`;
     }
-  } catch (err) {
-    console.error("Error loading claims without packages:", err);
-    tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:red;">Error loading claims data: ${err.message}</td></tr>`;
   }
-}
   
   // Show claim details in a modal
   function showClaimDetails(claim) {
@@ -523,13 +604,25 @@ async function loadClaimsWithoutPackages() {
             allClaimsData[claimIndex].refund_status = newStatus;
           }
           
-          // Refresh the claims displays
+          // Get current active tab to determine which claims to display
+          const activeTab = document.querySelector('.tab.active');
           const packageClaims = allClaimsData.filter(claim => claim.package_id);
+          const nonPackageClaims = allClaimsData.filter(claim => !claim.package_id);
+          
+          // Refresh the claims displays
           displayAllClaims(allClaimsData);
           displayPackageClaims(packageClaims);
           
-          // Update dashboard statistics
-          updateDashboardStats(allClaimsData);
+          // Update dashboard statistics based on active tab
+          if (activeTab) {
+            if (activeTab.id === "all-claims-tab") {
+              updateDashboardStats(allClaimsData, "all");
+            } else if (activeTab.id === "package-claims-tab") {
+              updateDashboardStats(packageClaims, "package");
+            } else if (activeTab.id === "no-package-claims-tab") {
+              updateDashboardStats(nonPackageClaims, "no-package");
+            }
+          }
           
           // Show success notification
           showNotification("Status updated successfully", "success");
