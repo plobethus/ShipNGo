@@ -1,34 +1,13 @@
-<!-- Updated HTML structure with proper footer placement -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Claim Manager - ShipNGo</title>
-  <link rel="stylesheet" href="../styles/managerclaims.css"/>
   <link rel="stylesheet" href="../styles/styles.css">
   <link rel="stylesheet" href="../styles/nav.css" />
-  <style>
-    /* Additional footer styling to ensure it stays at the bottom */
-    body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .page-content {
-      flex: 1;
-    }
-    
-    footer {
-      margin-top: auto;
-      width: 100%;
-      background-color: #004080;
-      color: #fff;
-      text-align: center;
-      padding: 20px;
-    }
-  </style>
+  <link rel="stylesheet" href="../styles/manager-claims-dashboard.css"/>
+  <link rel="stylesheet" href="../styles/manager-claims-modal.css" />
 </head>
 <body>
   <div id="header-include"></div>
@@ -37,6 +16,24 @@
   <div class="page-content">
     <div class="manager-container">
       <h1>Claim Management Dashboard</h1>
+      
+      <!-- Stats Dashboard -->
+      <div class="stats-dashboard">
+        <div class="stats-container">
+          <div class="stat-card">
+            <div class="stat-title">Total Claims</div>
+            <div class="stat-value" id="total-claims-count">-</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-title">Pending Claims</div>
+            <div class="stat-value" id="pending-claims-count">-</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-title">Resolution Rate</div>
+            <div class="stat-value" id="resolution-rate">-</div>
+          </div>
+        </div>
+      </div>
       
       <!-- Manual Tab Container -->
       <div class="tab-container">
@@ -50,6 +47,53 @@
         <div id="complaint-container">
           <!-- Tab content containers -->
           <div class="tab-content active" id="all-claims-content">
+            <!-- Filter Controls -->
+            <div class="filter-controls">
+              <div class="filter-group">
+                <label for="date-filter">Date:</label>
+                <select id="date-filter">
+                  <option value="">All Dates</option>
+                  <option value="today">Today</option>
+                  <option value="yesterday">Yesterday</option>
+                  <option value="last7">Last 7 Days</option>
+                  <option value="last30">Last 30 Days</option>
+                </select>
+              </div>
+              
+              <div class="filter-group">
+                <label for="customer-filter">Customer ID:</label>
+                <input type="text" id="customer-filter" placeholder="Enter Customer ID">
+              </div>
+              
+              <div class="filter-group">
+                <label for="package-filter">Package ID:</label>
+                <input type="text" id="package-filter" placeholder="Enter Package ID">
+              </div>
+              
+              <div class="filter-group">
+                <label for="status-filter">Status:</label>
+                <select id="status-filter">
+                  <option value="">All Status</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Rejected">Rejected</option>
+                  <option value="Processing">Processing</option>
+                </select>
+              </div>
+              
+              <div class="filter-group">
+                <label for="issue-type-filter">Issue Type:</label>
+                <select id="issue-type-filter">
+                  <option value="">All Issues</option>
+                </select>
+              </div>
+              
+              <div class="filter-buttons">
+                <button class="filter-btn apply-filter" id="apply-filters">Apply Filters</button>
+                <button class="filter-btn reset-filter" id="reset-filters">Reset</button>
+              </div>
+            </div>
+            
             <table>
               <thead>
                 <tr>
@@ -73,11 +117,59 @@
           
           <!-- Claims with Packages Tab Content -->
           <div class="tab-content" id="package-claims-content">
+            <!-- Filter Controls for Package Claims -->
+            <div class="filter-controls">
+              <div class="filter-group">
+                <label for="pkg-date-filter">Date:</label>
+                <select id="pkg-date-filter">
+                  <option value="">All Dates</option>
+                  <option value="today">Today</option>
+                  <option value="yesterday">Yesterday</option>
+                  <option value="last7">Last 7 Days</option>
+                  <option value="last30">Last 30 Days</option>
+                </select>
+              </div>
+              
+              <div class="filter-group">
+                <label for="pkg-customer-filter">Customer ID:</label>
+                <input type="text" id="pkg-customer-filter" placeholder="Enter Customer ID">
+              </div>
+              
+              <div class="filter-group">
+                <label for="pkg-package-filter">Package ID:</label>
+                <input type="text" id="pkg-package-filter" placeholder="Enter Package ID">
+              </div>
+              
+              <div class="filter-group">
+                <label for="pkg-status-filter">Status:</label>
+                <select id="pkg-status-filter">
+                  <option value="">All Status</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Rejected">Rejected</option>
+                  <option value="Processing">Processing</option>
+                </select>
+              </div>
+              
+              <div class="filter-group">
+                <label for="pkg-issue-type-filter">Issue Type:</label>
+                <select id="pkg-issue-type-filter">
+                  <option value="">All Issues</option>
+                </select>
+              </div>
+              
+              <div class="filter-buttons">
+                <button class="filter-btn apply-filter" id="pkg-apply-filters">Apply Filters</button>
+                <button class="filter-btn reset-filter" id="pkg-reset-filters">Reset</button>
+              </div>
+            </div>
+            
             <table>
               <thead>
                 <tr>
                   <th>Ticket ID</th>
                   <th>Issue Type</th>
+                  <th>Processed Date</th>
                   <th>Package ID</th>
                   <th>Weight</th>
                   <th>Dimensions</th>
@@ -87,7 +179,7 @@
               </thead>
               <tbody id="package-claims-table">
                 <tr>
-                  <td colspan="7" style="text-align: center;">Loading package claims data...</td>
+                  <td colspan="8" style="text-align: center;">Loading package claims data...</td>
                 </tr>
               </tbody>
             </table>
@@ -120,9 +212,8 @@
     <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
   </footer>
 
-  <!-- Manually add tab switching functionality in case main JS fails -->
+  <!-- Basic tab switching functionality -->
   <script>
-    // Basic tab functionality
     document.addEventListener('DOMContentLoaded', function() {
       const tabs = document.querySelectorAll('.tab');
       const contents = document.querySelectorAll('.tab-content');
@@ -141,133 +232,10 @@
           document.getElementById(contentId).classList.add('active');
         });
       });
-      
-      // Make a fallback fetch for claims data
-      fetch('/api/claims/')
-        .then(response => response.json())
-        .then(data => {
-          if (Array.isArray(data)) {
-            displayClaimsData(data);
-          } else if (data.claims) {
-            displayClaimsData(data.claims);
-          } else {
-            showErrorMessage("Failed to load claims data");
-          }
-        })
-        .catch(error => {
-          console.error("Error fetching claims:", error);
-          showErrorMessage("Error loading claims. Please try again.");
-        });
-        
-      function displayClaimsData(claims) {
-        // Display all claims
-        const allClaimsTable = document.getElementById('complaint-table');
-        if (allClaimsTable) {
-          allClaimsTable.innerHTML = claims.length ? '' : '<tr><td colspan="8">No claims found</td></tr>';
-          
-          claims.forEach(claim => {
-            // Format date if it exists
-            let formattedDate = "N/A";
-            if (claim.processed_date) {
-              const date = new Date(claim.processed_date);
-              formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            }
-            
-            // Create package details section
-            let packageInfo = "No package";
-            if (claim.package_id) {
-              packageInfo = `ID: ${claim.package_id}`;
-              if (claim.weight) packageInfo += `<br>Weight: ${claim.weight}`;
-              if (claim.dimensions) packageInfo += `<br>Dim: ${claim.dimensions}`;
-            }
-            
-            const row = document.createElement('tr');
-            row.innerHTML = `
-              <td>${claim.ticket_id || 'N/A'}</td>
-              <td>${claim.issue_type || 'N/A'}</td>
-              <td>${formattedDate}</td>
-              <td>${claim.reason || 'N/A'}</td>
-              <td>${claim.first_name || ''} ${claim.last_name || ''}</td>
-              <td>${claim.customer_id || 'N/A'}</td>
-              <td>${packageInfo}</td>
-              <td>${claim.refund_status || 'Pending'}</td>
-            `;
-            allClaimsTable.appendChild(row);
-          });
-        }
-        
-        // Display claims with package_id
-        displayPackageClaims(claims.filter(claim => claim.package_id));
-        
-        // Display claims without package_id
-        displayNoPackageClaims(claims.filter(claim => !claim.package_id));
-      }
-      
-      function displayPackageClaims(claimsWithPackage) {
-        const packageClaimsTable = document.getElementById('package-claims-table');
-        if (packageClaimsTable) {
-          packageClaimsTable.innerHTML = claimsWithPackage.length ? '' : '<tr><td colspan="7">No claims with packages found</td></tr>';
-          
-          claimsWithPackage.forEach(claim => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-              <td>${claim.ticket_id || 'N/A'}</td>
-              <td>${claim.issue_type || 'N/A'}</td>
-              <td>${claim.package_id || 'N/A'}</td>
-              <td>${claim.weight || 'N/A'}</td>
-              <td>${claim.dimensions || 'N/A'}</td>
-              <td>${claim.customer_id || 'N/A'}</td>
-              <td>${claim.refund_status || 'Pending'}</td>
-            `;
-            packageClaimsTable.appendChild(row);
-          });
-        }
-      }
-      
-      function displayNoPackageClaims(claimsWithoutPackage) {
-        const noPackageClaimsTable = document.getElementById('no-package-claims-table');
-        if (noPackageClaimsTable) {
-          noPackageClaimsTable.innerHTML = claimsWithoutPackage.length ? '' : '<tr><td colspan="4">No claims without packages found</td></tr>';
-          
-          claimsWithoutPackage.forEach(claim => {
-            // Format date if it exists
-            let formattedDate = "N/A";
-            if (claim.processed_date) {
-              const date = new Date(claim.processed_date);
-              formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            }
-            
-            const row = document.createElement('tr');
-            row.innerHTML = `
-              <td>${claim.ticket_id || 'N/A'}</td>
-              <td>${claim.issue_type || 'N/A'}</td>
-              <td>${formattedDate}</td>
-              <td>${claim.first_name || ''} ${claim.last_name || ''}</td>
-            `;
-            noPackageClaimsTable.appendChild(row);
-          });
-        }
-      }
-      
-      function showErrorMessage(message) {
-        // Display error in tables
-        const tables = {
-          'complaint-table': 8, 
-          'package-claims-table': 7, 
-          'no-package-claims-table': 4
-        };
-        
-        Object.entries(tables).forEach(([tableId, colspan]) => {
-          const table = document.getElementById(tableId);
-          if (table) {
-            table.innerHTML = `<tr><td colspan="${colspan}" style="color:red;text-align:center;">${message}</td></tr>`;
-          }
-        });
-      }
     });
   </script>
 
-  <!-- Load the main manager.js script -->
+  <!-- Load the manager claims script -->
   <script src="../scripts/managerClaims.js"></script>
 </body>
 </html>
