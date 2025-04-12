@@ -60,7 +60,7 @@ async function createClaim({ firstName, lastName, email, phone, package_id, issu
       safeIssueType,
       safeIssueDescription,
       userId || null,
-      'pending'
+      'Pending'
     ];
 
     // Execute the SQL
