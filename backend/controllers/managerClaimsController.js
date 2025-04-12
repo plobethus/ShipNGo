@@ -71,9 +71,39 @@ async function getSumTransactions() {
     throw error;
   }
 }
+
+// Add new function to update claim status
+async function updateClaimStatus(ticketId, status) {
+  try {
+    // Validate the status to ensure it's one of the allowed values
+    const allowedStatuses = ['Pending', 'Processing', 'Approved', 'Rejected'];
+    if (!allowedStatuses.includes(status)) {
+      throw new Error('Invalid status value');
+    }
+
+    const query = `
+      UPDATE claims 
+      SET refund_status = ? 
+      WHERE ticket_id = ?
+    `;
+    
+    const [result] = await db.query(query, [status, ticketId]);
+    
+    // Check if any rows were affected (if the claim exists)
+    if (result.affectedRows === 0) {
+      throw new Error('Claim not found');
+    }
+    
+    return { success: true, message: 'Status updated successfully' };
+  } catch (error) {
+    console.error("Database error in updateClaimStatus:", error);
+    throw error;
+  }
+}
   
 module.exports = {
   getAllClaims,
   getClaimsWithoutPackages,
-  getSumTransactions
+  getSumTransactions,
+  updateClaimStatus
 };
