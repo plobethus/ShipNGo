@@ -22,7 +22,10 @@ const shipmentRoutes = require("./routes/shipment");
 const trackingRoutes = require("./routes/tracking");
 const profileRoutes = require("./routes/profile"); // Added profile routes
 const driverRoutes = require("./routes/drivers");
-const managerRoutes = require("./routes/manager")
+const managerRoutes = require("./routes/manager");
+
+const alertsRoutes = require('./routes/alerts');
+
 
 const server = http.createServer(async (req, res) => {
   try {
@@ -91,6 +94,11 @@ const server = http.createServer(async (req, res) => {
           message: "If you can see this, authentication is working correctly"
         }
       });
+    }
+
+    if (pathname === "/api/alerts" && req.method === "GET") {
+      await alertsRoutes.getAlerts(req, res);
+      return;
     }
 
     // ---- Protected Routes (login required) ----
