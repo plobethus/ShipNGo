@@ -35,174 +35,85 @@
         </div>
       </div>
       
-      <!-- Manual Tab Container -->
-      <div class="tab-container">
-        <div class="tab active" id="all-claims-tab">All Claims</div>
-        <div class="tab" id="package-claims-tab">Claims with Packages</div>
-        <div class="tab" id="no-package-claims-tab">Claims without Packages</div>
-      </div>
-      
       <div class="container">
         <h2>Customer Claims</h2>
         <div id="complaint-container">
-          <!-- Tab content containers -->
-          <div class="tab-content active" id="all-claims-content">
-            <!-- Filter Controls -->
-            <div class="filter-controls">
-              <div class="filter-group">
-                <label for="date-filter">Date:</label>
-                <select id="date-filter">
-                  <option value="">All Dates</option>
-                  <option value="today">Today</option>
-                  <option value="yesterday">Yesterday</option>
-                  <option value="last7">Last 7 Days</option>
-                  <option value="last30">Last 30 Days</option>
-                </select>
-              </div>
-              
-              <div class="filter-group">
-                <label for="customer-filter">Customer ID:</label>
-                <input type="text" id="customer-filter" placeholder="Enter Customer ID">
-              </div>
-              
-              <div class="filter-group">
-                <label for="package-filter">Package ID:</label>
-                <input type="text" id="package-filter" placeholder="Enter Package ID">
-              </div>
-              
-              <div class="filter-group">
-                <label for="status-filter">Status:</label>
-                <select id="status-filter">
-                  <option value="">All Status</option>
-                  <option value="Pending">Pending</option>
-                  <option value="Approved">Approved</option>
-                  <option value="Rejected">Rejected</option>
-                  <option value="Processing">Processing</option>
-                </select>
-              </div>
-              
-              <div class="filter-group">
-                <label for="issue-type-filter">Issue Type:</label>
-                <select id="issue-type-filter">
-                  <option value="">All Issues</option>
-                </select>
-              </div>
-              
-              <div class="filter-buttons">
-                <button class="filter-btn apply-filter" id="apply-filters">Apply Filters</button>
-                <button class="filter-btn reset-filter" id="reset-filters">Reset</button>
-              </div>
+          <!-- Filter Controls -->
+          <div class="filter-controls">
+            <div class="filter-group">
+              <label for="date-filter">Date:</label>
+              <select id="date-filter">
+                <option value="">All Dates</option>
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="last7">Last 7 Days</option>
+                <option value="last30">Last 30 Days</option>
+              </select>
             </div>
             
-            <table>
-              <thead>
-                <tr>
-                  <th>Ticket ID</th>
-                  <th>Issue Type</th>
-                  <th>Processed Date</th>
-                  <th>Reason</th>
-                  <th>Customer Name</th>
-                  <th>Customer ID</th>
-                  <th>Package Details</th>
-                  <th>Refund Status</th>
-                </tr>
-              </thead>
-              <tbody id="complaint-table">
-                <tr>
-                  <td colspan="8" style="text-align: center;">Loading claims data...</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          
-          <!-- Claims with Packages Tab Content -->
-          <div class="tab-content" id="package-claims-content">
-            <!-- Filter Controls for Package Claims -->
-            <div class="filter-controls">
-              <div class="filter-group">
-                <label for="pkg-date-filter">Date:</label>
-                <select id="pkg-date-filter">
-                  <option value="">All Dates</option>
-                  <option value="today">Today</option>
-                  <option value="yesterday">Yesterday</option>
-                  <option value="last7">Last 7 Days</option>
-                  <option value="last30">Last 30 Days</option>
-                </select>
-              </div>
-              
-              <div class="filter-group">
-                <label for="pkg-customer-filter">Customer ID:</label>
-                <input type="text" id="pkg-customer-filter" placeholder="Enter Customer ID">
-              </div>
-              
-              <div class="filter-group">
-                <label for="pkg-package-filter">Package ID:</label>
-                <input type="text" id="pkg-package-filter" placeholder="Enter Package ID">
-              </div>
-              
-              <div class="filter-group">
-                <label for="pkg-status-filter">Status:</label>
-                <select id="pkg-status-filter">
-                  <option value="">All Status</option>
-                  <option value="Pending">Pending</option>
-                  <option value="Approved">Approved</option>
-                  <option value="Rejected">Rejected</option>
-                  <option value="Processing">Processing</option>
-                </select>
-              </div>
-              
-              <div class="filter-group">
-                <label for="pkg-issue-type-filter">Issue Type:</label>
-                <select id="pkg-issue-type-filter">
-                  <option value="">All Issues</option>
-                </select>
-              </div>
-              
-              <div class="filter-buttons">
-                <button class="filter-btn apply-filter" id="pkg-apply-filters">Apply Filters</button>
-                <button class="filter-btn reset-filter" id="pkg-reset-filters">Reset</button>
-              </div>
+            <div class="filter-group">
+              <label for="package-status-filter">Contains Package:</label>
+              <select id="package-status-filter">
+                <option value="all">All Claims</option>
+                <option value="with-package">With Package</option>
+                <option value="without-package">Without Package</option>
+              </select>
             </div>
             
-            <table>
-              <thead>
-                <tr>
-                  <th>Ticket ID</th>
-                  <th>Issue Type</th>
-                  <th>Processed Date</th>
-                  <th>Package ID</th>
-                  <th>Weight</th>
-                  <th>Dimensions</th>
-                  <th>Customer ID</th>
-                  <th>Refund Status</th>
-                </tr>
-              </thead>
-              <tbody id="package-claims-table">
-                <tr>
-                  <td colspan="8" style="text-align: center;">Loading package claims data...</td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="filter-group">
+              <label for="customer-filter">Customer ID:</label>
+              <input type="text" id="customer-filter" placeholder="Enter Customer ID">
+            </div>
+            
+            <div class="filter-group">
+              <label for="package-filter">Package ID:</label>
+              <input type="text" id="package-filter" placeholder="Enter Package ID">
+            </div>
+            
+            <div class="filter-group">
+              <label for="status-filter">Status:</label>
+              <select id="status-filter">
+                <option value="">All Status</option>
+                <option value="Pending">Pending</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+                <option value="Processing">Processing</option>
+              </select>
+            </div>
+            
+            <div class="filter-group">
+              <label for="issue-type-filter">Issue Type:</label>
+              <select id="issue-type-filter">
+                <option value="">All Issues</option>
+              </select>
+            </div>
+            
+            <div class="filter-buttons">
+              <button class="filter-btn apply-filter" id="apply-filters">Apply Filters</button>
+              <button class="filter-btn reset-filter" id="reset-filters">Reset</button>
+            </div>
           </div>
           
-          <!-- Claims without Packages Tab Content -->
-          <div class="tab-content" id="no-package-claims-content">
-            <table>
-              <thead>
-                <tr>
-                  <th>Ticket ID</th>
-                  <th>Issue Type</th>
-                  <th>Processed Date</th>
-                  <th>Customer Name</th>
-                </tr>
-              </thead>
-              <tbody id="no-package-claims-table">
-                <tr>
-                  <td colspan="4" style="text-align: center;">Loading non-package claims data...</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <!-- Claims Table -->
+          <table>
+            <thead>
+              <tr id="claims-table-header">
+                <th>Ticket ID</th>
+                <th>Issue Type</th>
+                <th>Processed Date</th>
+                <th>Reason</th>
+                <th>Customer Name</th>
+                <th>Customer ID</th>
+                <th>Package Details</th>
+                <th>Refund Status</th>
+              </tr>
+            </thead>
+            <tbody id="claims-table">
+              <tr>
+                <td colspan="8" style="text-align: center;">Loading claims data...</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -211,29 +122,6 @@
   <footer>
     <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
   </footer>
-
-  <!-- Basic tab switching functionality -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const tabs = document.querySelectorAll('.tab');
-      const contents = document.querySelectorAll('.tab-content');
-      
-      tabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-          // Remove active class from all tabs and contents
-          tabs.forEach(t => t.classList.remove('active'));
-          contents.forEach(c => c.classList.remove('active'));
-          
-          // Add active class to clicked tab
-          this.classList.add('active');
-          
-          // Get corresponding content ID and activate it
-          const contentId = this.id.replace('-tab', '-content');
-          document.getElementById(contentId).classList.add('active');
-        });
-      });
-    });
-  </script>
 
   <!-- Load the manager claims script -->
   <script src="../scripts/managerClaims.js"></script>
