@@ -22,6 +22,8 @@ const trackingRoutes = require("./routes/tracking");
 const profileRoutes = require("./routes/profile"); 
 const shopRoutes = require("./routes/shop");
 const statusRoutes = require("./routes/status");
+const postOfficeRoutes = require("./routes/postOffices");
+
 
 const driverRoutes = require("./routes/drivers");
 const managerRoutes = require("./routes/manager");
@@ -208,6 +210,13 @@ else if (pathname.startsWith("/api/profile")) {
         const parts = pathname.split("/");
         const id = parts[3];
         await driverRoutes.deleteStopFromRoute(req, res, id)
+        return;
+      }
+    }
+    else if ((tokenData.role == "employee" || tokenData.role == "manager") && pathname.startsWith("/postoffice")){
+      if (req.method === "GET" && pathname === "/postoffice/get_all") {
+        await postOfficeRoutes.getAllOffices(req, res);
+        console.log("office got!")
         return;
       }
     }
