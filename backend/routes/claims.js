@@ -1,6 +1,6 @@
 /*
 * /ShipNGo/backend/routes/claims.js
-* Updated to only show user-specific claims
+* Updated to handle package_id field and only show user-specific claims
 */
 
 const path = require("path");
@@ -25,7 +25,7 @@ async function fileClaim(req, res) {
     
     // Extract fields from the request body
     const { 
-      firstName, lastName, name, email, phone, claimType, reason, issue
+      firstName, lastName, name, email, phone, package_id, claimType, reason, issue
     } = body;
     
     console.log("Extracted fields:");
@@ -33,6 +33,7 @@ async function fileClaim(req, res) {
     console.log("lastName:", lastName);
     console.log("email:", email);
     console.log("phone:", phone);
+    console.log("package_id:", package_id);
     console.log("claimType:", claimType);
     console.log("reason/issue:", reason || issue);
     console.log("============================================");
@@ -62,6 +63,19 @@ async function fileClaim(req, res) {
       userId = req.tokenData.id || req.tokenData.customer_id || null;
     }
     
+    // Process packageId - convert to integer if possible
+    // Fixed to handle '0' as a valid packageId
+    let safePackageId = null;
+    if (package_id !== undefined && package_id !== '') {
+      safePackageId = parseInt(package_id, 10);
+      // Only set to null if it's explicitly NaN
+      if (isNaN(safePackageId)) {
+        safePackageId = null;
+      }
+      // Log the parsed package ID for debugging
+      console.log("Parsed package_id:", package_id, "→", safePackageId);
+    }
+    
     // KEY FIX: Ensure all params match exactly what controller expects
     console.log("======== PASSING TO CONTROLLER ========");
     const controllerParams = {
@@ -69,6 +83,7 @@ async function fileClaim(req, res) {
       lastName: lastNameValue,
       email: email,
       phone: phone,
+      package_id: safePackageId,
       issueType: mappedClaimType,  // This is now validated
       issueDescription: issueDescription,
       userId: userId

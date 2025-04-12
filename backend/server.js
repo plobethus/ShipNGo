@@ -18,13 +18,17 @@ const authRoutes = require("./routes/auth");
 const claimsRoutes = require("./routes/claims");
 const deliverpointsRoutes = require("./routes/deliverpoints");
 const packageRoutes = require("./routes/packageRoutes");
-const shipmentRoutes = require("./routes/shipment");
 const trackingRoutes = require("./routes/tracking");
-const profileRoutes = require("./routes/profile"); // Added profile routes
+const profileRoutes = require("./routes/profile"); 
+const shopRoutes = require("./routes/shop");
+const statusRoutes = require("./routes/status");
+
 const driverRoutes = require("./routes/drivers");
 const managerRoutes = require("./routes/manager");
 
 const alertsRoutes = require('./routes/alerts');
+
+const financeRoutes = require("./routes/financialreport");
 
 
 const server = http.createServer(async (req, res) => {
@@ -44,7 +48,7 @@ const server = http.createServer(async (req, res) => {
       } else if (req.method === "POST" && pathname === "/tracking") {
         await trackingRoutes.updateTracking(req, res);
         return;
-      }
+      } 
     }
     // Auth endpoints are public (login, register, auth/me)
     else if (pathname.startsWith("/auth")) {
@@ -136,6 +140,9 @@ const server = http.createServer(async (req, res) => {
       if (req.method === "GET" && pathname === "/packages/dashboard/employee") {
         await packageRoutes.getPackagesEmployee(req, res, parsedUrl.query);
         return;
+      } else if (req.method === "POST" && pathname === "/packages") {
+        await packageRoutes.createPackage(req, res);
+        return;
       } else if (req.method === "PUT" && pathname.startsWith("/packages/")) {
         const parts = pathname.split("/");
         const id = parts[2];
@@ -144,22 +151,20 @@ const server = http.createServer(async (req, res) => {
       } else if (req.method === "GET" && pathname === "/packages/customer") {
         await packageRoutes.getPackagesCustomer(req, res);
         return;
-      }
-    }
-    else if (pathname.startsWith("/shipment")) {
-      if (req.method === "POST" && pathname === "/shipment") {
-        await shipmentRoutes.createShipment(req, res);
-        return;
-      } else if (req.method === "GET" && pathname === "/shipment") {
-        await shipmentRoutes.getShipments(req, res);
-        return;
-      } else if (req.method === "GET" && pathname.startsWith("/shipment/")) {
+      } else if (req.method === "DELETE" && pathname.startsWith("/packages/")) {
         const parts = pathname.split("/");
         const id = parts[2];
-        await shipmentRoutes.getShipmentById(req, res, id);
+        await packageRoutes.deletePackage(req, res, id);
         return;
       }
     }
+    else if (pathname.startsWith("/status")) {
+      if (req.method === "GET" && pathname === "/status") {
+        await statusRoutes.status(req, res);
+        return;
+      }
+    }
+      
     // Profile routes - added for customer profile management
 else if (pathname.startsWith("/api/profile")) {
   // Ensure only customers can access profile routes
@@ -181,6 +186,12 @@ else if (pathname.startsWith("/api/profile")) {
     return;
   }
 }
+    else if (pathname.startsWith("/checkout")) {
+      if (req.method === "POST" && pathname === "/checkout") {
+        await shopRoutes.checkout(req, res);
+        return;
+      }
+    }
     else if (tokenData.role == "employee" && pathname.startsWith("/driver")){
       if (req.method === "GET" && pathname === "/driver/get_routes") {
         await driverRoutes.getActiveRoutesByCurrentEmployee(req, res);
@@ -205,8 +216,14 @@ else if (pathname.startsWith("/api/profile")) {
         if (req.method === "GET" && pathname === "/api/claims/") {
           await managerRoutes.fetchAllClaims(req, res);
           return;
-        }
-      }
+    }   else if (req.method === "GET" && pathname === "/api/claims/sum") {
+            await financeRoutes.fetchSumTransactions(req,res);
+            return;
+    }   else if(req.method === "GET" && pathname === "/api/claims/trans"){
+            await financeRoutes.fetchAllTransactions(req,res);
+            return;
+    }
+}
 
     // If no protected route matched, attempt to serve a static file from the frontend folder.
     else {

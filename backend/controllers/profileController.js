@@ -1,18 +1,8 @@
-/*
-* /ShipNGo/backend/controllers/profileController.js
-*/
+//ShipNGo/backend/controllers/profileController.js
+
 
 const bcrypt = require('bcryptjs');
-const db = require("mysql2").createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
-  ssl: { rejectUnauthorized: true },
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-}).promise();
+const db = require("../db"); 
 
 /**
  * Get customer profile information

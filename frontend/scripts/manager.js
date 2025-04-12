@@ -1,11 +1,32 @@
-//ShipNGo/frontend/scripts/manager.js
 document.addEventListener("DOMContentLoaded", async function () {
+    try {
+      const sumResponse = await fetch("/api/claims/sum");
+      const sumData = await sumResponse.json(); 
+      
+      // Access the container where you want to show the total revenue
+      const totalContainer = document.getElementById("total-container");
+  
+      if (Array.isArray(sumData) && sumData.length > 0) {
+        const totalRevenue = sumData[0].total_sum || 0;
+        totalContainer.textContent = `Total Revenue: $${totalRevenue}`;
+      } else if (sumData && sumData.total_sum !== undefined) {
+        totalContainer.textContent = `Total Revenue: $${sumData.total_sum}`;
+      } else {
+        totalContainer.textContent = "Total Revenue: $0";
+      }
+    } catch (err) {
+      console.error("Error fetching sum of transactions:", err);
+    }
+
+    
+
+  
     try {
       const response = await fetch("/api/claims/");
       const data = await response.json();
   
       const tableBody = document.getElementById("complaint-table");
-      tableBody.innerHTML = ""; // Clear any existing rows
+      tableBody.innerHTML = ""; 
   
       if (data && data.length > 0) {
         data.forEach(claim => {

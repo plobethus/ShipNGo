@@ -1,17 +1,7 @@
-/*
-* /ShipNGo/backend/controllers/packageController.js
-*/
+//ShipNGo/backend/controllers/packageController.js
 
-const db = require("mysql2").createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
-    ssl: { rejectUnauthorized: true },
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-  }).promise();
+
+const db = require("../db"); 
   
   async function getAllPackages(filter) {
     let query = `
@@ -49,6 +39,7 @@ const db = require("mysql2").createPool({
     let query = "UPDATE packages SET ";
     const updates = [];
     const values = [];
+    
     if (data.status) {
       updates.push("status = ?");
       values.push(data.status);
@@ -57,8 +48,26 @@ const db = require("mysql2").createPool({
       updates.push("location = ?");
       values.push(data.location);
     }
+    if (data.weight) {
+      updates.push("weight = ?");
+      values.push(data.weight);
+    }
+    if (data.address_from) {
+      updates.push("address_from = ?");
+      values.push(data.address_from);
+    }
+    if (data.address_to) {
+      updates.push("address_to = ?");
+      values.push(data.address_to);
+    }
+    
+    if (updates.length === 0) {
+      throw new Error("No valid fields provided to update.");
+    }
+    
     query += updates.join(", ") + " WHERE package_id = ?";
     values.push(id);
+  
     const [result] = await db.execute(query, values);
     return result.affectedRows;
   }
@@ -74,27 +83,26 @@ const db = require("mysql2").createPool({
   const [packages] = await db.execute(query, [customerId, customerId]);
   return packages;
   }
-
   async function createPackage({
     sender_id,
+    sender_name, // new: include sender_name if you want to return it in the response
     receiver_name,
     address_from,
     address_to,
     weight,
     dimensions,
     shipping_class,
-  
   }) {
-    const shippingCost = parseFloat((5 + weight * 0.5).toFixed(2)); // Simple cost formula
+    // Calculate shipping cost (simple formula)
+    const shippingCost = parseFloat((5 + weight * 0.5).toFixed(2));
   
     const sql = `
       INSERT INTO packages
-      (sender_id, receiver_name, weight, dimensions, shipping_class, cost, status, address_from, address_to, location)
+        (sender_id, receiver_name, weight, dimensions, shipping_class, cost, status, address_from, address_to, location)
       VALUES (?, ?, ?, ?, ?, ?, 'Pending', ?, ?, ?)
     `;
-  
     const values = [
-      sender_id, // Temporary hardcoded sender_id, replace with token-based ID later
+      sender_id,
       receiver_name,
       weight,
       dimensions,
@@ -102,11 +110,40 @@ const db = require("mysql2").createPool({
       shippingCost,
       address_from,
       address_to,
-      address_to
+      address_to  
     ];
   
     const [result] = await db.execute(sql, values);
-    return { package_id: result.insertId, cost: shippingCost };
+  
+
+    const [rows] = await db.execute(
+      "SELECT discount_percentage FROM customers WHERE customer_id = ?",
+      [sender_id]
+    );
+    const discount = rows[0]?.discount_percentage || 0;
+  
+    return {
+      package: {
+        package_id: result.insertId,
+        sender_name,
+        receiver_name,
+        address_from,
+        address_to,
+        weight,
+        shipping_class,
+        cost: shippingCost,
+        status: "Pending",
+        location: address_to
+      },
+      discount_applied: discount
+    };
+  }
+
+  
+  async function deletePackage(id) {
+    const query = "DELETE FROM packages WHERE package_id = ?";
+    const [result] = await db.execute(query, [id]);
+    return result.affectedRows;
   }
   
   
@@ -114,5 +151,6 @@ const db = require("mysql2").createPool({
     getAllPackages,
     updatePackage,
     getCustomerPackages,
-    createPackage
+    createPackage,
+    deletePackage
   };

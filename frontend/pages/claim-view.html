@@ -1,30 +1,241 @@
-<!-- /ShipNGo/frontend/pages/route_manage.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tracking - ShipNGo</title>
-  <link rel="stylesheet" href="../styles/styles.css" />
-  <link rel="stylesheet" href="../styles/nav.css"/>
-  <link rel="stylesheet" href="../styles/routes.css"/>
+  <title>Claim Manager - ShipNGo</title>
+  <link rel="stylesheet" href="../styles/styles.css">
+  <link rel="stylesheet" href="../styles/nav.css" />
+  <link rel="stylesheet" href="../styles/manager-claims-dashboard.css"/>
+  <link rel="stylesheet" href="../styles/manager-claims-modal.css" />
 </head>
 <body>
   <div id="header-include"></div>
   <script src="/scripts/header.js" defer></script>
 
-  
-<div>
-  <section id="services" class="services">
-    <h3>Our Services</h3>
-    <p>We provide local and international shipping, express delivery, and secure parcel handling.</p>
-  </section>
-  
+  <div class="page-content">
+    <div class="manager-container">
+      <h1>Claim Management Dashboard</h1>
+      
+      <!-- Stats Dashboard -->
+      <div class="stats-dashboard">
+        <div class="stats-container">
+          <div class="stat-card">
+            <div class="stat-title">Total Claims</div>
+            <div class="stat-value" id="total-claims-count">-</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-title">Pending Claims</div>
+            <div class="stat-value" id="pending-claims-count">-</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-title">Resolution Rate</div>
+            <div class="stat-value" id="resolution-rate">-</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Manual Tab Container -->
+      <div class="tab-container">
+        <div class="tab active" id="all-claims-tab">All Claims</div>
+        <div class="tab" id="package-claims-tab">Claims with Packages</div>
+        <div class="tab" id="no-package-claims-tab">Claims without Packages</div>
+      </div>
+      
+      <div class="container">
+        <h2>Customer Claims</h2>
+        <div id="complaint-container">
+          <!-- Tab content containers -->
+          <div class="tab-content active" id="all-claims-content">
+            <!-- Filter Controls -->
+            <div class="filter-controls">
+              <div class="filter-group">
+                <label for="date-filter">Date:</label>
+                <select id="date-filter">
+                  <option value="">All Dates</option>
+                  <option value="today">Today</option>
+                  <option value="yesterday">Yesterday</option>
+                  <option value="last7">Last 7 Days</option>
+                  <option value="last30">Last 30 Days</option>
+                </select>
+              </div>
+              
+              <div class="filter-group">
+                <label for="customer-filter">Customer ID:</label>
+                <input type="text" id="customer-filter" placeholder="Enter Customer ID">
+              </div>
+              
+              <div class="filter-group">
+                <label for="package-filter">Package ID:</label>
+                <input type="text" id="package-filter" placeholder="Enter Package ID">
+              </div>
+              
+              <div class="filter-group">
+                <label for="status-filter">Status:</label>
+                <select id="status-filter">
+                  <option value="">All Status</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Rejected">Rejected</option>
+                  <option value="Processing">Processing</option>
+                </select>
+              </div>
+              
+              <div class="filter-group">
+                <label for="issue-type-filter">Issue Type:</label>
+                <select id="issue-type-filter">
+                  <option value="">All Issues</option>
+                </select>
+              </div>
+              
+              <div class="filter-buttons">
+                <button class="filter-btn apply-filter" id="apply-filters">Apply Filters</button>
+                <button class="filter-btn reset-filter" id="reset-filters">Reset</button>
+              </div>
+            </div>
+            
+            <table>
+              <thead>
+                <tr>
+                  <th>Ticket ID</th>
+                  <th>Issue Type</th>
+                  <th>Processed Date</th>
+                  <th>Reason</th>
+                  <th>Customer Name</th>
+                  <th>Customer ID</th>
+                  <th>Package Details</th>
+                  <th>Refund Status</th>
+                </tr>
+              </thead>
+              <tbody id="complaint-table">
+                <tr>
+                  <td colspan="8" style="text-align: center;">Loading claims data...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Claims with Packages Tab Content -->
+          <div class="tab-content" id="package-claims-content">
+            <!-- Filter Controls for Package Claims -->
+            <div class="filter-controls">
+              <div class="filter-group">
+                <label for="pkg-date-filter">Date:</label>
+                <select id="pkg-date-filter">
+                  <option value="">All Dates</option>
+                  <option value="today">Today</option>
+                  <option value="yesterday">Yesterday</option>
+                  <option value="last7">Last 7 Days</option>
+                  <option value="last30">Last 30 Days</option>
+                </select>
+              </div>
+              
+              <div class="filter-group">
+                <label for="pkg-customer-filter">Customer ID:</label>
+                <input type="text" id="pkg-customer-filter" placeholder="Enter Customer ID">
+              </div>
+              
+              <div class="filter-group">
+                <label for="pkg-package-filter">Package ID:</label>
+                <input type="text" id="pkg-package-filter" placeholder="Enter Package ID">
+              </div>
+              
+              <div class="filter-group">
+                <label for="pkg-status-filter">Status:</label>
+                <select id="pkg-status-filter">
+                  <option value="">All Status</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Rejected">Rejected</option>
+                  <option value="Processing">Processing</option>
+                </select>
+              </div>
+              
+              <div class="filter-group">
+                <label for="pkg-issue-type-filter">Issue Type:</label>
+                <select id="pkg-issue-type-filter">
+                  <option value="">All Issues</option>
+                </select>
+              </div>
+              
+              <div class="filter-buttons">
+                <button class="filter-btn apply-filter" id="pkg-apply-filters">Apply Filters</button>
+                <button class="filter-btn reset-filter" id="pkg-reset-filters">Reset</button>
+              </div>
+            </div>
+            
+            <table>
+              <thead>
+                <tr>
+                  <th>Ticket ID</th>
+                  <th>Issue Type</th>
+                  <th>Processed Date</th>
+                  <th>Package ID</th>
+                  <th>Weight</th>
+                  <th>Dimensions</th>
+                  <th>Customer ID</th>
+                  <th>Refund Status</th>
+                </tr>
+              </thead>
+              <tbody id="package-claims-table">
+                <tr>
+                  <td colspan="8" style="text-align: center;">Loading package claims data...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Claims without Packages Tab Content -->
+          <div class="tab-content" id="no-package-claims-content">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ticket ID</th>
+                  <th>Issue Type</th>
+                  <th>Processed Date</th>
+                  <th>Customer Name</th>
+                </tr>
+              </thead>
+              <tbody id="no-package-claims-table">
+                <tr>
+                  <td colspan="4" style="text-align: center;">Loading non-package claims data...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <footer>
     <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
   </footer>
-    </div>
-</div>
 
+  <!-- Basic tab switching functionality -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const tabs = document.querySelectorAll('.tab');
+      const contents = document.querySelectorAll('.tab-content');
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          // Remove active class from all tabs and contents
+          tabs.forEach(t => t.classList.remove('active'));
+          contents.forEach(c => c.classList.remove('active'));
+          
+          // Add active class to clicked tab
+          this.classList.add('active');
+          
+          // Get corresponding content ID and activate it
+          const contentId = this.id.replace('-tab', '-content');
+          document.getElementById(contentId).classList.add('active');
+        });
+      });
+    });
+  </script>
+
+  <!-- Load the manager claims script -->
+  <script src="../scripts/managerClaims.js"></script>
 </body>
 </html>

@@ -1,37 +1,22 @@
-/*
-* /ShipNGo/backend/controllers/trackingController.js
-*/
+//ShipNGo/backend/controllers/trackingController.js
 
-const db = require("mysql2").createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
-    ssl: { rejectUnauthorized: true },
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-  }).promise();
+const db = require("../db"); 
   
-  async function getTrackingInfo(trackingId) {
+  async function getTrackingInfo(package_id) {
     const query = `
       SELECT 
-        th.tracking_id,
         th.package_id,
         w.address AS warehouse_location,
         p.address AS post_office_address,
-        th.date,
         th.status,
-        th.updated_at,
-        r.route_name
+        th.updated_at
       FROM trackinghistory th
       LEFT JOIN warehouses w ON th.warehouse_location = w.ware_id
       LEFT JOIN postoffices p ON th.post_office_location = p.post_id
-      LEFT JOIN routes r ON th.route_id = r.route_id
-      WHERE th.tracking_id = ?
+      WHERE th.package_id = ?
       ORDER BY th.updated_at DESC;
     `;
-    const [rows] = await db.execute(query, [trackingId]);
+    const [rows] = await db.execute(query, [package_id]);
     return rows;
   }
   

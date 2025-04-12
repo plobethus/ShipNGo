@@ -1,0 +1,76 @@
+/* /ShipNGo/frontend/styles/status.css */
+
+/* Main container for the page */
+.status-page-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  
+  /* Headings */
+  .status-page-container h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #004080;
+  }
+  
+  /* CHARTS SECTION */
+  .charts-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+  
+  /* Each chart */
+  .chart-container {
+    flex: 1 1 400px;
+    max-width: 600px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  /* TABLES SECTION */
+  .tables-section {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+  
+  .tables-section h2 {
+    margin-bottom: 1rem;
+    color: #004080;
+    text-align: center;
+  }
+  
+  /* Each table container */
+  .table-container {
+    margin-bottom: 2rem;
+    overflow-x: auto; 
+  }
+  
+  .table-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+  }
+  
+  .table-container th,
+  .table-container td {
+    border: 1px solid #ccc;
+    padding: 0.75rem 1rem;
+    text-align: left;
+  }
+  
+  .table-container th {
+    background: #004080;
+    color: #fff;
+  }
+  
+  .table-container tr:nth-child(even) {
+    background: #f2f2f2;
+  }
+  
