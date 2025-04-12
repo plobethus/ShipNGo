@@ -1,6 +1,5 @@
 //ShipNGo/backend/controllers/deliveryPointsController.js
 
-
 const db = require("../db"); 
   
   async function registerDeliveryPoint(name, special_instructions, delivery_type, entrance_address) {

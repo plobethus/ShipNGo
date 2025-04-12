@@ -13,7 +13,7 @@ async function getCustomerProfile(customerId) {
   console.log("Getting profile for customer ID:", customerId);
   
   try {
-    // Remove created_at from the query since it doesn't exist in the table
+
     const [rows] = await db.execute(
       "SELECT customer_id, name, email, phone, address FROM customers WHERE customer_id = ?",
       [customerId]
@@ -25,12 +25,9 @@ async function getCustomerProfile(customerId) {
       throw new Error("Customer not found");
     }
     
-    // Format the data for consistency
     const customerData = rows[0];
     
-    // Make sure phone is properly formatted for display
     if (customerData.phone) {
-      // Store as string to prevent number precision issues
       customerData.phone = customerData.phone.toString();
     }
     
@@ -48,12 +45,10 @@ async function getCustomerProfile(customerId) {
  * @returns {Promise<Object>} - Result of the update operation
  */
 async function updateCustomerProfile(customerId, profileData) {
-  // Only allow updating these fields
   const allowedFields = ['name', 'phone', 'address', 'email'];
   const updates = [];
   const values = [];
   
-  // Build the update query dynamically based on provided fields
   for (const field of allowedFields) {
     if (profileData[field] !== undefined) {
       updates.push(`${field} = ?`);
@@ -65,7 +60,6 @@ async function updateCustomerProfile(customerId, profileData) {
     return { affectedRows: 0 };
   }
   
-  // Add the customerId to the values array for the WHERE clause
   values.push(customerId);
   
   const query = `UPDATE customers SET ${updates.join(', ')} WHERE customer_id = ?`;
@@ -82,7 +76,6 @@ async function updateCustomerProfile(customerId, profileData) {
  * @returns {Promise<boolean>} - Success/failure of password change
  */
 async function changeCustomerPassword(customerId, currentPassword, newPassword) {
-  // First verify current password
   const [rows] = await db.execute(
     "SELECT password FROM customers WHERE customer_id = ?",
     [customerId]
@@ -97,11 +90,9 @@ async function changeCustomerPassword(customerId, currentPassword, newPassword) 
     return false;
   }
   
-  // Hash the new password
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(newPassword, salt);
   
-  // Update the password
   const [result] = await db.execute(
     "UPDATE customers SET password = ? WHERE customer_id = ?",
     [hashedPassword, customerId]

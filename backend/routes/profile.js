@@ -1,18 +1,12 @@
-/*
-* /ShipNGo/backend/routes/profile.js
-*/
+//ShipNGo/backend/routes/profile.js
 
 const { sendJson, readJsonBody } = require("../helpers");
 const profileController = require("../controllers/profileController");
 
-/**
- * Get profile information for the authenticated customer
- */
 async function getProfile(req, res) {
   try {
     console.log("getProfile route hit, tokenData:", req.tokenData);
     
-    // Check if tokenData exists
     if (!req.tokenData) {
       console.log("No token data found");
       return sendJson(res, 401, { 
@@ -24,7 +18,6 @@ async function getProfile(req, res) {
     const customerId = req.tokenData.customer_id;
     console.log("Customer ID from token:", customerId);
     
-    // Verify this is a customer request
     if (req.tokenData.role !== "customer") {
       console.log("Non-customer role attempted to access profile:", req.tokenData.role);
       return sendJson(res, 403, { 
@@ -57,9 +50,6 @@ async function getProfile(req, res) {
   }
 }
 
-/**
- * Update profile information for the authenticated customer
- */
 async function updateProfile(req, res) {
   try {
     const customerId = req.tokenData.customer_id;
@@ -73,7 +63,6 @@ async function updateProfile(req, res) {
     
     const profileData = await readJsonBody(req);
     
-    // Validate required fields
     if (!profileData) {
       return sendJson(res, 400, { 
         success: false, 
@@ -102,9 +91,6 @@ async function updateProfile(req, res) {
   }
 }
 
-/**
- * Change password for the authenticated customer
- */
 async function changePassword(req, res) {
   try {
     const customerId = req.tokenData.customer_id;
@@ -118,7 +104,6 @@ async function changePassword(req, res) {
     
     const passwordData = await readJsonBody(req);
     
-    // Validate required fields
     if (!passwordData || !passwordData.currentPassword || !passwordData.newPassword) {
       return sendJson(res, 400, { 
         success: false, 
@@ -126,7 +111,6 @@ async function changePassword(req, res) {
       });
     }
     
-    // Validate new password
     if (passwordData.newPassword.length < 8) {
       return sendJson(res, 400, { 
         success: false, 

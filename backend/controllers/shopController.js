@@ -1,7 +1,6 @@
 //ShipNGo/backend/controllers/shopController
 const db = require("../db"); 
 
-//Items being {category:str, quantity:int}, category can be enum('Envelope','Box','Tape','Stamps','Labels')
 async function performCheckout(user, items){
   const userId = user.customer_id;
     for (const item of items){

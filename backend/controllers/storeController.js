@@ -14,7 +14,6 @@ const db = require("../db");
       for (const { name, quantity } of items) {
         if (quantity <= 0) continue;
   
-        // Check stock availability first
         const [rows] = await conn.execute(
           "SELECT stock_quantity FROM supplies WHERE name = ?",
           [name]

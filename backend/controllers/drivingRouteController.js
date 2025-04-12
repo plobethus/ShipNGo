@@ -1,7 +1,6 @@
 //ShipNGo/backend/controllers/drivingRouteController.js
 const db = require("../db"); 
 
-
 async function createRoute(employee_id,
     destination,
     departure_time,

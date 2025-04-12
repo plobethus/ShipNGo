@@ -1,6 +1,5 @@
-/*
- * /ShipNGo/backend/routes/manager.js
- */
+//ShipNGo/backend/routes/manager.js
+
 
 const { sendJson } = require("../helpers");
 const { getAllClaims } = require("../controllers/managerController");

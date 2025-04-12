@@ -1,4 +1,4 @@
-// /backend/controllers/postOfficeController.js
+// backend/controllers/postOfficeController.js
 const db = require("mysql2").createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,

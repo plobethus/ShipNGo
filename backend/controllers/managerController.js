@@ -1,5 +1,4 @@
 //ShipNGo/backend/controllers/claims.js
- 
 
 const db = require("../db"); 
   
