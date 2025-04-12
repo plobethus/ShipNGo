@@ -1,57 +1,273 @@
-<!-- /ShipNGo/frontend/pages/login.html -->
+<!-- Updated HTML structure with proper footer placement -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login - ShipNGo</title>
+  <title>Claim Manager - ShipNGo</title>
   <link rel="stylesheet" href="../styles/managerclaims.css"/>
   <link rel="stylesheet" href="../styles/styles.css">
   <link rel="stylesheet" href="../styles/nav.css" />
+  <style>
+    /* Additional footer styling to ensure it stays at the bottom */
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .page-content {
+      flex: 1;
+    }
+    
+    footer {
+      margin-top: auto;
+      width: 100%;
+      background-color: #004080;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
 </head>
 <body>
   <div id="header-include"></div>
   <script src="/scripts/header.js" defer></script>
 
-    <div class = "manager-container">
-        
-        <div class="container">
-            <h2 style="color:white;">Customer Claims</h2>
-            <div id="complaint-container">
-                <!-- Stores all of the claim tickets and displays them to the manager-->
-                <table>
-                    <thead>
-                      <tr>
-                        <th>Ticket ID</th>
-                        <th>Issue Type</th>
-                        <th>Processed Date</th>
-                        <th>Phone Number</th>
-                        <th>Email</th>
-                        <th>Reason</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Customer ID</th>
-                        <th>Refund Status</th>
-                      </tr>
-                    </thead>
-                    <tbody id="complaint-table"></tbody>
-                  </table>
-            </div>
-        </div>
-    </div>
-
-
-  <div>
-    <section id="services" class="services">
-      <h3>Our Services</h3>
-      <p>We provide local and international shipping, express delivery, and secure parcel handling.</p>
-    </section>
-    
-    <footer>
-      <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
-    </footer>
+  <div class="page-content">
+    <div class="manager-container">
+      <h1>Claim Management Dashboard</h1>
+      
+      <!-- Manual Tab Container -->
+      <div class="tab-container">
+        <div class="tab active" id="all-claims-tab">All Claims</div>
+        <div class="tab" id="package-claims-tab">Claims with Packages</div>
+        <div class="tab" id="no-package-claims-tab">Claims without Packages</div>
       </div>
+      
+      <div class="container">
+        <h2>Customer Claims</h2>
+        <div id="complaint-container">
+          <!-- Tab content containers -->
+          <div class="tab-content active" id="all-claims-content">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ticket ID</th>
+                  <th>Issue Type</th>
+                  <th>Processed Date</th>
+                  <th>Reason</th>
+                  <th>Customer Name</th>
+                  <th>Customer ID</th>
+                  <th>Package Details</th>
+                  <th>Refund Status</th>
+                </tr>
+              </thead>
+              <tbody id="complaint-table">
+                <tr>
+                  <td colspan="8" style="text-align: center;">Loading claims data...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Claims with Packages Tab Content -->
+          <div class="tab-content" id="package-claims-content">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ticket ID</th>
+                  <th>Issue Type</th>
+                  <th>Package ID</th>
+                  <th>Weight</th>
+                  <th>Dimensions</th>
+                  <th>Customer ID</th>
+                  <th>Refund Status</th>
+                </tr>
+              </thead>
+              <tbody id="package-claims-table">
+                <tr>
+                  <td colspan="7" style="text-align: center;">Loading package claims data...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Claims without Packages Tab Content -->
+          <div class="tab-content" id="no-package-claims-content">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ticket ID</th>
+                  <th>Issue Type</th>
+                  <th>Processed Date</th>
+                  <th>Customer Name</th>
+                </tr>
+              </thead>
+              <tbody id="no-package-claims-table">
+                <tr>
+                  <td colspan="4" style="text-align: center;">Loading non-package claims data...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <script src="../scripts/manager.js"></script>
+  <footer>
+    <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
+  </footer>
+
+  <!-- Manually add tab switching functionality in case main JS fails -->
+  <script>
+    // Basic tab functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const tabs = document.querySelectorAll('.tab');
+      const contents = document.querySelectorAll('.tab-content');
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          // Remove active class from all tabs and contents
+          tabs.forEach(t => t.classList.remove('active'));
+          contents.forEach(c => c.classList.remove('active'));
+          
+          // Add active class to clicked tab
+          this.classList.add('active');
+          
+          // Get corresponding content ID and activate it
+          const contentId = this.id.replace('-tab', '-content');
+          document.getElementById(contentId).classList.add('active');
+        });
+      });
+      
+      // Make a fallback fetch for claims data
+      fetch('/api/claims/')
+        .then(response => response.json())
+        .then(data => {
+          if (Array.isArray(data)) {
+            displayClaimsData(data);
+          } else if (data.claims) {
+            displayClaimsData(data.claims);
+          } else {
+            showErrorMessage("Failed to load claims data");
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching claims:", error);
+          showErrorMessage("Error loading claims. Please try again.");
+        });
+        
+      function displayClaimsData(claims) {
+        // Display all claims
+        const allClaimsTable = document.getElementById('complaint-table');
+        if (allClaimsTable) {
+          allClaimsTable.innerHTML = claims.length ? '' : '<tr><td colspan="8">No claims found</td></tr>';
+          
+          claims.forEach(claim => {
+            // Format date if it exists
+            let formattedDate = "N/A";
+            if (claim.processed_date) {
+              const date = new Date(claim.processed_date);
+              formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            }
+            
+            // Create package details section
+            let packageInfo = "No package";
+            if (claim.package_id) {
+              packageInfo = `ID: ${claim.package_id}`;
+              if (claim.weight) packageInfo += `<br>Weight: ${claim.weight}`;
+              if (claim.dimensions) packageInfo += `<br>Dim: ${claim.dimensions}`;
+            }
+            
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${claim.ticket_id || 'N/A'}</td>
+              <td>${claim.issue_type || 'N/A'}</td>
+              <td>${formattedDate}</td>
+              <td>${claim.reason || 'N/A'}</td>
+              <td>${claim.first_name || ''} ${claim.last_name || ''}</td>
+              <td>${claim.customer_id || 'N/A'}</td>
+              <td>${packageInfo}</td>
+              <td>${claim.refund_status || 'Pending'}</td>
+            `;
+            allClaimsTable.appendChild(row);
+          });
+        }
+        
+        // Display claims with package_id
+        displayPackageClaims(claims.filter(claim => claim.package_id));
+        
+        // Display claims without package_id
+        displayNoPackageClaims(claims.filter(claim => !claim.package_id));
+      }
+      
+      function displayPackageClaims(claimsWithPackage) {
+        const packageClaimsTable = document.getElementById('package-claims-table');
+        if (packageClaimsTable) {
+          packageClaimsTable.innerHTML = claimsWithPackage.length ? '' : '<tr><td colspan="7">No claims with packages found</td></tr>';
+          
+          claimsWithPackage.forEach(claim => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${claim.ticket_id || 'N/A'}</td>
+              <td>${claim.issue_type || 'N/A'}</td>
+              <td>${claim.package_id || 'N/A'}</td>
+              <td>${claim.weight || 'N/A'}</td>
+              <td>${claim.dimensions || 'N/A'}</td>
+              <td>${claim.customer_id || 'N/A'}</td>
+              <td>${claim.refund_status || 'Pending'}</td>
+            `;
+            packageClaimsTable.appendChild(row);
+          });
+        }
+      }
+      
+      function displayNoPackageClaims(claimsWithoutPackage) {
+        const noPackageClaimsTable = document.getElementById('no-package-claims-table');
+        if (noPackageClaimsTable) {
+          noPackageClaimsTable.innerHTML = claimsWithoutPackage.length ? '' : '<tr><td colspan="4">No claims without packages found</td></tr>';
+          
+          claimsWithoutPackage.forEach(claim => {
+            // Format date if it exists
+            let formattedDate = "N/A";
+            if (claim.processed_date) {
+              const date = new Date(claim.processed_date);
+              formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            }
+            
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${claim.ticket_id || 'N/A'}</td>
+              <td>${claim.issue_type || 'N/A'}</td>
+              <td>${formattedDate}</td>
+              <td>${claim.first_name || ''} ${claim.last_name || ''}</td>
+            `;
+            noPackageClaimsTable.appendChild(row);
+          });
+        }
+      }
+      
+      function showErrorMessage(message) {
+        // Display error in tables
+        const tables = {
+          'complaint-table': 8, 
+          'package-claims-table': 7, 
+          'no-package-claims-table': 4
+        };
+        
+        Object.entries(tables).forEach(([tableId, colspan]) => {
+          const table = document.getElementById(tableId);
+          if (table) {
+            table.innerHTML = `<tr><td colspan="${colspan}" style="color:red;text-align:center;">${message}</td></tr>`;
+          }
+        });
+      }
+    });
+  </script>
+
+  <!-- Load the main manager.js script -->
+  <script src="../scripts/managerClaims.js"></script>
 </body>
 </html>
