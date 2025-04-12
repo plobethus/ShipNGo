@@ -123,11 +123,27 @@ async function updatePackage(id, data) {
   
 async function getCustomerPackages(customerId) {
   const query = `
-    SELECT package_id, sender_id, weight, status, address_from, address_to, receiver_name
-    FROM packages
-    WHERE sender_id = ? 
-      OR address_to = (SELECT address FROM customers WHERE customer_id = ?)
-  `;
+    SELECT 
+  p.package_id,
+  p.sender_id,
+  p.weight,
+  p.address_from,
+  p.address_to,
+  p.receiver_name,
+  COALESCE(t.status, 'Scheduled') AS status
+  FROM packages p
+  LEFT JOIN (
+      SELECT t1.package_id, t1.status
+      FROM package_tracking_log t1
+      JOIN (
+          SELECT package_id, MAX(changed_at) AS max_changed_at
+          FROM package_tracking_log
+          GROUP BY package_id
+      ) t2 ON t1.package_id = t2.package_id AND t1.changed_at = t2.max_changed_at
+  ) t ON p.package_id = t.package_id
+  WHERE p.sender_id = ?
+    OR p.address_to = (SELECT address FROM customers WHERE customer_id = ?)
+`;
   console.log("customerId in route:", customerId);
   const [packages] = await db.execute(query, [customerId, customerId]);
   return packages;
@@ -148,8 +164,8 @@ async function createPackage({
 
   const sql = `
     INSERT INTO packages
-      (sender_id, receiver_name, weight, dimensions, shipping_class, cost, status, address_from, address_to, location, created_at)
-    VALUES (?, ?, ?, ?, ?, ?, 'Pending', ?, ?, ?, NOW())
+      (sender_id, receiver_name, weight, dimensions, shipping_class, cost, address_from, address_to, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())
   `;
   const values = [
     sender_id,
@@ -159,7 +175,6 @@ async function createPackage({
     shipping_class.charAt(0).toUpperCase() + shipping_class.slice(1),
     shippingCost,
     address_from,
-    address_to,
     address_to   
   ];
   
