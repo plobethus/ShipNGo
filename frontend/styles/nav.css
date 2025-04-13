@@ -35,8 +35,19 @@ nav ul {
   margin: 0;
   padding: 0;
   display: flex;  /* items horizontally aligned */
+
+  gap: 30px;      /* space between items */
+}
+
+/* Public vs. protected nav lists */
+.public-nav,
+#protected-nav {
+  display: flex;
+  align-items: center;
+
   gap: 30px; 
   align-items: center;     /* space between items */
+
 }
 
 nav ul li {
@@ -116,6 +127,14 @@ nav ul li:hover .dropdown {
   justify-content: center;
   align-items: center;
 }
+
+
+.title-and-dropdown {
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+}
+
 
 /* Auth-only elements should be hidden by default */
 .auth-only-element {

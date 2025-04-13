@@ -1,14 +1,23 @@
 <!-- /ShipNGo/frontend/includes/header.html -->
 <nav>
     <div class="title-and-dropdown">
+
+      <!-- Brand/logo -->
+
       <a href="/index.html">
         <h1 class="navbar" style="text-decoration:none;">ShipNGo</h1>
       </a>
   
+
+      <!-- Public nav items (Support is always visible) -->
+      <ul class="main-nav">
+        <li>
+
       <!-- Always-visible nav items -->
       <ul>
         <!-- Universal Support Dropdown -->
         <li id="support-general">
+
           <a href="#">Support</a>
           <ul class="dropdown">
             <li><a id="faq" href="/pages/faq.html">FAQ</a></li>
@@ -16,8 +25,9 @@
           </ul>
         </li>
       </ul>
-  
+
       <!-- Protected nav items (only shown after login) -->
+
       <ul id="protected-nav" style="display: none;">
         <li>
           <a href="#" id="shipping">Shipping</a>
@@ -35,7 +45,8 @@
         <li>
           <a href="#" id="routes">Routes</a>
           <ul class="dropdown">
-            <li><a href="../pages/route_manage.html">Manage Routes</a></li>
+
+            <li><a href="/pages/route_manage.html">Manage Routes</a></li>
           </ul>
         </li>
         <li id="manager-status" style="display: none;">
@@ -44,12 +55,22 @@
       </ul>
     </div>
   
+
+    <!-- Right-side: Dashboard + Profile + Login/Logout -->
+    <div class="profile">
+      <ul>
+        <a id="dashboard-link" href="#" style="color:white; text-decoration:none;">Dashboard</a> 
+      </ul>
+  
+      <!-- Profile button (hidden by default, shown after login) -->
+
     <div class="profile">
       <ul>
         <a id="dashboard-link" href="#" style="color:white; text-decoration:none;">Dashboard</a>
       </ul>
   
       <!-- Profile Button -->
+
       <div class="profile-nav-button auth-only-element" id="profile-nav-button" style="display: none !important; visibility: hidden;">
         <a href="/pages/profile.html" class="profile-btn">
           <span class="profile-icon">👤</span>
@@ -57,6 +78,9 @@
         </a>
       </div>
   
+
+      <!-- Login/Logout buttons -->
+
       <div class="login">
         <a id="login-btn" href="/pages/login.html" class="btn">Log In</a>
         <button id="logout-btn" class="btn" style="display: none;">Logout</button>

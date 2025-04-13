@@ -438,6 +438,40 @@ select {
   font-size: 14px;
 }
 
+.bouncing-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 3rem;
+  z-index: 999;
+  animation: bounceAround 6s linear infinite alternate;
+}
+
+/* Bouncing diagonally inside the viewport */
+.flying-box {
+  position: absolute;
+  top: 100px; /* adjust vertical position */
+  left: -100px; /* start off screen */
+  font-size: 2.5rem;
+  animation: flyBox 10s linear infinite;
+  z-index: 999;
+}
+
+@keyframes flyBox {
+  0% {
+    transform: translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(50vw) rotate(15deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(100vw) rotate(-10deg);
+    opacity: 0;
+  }
+}
+
 .modal-backdrop {
   position: fixed;
   top: 0;
