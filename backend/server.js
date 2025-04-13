@@ -30,6 +30,8 @@ const alertsRoutes = require('./routes/alerts');
 
 const financeRoutes = require("./routes/financialreport");
 
+const locatoinsRoutes = require("./routes/locations")
+
 
 const server = http.createServer(async (req, res) => {
   try {
@@ -192,6 +194,10 @@ else if (pathname.startsWith("/api/profile")) {
         return;
       }
     }
+    else if (pathname == "/locations" && req.method == "GET"){
+      await locatoinsRoutes.getAllLocations(req, res);
+      return;
+    }
     else if (tokenData.role == "employee" && pathname.startsWith("/driver")){
       if (req.method === "GET" && pathname === "/driver/get_routes") {
         await driverRoutes.getActiveRoutesByCurrentEmployee(req, res);
@@ -211,7 +217,6 @@ else if (pathname.startsWith("/api/profile")) {
         return;
       }
     }
-
     else if (tokenData.role === "manager" && pathname.startsWith("/api/claims/")){
       if (req.method === "GET" && pathname === "/api/claims/") {
         await managerRoutes.fetchAllClaims(req, res);

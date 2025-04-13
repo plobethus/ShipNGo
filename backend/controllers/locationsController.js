@@ -10,13 +10,13 @@ const db = require("mysql2").createPool({
   queueLimit: 0
 }).promise();
 
-async function getAllPostOffices() {
-  const [rows] = await db.execute("SELECT * FROM postoffices");
+async function getAllLocation() {
+  const [rows] = await db.execute("SELECT * FROM locations");
   return rows;
 }
 
-async function getPostOfficeById(post_id) {
-  const [rows] = await db.execute("SELECT * FROM postoffices WHERE post_id = ?", [post_id]);
+async function getLocationById(post_id) {
+  const [rows] = await db.execute("SELECT * FROM locations WHERE location_id = ?", [post_id]);
   return rows[0];
 }
 
@@ -52,13 +52,13 @@ async function createPostOffice(data) {
 }
 
 async function deletePostOffice(post_id) {
-  const [result] = await db.execute("DELETE FROM postoffices WHERE post_id = ?", [post_id]);
+  const [result] = await db.execute("DELETE FROM locations WHERE location_id = ?", [post_id]);
   return result.affectedRows;
 }
 
 module.exports = {
-  getAllPostOffices,
-  getPostOfficeById,
+  getAllLocation,
+  getLocationById,
   createPostOffice,
   deletePostOffice
 };

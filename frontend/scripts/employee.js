@@ -6,16 +6,48 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("search-customer")?.addEventListener("input", debounce(loadPackages, 500));
     document.getElementById("start-date")?.addEventListener("change", loadPackages);
     document.getElementById("end-date")?.addEventListener("change", loadPackages);
+    document.getElementById("location-filter")?.addEventListener("change", loadPackages);
     document.getElementById("min-weight")?.addEventListener("input", debounce(loadPackages, 500));
     document.getElementById("max-weight")?.addEventListener("input", debounce(loadPackages, 500));
     document.getElementById("address-filter")?.addEventListener("input", debounce(loadPackages, 500));
 
     await loadPackages();
+    await populateLocationDropdown()
   } catch (error) {
     console.error("Error during employee authentication:", error);
     window.location.href = "/pages/login.html";
   }
 });
+
+
+async function populateLocationDropdown() {
+  try {
+    const response = await fetch("/locations", {
+      method: "GET",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" }
+    });
+    const data = await response.json();
+
+
+    const dropdown = document.getElementById("location-filter");
+    const dropdown2 = document.getElementById("edit-location-dropdown");
+    dropdown.innerHTML = '<option value="">-- Select Location --</option>';
+    dropdown2.innerHTML = '<option value="">-- Select Location --</option>';
+    data.forEach(loc => {
+      const option = document.createElement("option");
+      option.value = loc.location_id;
+      option.textContent = `${loc.location_name} - ${loc.location_type} at ${loc.address}`;
+      
+      dropdown.appendChild(option);
+      dropdown2.appendChild(option.cloneNode(true));
+    });
+  } catch (err) {
+    console.error("Failed to load locations:", err);
+  }
+}
+
+
 
 function debounce(func, delay) {
   let timeout;
@@ -33,8 +65,9 @@ async function loadPackages() {
     endDate: document.getElementById("end-date")?.value || "",
     minWeight: document.getElementById("min-weight")?.value || "",
     maxWeight: document.getElementById("max-weight")?.value || "",
-    address: document.getElementById("address-filter")?.value || ""
-  });
+    address: document.getElementById("address-filter")?.value || "",
+    locationId: document.getElementById("location-filter")?.value || ""
+    });
   const url = `/packages/dashboard/employee?${params.toString()}`;
   try {
     const response = await fetch(url, {
@@ -42,7 +75,7 @@ async function loadPackages() {
       credentials: "include",
       headers: { "Content-Type": "application/json" }
     });
-    if (!response.ok) {
+    if (!response.ok && response.status != 404) {
       const errorData = await response.json();
       console.error("Error fetching packages:", errorData.message);
       return;
@@ -74,8 +107,6 @@ async function loadPackages() {
           <td>${pkg.manager_of_location || "N/A"}</td>                  <!--changed-->
           <td>${pkg.hours_open || "N/A"}</td>                           <!--changed-->
           <td>
-            <button onclick="quickUpdate(${pkg.package_id}, 'In Transit')">In Transit</button>
-            <button onclick="quickUpdate(${pkg.package_id}, 'Delivered')">Delivered</button>
             <button onclick="editPackage(${pkg.package_id})">Edit</button>
             <button onclick="deletePackageUI(${pkg.package_id})">Delete</button>
           </td>
@@ -109,35 +140,13 @@ async function quickUpdate(packageId, newStatus) {
   }
 }
 
-async function editPackage(packageId) {
+let currentEditPackageId = null;
 
-  const attributeToEdit = prompt("Which attribute do you want to change? (e.g., location, weight, address_from, address_to)"); //changed
-  if (!attributeToEdit) return; 
-  
-  const newValue = prompt(`Enter new value for ${attributeToEdit}:`);  
-  if (newValue === null) return;  
-
-  const payload = {};
-  payload[attributeToEdit] = newValue;  
-
-  try {
-    const response = await fetch(`/packages/${packageId}`, {
-      method: "PUT",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      alert(`Error updating package: ${data.message}`);
-      return;
-    }
-    alert("Package updated successfully!");
-    await loadPackages();
-  } catch (error) {
-    console.error("Error updating package:", error);
-    alert("Error updating package. Please try again.");
-  }
+function editPackage(packageId) {
+  currentEditPackageId = packageId;
+  document.getElementById("edit-package-id").textContent = packageId;
+  document.getElementById("edit-value").value = "";
+  document.getElementById("edit-modal").classList.remove("hidden");
 }
 
 async function deletePackageUI(packageId) {
@@ -162,3 +171,70 @@ async function deletePackageUI(packageId) {
     alert("Error deleting package. Please try again.");
   }
 }
+
+
+document.getElementById("close-modal").addEventListener("click", () => {
+  document.getElementById("edit-modal").classList.add("hidden");
+});
+
+document.getElementById("cancel-edit").addEventListener("click", () => {
+  document.getElementById("edit-modal").classList.add("hidden");
+});
+
+document.getElementById("edit-attribute").addEventListener("change", () => {
+  const attr = document.getElementById("edit-attribute").value;
+  const valInput = document.getElementById("edit-value-container");
+  const locDropdown = document.getElementById("edit-location-container");
+
+  if (attr === "location_id") {
+    valInput.classList.add("hidden");
+    locDropdown.classList.remove("hidden");
+  } else {
+    valInput.classList.remove("hidden");
+    locDropdown.classList.add("hidden");
+  }
+});
+
+
+
+document.getElementById("save-edit").addEventListener("click", async () => {
+  const attribute = document.getElementById("edit-attribute").value;
+  const payload = {};
+
+  if (attribute === "location_id") {
+    const selectedLoc = document.getElementById("edit-location-dropdown").value;
+    if (!selectedLoc) return alert("Please select a location.");
+    payload[attribute] = parseInt(selectedLoc);
+    payload["status"] = "In Transit";
+
+  } else {
+    const value = document.getElementById("edit-value").value;
+    if (value === "") return alert("Please enter a value.");
+    payload[attribute] = value;
+  }
+
+
+  try {
+    const response = await fetch(`/packages/${currentEditPackageId}`, {
+      method: "PUT",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(`Error updating package: ${data.message}`);
+      return;
+    }
+
+    alert("Package updated successfully!");
+    document.getElementById("edit-modal").classList.add("hidden");
+    await loadPackages();
+  } catch (error) {
+    console.error("Error updating package:", error);
+    alert("Error updating package. Please try again.");
+  }
+});
+
+

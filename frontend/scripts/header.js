@@ -19,6 +19,7 @@ function initializeHeader() {
   const profileNavButton = document.getElementById("profile-nav-button");
   const shipping = document.getElementById("shipping");
   const store = document.getElementById("store");
+
   const routes = document.getElementById("routes");
 
   const authOnlyElements = document.querySelectorAll('.auth-only-element');
@@ -56,17 +57,28 @@ function initializeHeader() {
       if (role === "customer") {
         dashboardLink.href = "/pages/customer.html";
         dashboardLink.textContent = "Customer Dashboard";
+
         if (routes) routes.style.display = "none";
       } else if (role === "employee") {
         dashboardLink.href = "/pages/employee.html";
         dashboardLink.textContent = "Employee Dashboard";
+
         if (shipping) shipping.style.display = "none";
+
+        if (supportone) supportone.style.display = "none";
+        //if (shipping) shipping.style.display = "none";
+
         if (store) store.style.display = "none";
       } else if (role === "manager") {
         dashboardLink.href = "/pages/manager.html";
         dashboardLink.textContent = "Manager Dashboard";
+
         if (shipping) shipping.style.display = "none";
         if (store) store.style.display = "none";
+
+        if (shipping) shipping.style.display = "none";
+        if (store) store.style.display = "none";
+
         const managerStatusLi = document.getElementById("manager-status");
         if (managerStatusLi) {
           managerStatusLi.style.display = "block";
