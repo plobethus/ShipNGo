@@ -25,7 +25,7 @@ nav ul {
   margin: 0;
   padding: 0;
   display: flex;  /* items horizontally aligned */
-  gap: 20px;      /* space between items */
+  gap: 30px;      /* space between items */
 }
 
 /* Public vs. protected nav lists */
@@ -114,6 +114,7 @@ nav ul li:hover .dropdown {
 .title-and-dropdown {
   display: flex;
   flex-direction: row;
+  gap: 50px;
 }
 
 /* Auth-only elements should be hidden by default */
