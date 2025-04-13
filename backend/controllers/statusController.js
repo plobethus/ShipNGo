@@ -1,4 +1,4 @@
-const pool = require("../db"); // This imports our promise-based pool
+const pool = require("../db");
 
 async function status(req, res) {
   try {
@@ -6,7 +6,6 @@ async function status(req, res) {
     todayStart.setHours(0, 0, 0, 0);
     const todayStartISO = todayStart.toISOString().slice(0, 19).replace("T", " ");
 
-    // Query strings
     const sqlTopOrigins = `
       SELECT p.address_from AS name, COUNT(*) AS count
       FROM packages p
@@ -46,8 +45,6 @@ async function status(req, res) {
       WHERE status = 'Delayed / Delivery Attempted'
     `;
 
-    // Execute all queries in parallel
-    // NOTE: Use "pool.query(...)" not "db.query(...)"
     const [
       [topOriginsRows],
       [topDestRows],
@@ -64,7 +61,6 @@ async function status(req, res) {
       pool.query(sqlDelayed),
     ]);
 
-    // Build final data object
     const reportData = {
       topOrigins: topOriginsRows,
       topDestinations: topDestRows,
@@ -74,7 +70,6 @@ async function status(req, res) {
       delayedCount: delayedRows[0]?.delayedCount || 0,
     };
 
-    // Send back JSON
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ success: true, data: reportData }));
   } catch (error) {

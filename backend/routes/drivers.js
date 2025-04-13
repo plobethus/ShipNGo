@@ -1,4 +1,4 @@
-
+//ShipNGo/backend/routes/drivers.js
 
 const { sendJson } = require("../helpers");
 const stopsController = require("../controllers/stopsController");
@@ -46,7 +46,7 @@ async function appendStopToRoute(req, res) {
             return;
         }
 
-        
+
 
         const newStopId = await stopsController.createStop(
             route_id,
@@ -55,7 +55,7 @@ async function appendStopToRoute(req, res) {
             null
         );
 
-        sendJson(res, 201, { stop_id: newStopId});
+        sendJson(res, 201, { stop_id: newStopId });
     } catch (err) {
         sendJson(res, 500, { message: err.message });
     }
