@@ -3,7 +3,7 @@
 const db = require("../db"); 
   
 async function getAllClaims() {
-  const [rows] = await db.query("SELECT * FROM claims");
+  const [rows] = await db.query("SELECT * FROM claims LEFT JOIN packages ON claims.package_id = packages.package_id");
   return rows;
 }
 
