@@ -21,20 +21,19 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const latest = history[0];
 
+    console.log(latest);
+
     document.getElementById("tracking-id").textContent = latest.package_id;
     document.getElementById("tracking-status").textContent = latest.status;
-    document.getElementById("post-office").textContent = latest.post_office_address || "N/A";
-    document.getElementById("warehouse").textContent = latest.warehouse_location || "N/A";
+    document.getElementById("warehouse").textContent = ((latest.location_type || "") + " " + (latest.location_name || "Unknown Location Name") + " (" + (latest.location_address || "Unknown Address") + ")" ) ;
 
-    // Optional full history list
     const historyList = document.getElementById("history-list");
     history.forEach(entry => {
       const li = document.createElement("li");
       li.innerHTML = `
         <strong>${entry.status}</strong> at 
-        <em>${entry.post_office_address || "Unknown PO"}</em> /
-        <em>${entry.warehouse_location || "Unknown WH"}</em> 
-        on ${new Date(entry.updated_at).toLocaleString()}
+        <em>${((entry.location_type || "") + " " +(entry.location_name || "Unknown Location Name") + " (" + (entry.location_address || "Unknown Address") + ")")}</em> /
+        on ${new Date(entry.changed_at).toLocaleString()}
       `;
       historyList.appendChild(li);
     });

@@ -80,23 +80,29 @@ async function getAllPackages(filter) {
     values.push(filter.endDate);
   }
 
+  if (filter.locationId) {
+    query += `
+      AND (
+        SELECT t2.location
+        FROM package_tracking_log t2
+        WHERE t2.package_id = p.package_id
+        ORDER BY t2.changed_at DESC
+        LIMIT 1
+      ) = ?
+    `;
+    values.push(filter.locationId);
+  }
+
   const [packages] = await db.execute(query, values);
   return packages;
 }
 
+//IMPORTANT!! Doesnt update tracking so update tracking in the route
 async function updatePackage(id, data) {
   let query = "UPDATE packages SET ";
   const updates = [];
   const values = [];
 
-  if (data.status) {
-    updates.push("status = ?");
-    values.push(data.status);
-  }
-  if (data.location) {
-    updates.push("location = ?");
-    values.push(data.location);
-  }
   if (data.weight) {
     updates.push("weight = ?");
     values.push(data.weight);
@@ -110,7 +116,10 @@ async function updatePackage(id, data) {
     values.push(data.address_to);
   }
 
-  if (updates.length === 0) {
+  if (updates.length === 0 ) {
+    if ((data["location_id"] || data["status"])){
+      return; //No updates to package, only to tracking;
+    }
     throw new Error("No valid fields provided to update.");
   }
 

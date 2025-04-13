@@ -2,6 +2,7 @@
 
 const { sendJson } = require("../helpers");
 const packageController = require("../controllers/packageController");
+const trackingController = require("../controllers/trackingController");
 const { readJsonBody } = require("../helpers");
 const db = require("../db");
 
@@ -21,10 +22,9 @@ async function getPackagesEmployee(req, res, query) {
 async function updatePackage(req, res, id) {
   try {
     const body = await readJsonBody(req);
+    let employee_id = null;
     if (req.tokenData && req.tokenData.employee_id) {
-      await db.execute("SET @employee_id = ?", [req.tokenData.employee_id]);
-    } else {
-      await db.execute("SET @employee_id = NULL");
+      employee_id = req.tokenData.employee_id;
     }
 
     const affected = await packageController.updatePackage(id, body);
@@ -32,6 +32,12 @@ async function updatePackage(req, res, id) {
       sendJson(res, 404, { message: "Package not found or no changes made." });
       return;
     }
+    const affected2= await trackingController.updateTracking(id, body["location_id"] ?? null, body["status"] ?? null, employee_id, body["date"] ?? null)
+    if (affected2 === 0) {
+      sendJson(res, 404, { message: "Could not update tracking." });
+      return;
+    }
+    
     sendJson(res, 200, { message: "Package updated successfully." });
   } catch (err) {
     sendJson(res, 500, { message: err.message });
