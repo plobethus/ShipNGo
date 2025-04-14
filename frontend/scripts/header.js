@@ -19,10 +19,15 @@ function initializeHeader() {
   const profileNavButton = document.getElementById("profile-nav-button");
   const shipping = document.getElementById("shipping");
   const store = document.getElementById("store");
-
   const routes = document.getElementById("routes");
+  const fileClaimItem = document.getElementById("file-claim-item");
+  const supportNav = document.getElementById("support-nav");
+  const reportsNav = document.getElementById("reports-nav");
 
   const authOnlyElements = document.querySelectorAll('.auth-only-element');
+  const customerOnlyElements = document.querySelectorAll('.customer-only-element');
+  const managerOnlyElements = document.querySelectorAll('.manager-only-element');
+  const nonManagerElements = document.querySelectorAll('.non-manager-element');
 
   if (role) {
     // LOGGED IN
@@ -51,6 +56,69 @@ function initializeHeader() {
       }
     });
 
+    // Handle role-specific elements
+    if (role === "customer") {
+      // For customers
+      customerOnlyElements.forEach(el => {
+        el.style.display = "block";
+      });
+      
+      // Show the file claim item
+      if (fileClaimItem) {
+        fileClaimItem.style.display = "block";
+        console.log("File Claim item made visible for customer");
+      }
+      
+      // Hide manager-only elements
+      managerOnlyElements.forEach(el => {
+        el.style.display = "none";
+      });
+      
+      // Show non-manager elements (like the Support dropdown)
+      nonManagerElements.forEach(el => {
+        el.style.display = "block";
+      });
+      
+      if (supportNav) supportNav.style.display = "flex";
+      if (reportsNav) reportsNav.style.display = "none";
+    } else if (role === "manager") {
+      // For managers
+      customerOnlyElements.forEach(el => {
+        el.style.display = "none";
+      });
+      
+      // Show manager-only elements (like the Reports dropdown)
+      managerOnlyElements.forEach(el => {
+        el.style.display = "block";
+      });
+      
+      // Hide non-manager elements
+      nonManagerElements.forEach(el => {
+        el.style.display = "none";
+      });
+      
+      // Specifically toggle the main nav dropdowns
+      if (supportNav) supportNav.style.display = "none";
+      if (reportsNav) reportsNav.style.display = "flex";
+      console.log("Reports navigation made visible for manager");
+    } else {
+      // For other roles (like employee)
+      customerOnlyElements.forEach(el => {
+        el.style.display = "none";
+      });
+      
+      managerOnlyElements.forEach(el => {
+        el.style.display = "none";
+      });
+      
+      nonManagerElements.forEach(el => {
+        el.style.display = "block";
+      });
+      
+      if (supportNav) supportNav.style.display = "flex";
+      if (reportsNav) reportsNav.style.display = "none";
+    }
+
     if (dashboardLink) {
       dashboardLink.style.display = "block";
 
@@ -64,17 +132,10 @@ function initializeHeader() {
         dashboardLink.textContent = "Employee Dashboard";
 
         if (shipping) shipping.style.display = "none";
-
-        //if (supportone) supportone.style.display = "none";
-        //if (shipping) shipping.style.display = "none";
-
         if (store) store.style.display = "none";
       } else if (role === "manager") {
         dashboardLink.href = "/pages/manager.html";
         dashboardLink.textContent = "Manager Dashboard";
-
-        if (shipping) shipping.style.display = "none";
-        if (store) store.style.display = "none";
 
         if (shipping) shipping.style.display = "none";
         if (store) store.style.display = "none";
@@ -104,6 +165,29 @@ function initializeHeader() {
       el.style.display = "none";
       el.style.visibility = "hidden";
     });
+
+    // Hide role-specific elements when not logged in
+    customerOnlyElements.forEach(el => {
+      el.style.display = "none";
+    });
+    
+    managerOnlyElements.forEach(el => {
+      el.style.display = "none";
+    });
+    
+    // Show non-manager elements (Support dropdown should be visible when not logged in)
+    nonManagerElements.forEach(el => {
+      el.style.display = "block";
+    });
+    
+    // Specifically control nav elements
+    if (supportNav) supportNav.style.display = "flex";
+    if (reportsNav) reportsNav.style.display = "none";
+    
+    // Hide the file claim item
+    if (fileClaimItem) {
+      fileClaimItem.style.display = "none";
+    }
   }
 
   // Logout functionality
@@ -117,4 +201,8 @@ function initializeHeader() {
       window.location.href = "/pages/login.html";
     });
   }
+  
+  console.log("Header initialized. Role:", role);
+  console.log("Support Nav found:", supportNav !== null);
+  console.log("Reports Nav found:", reportsNav !== null);
 }
