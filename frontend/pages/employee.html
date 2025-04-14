@@ -5,124 +5,178 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Employee Dashboard - ShipNGo</title>
   <link rel="stylesheet" href="../styles/nav.css" />
-  <link rel="stylesheet" href="../styles/styles.css" />  
+  <link rel="stylesheet" href="../styles/styles.css" />
+  <link rel="stylesheet" href="../styles/employee-dashboard.css"/>
   <script src="../scripts/dashboard.js" defer></script>  
 </head>
 <body>
   <div id="header-include"></div>
   <script src="/scripts/header.js" defer></script>
 
+  <div class="page-content">
+    <h1 class="dashboard-title">Package Management Dashboard</h1>
+    
+    <!-- Stats Dashboard -->
+    <div class="stats-dashboard">
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-title">Total Packages</div>
+          <div class="stat-value" id="total-packages-count">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Pending</div>
+          <div class="stat-value" id="pending-packages-count">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Scheduled</div>
+          <div class="stat-value" id="scheduled-packages-count">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">In Transit</div>
+          <div class="stat-value" id="in-transit-packages-count">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Delivered</div>
+          <div class="stat-value" id="delivered-packages-count">-</div>
+        </div>
+      </div>
+    </div>
   
-  <div class="package-controls">
-    <div class="login-title">Filters</div>
-    <div class="control-container">
-      <label for="status-filter">Filter by Status:</label>
-      <select id="status-filter">
-        <option value="">All</option>
-        <option value="Pending">Pending</option>
-        <option value="Scheduled">Scheduled</option>
-        <option value="In Transit">In Transit</option>
-        <option value="Delivered">Delivered</option>
-      </select>
-      
-      <label for="search-customer">Search by Customer:</label>
-      <input type="text" id="search-customer" placeholder="Enter customer name" />
+    <!-- Filter Controls -->
+    <div class="package-controls">
+      <div class="control-container">
+        <div class="filter-group">
+          <label for="status-filter">Filter by Status:</label>
+          <select id="status-filter">
+            <option value="">All</option>
+            <option value="Pending">Pending</option>
+            <option value="Scheduled">Scheduled</option>
+            <option value="In Transit">In Transit</option>
+            <option value="Delivered">Delivered</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="search-customer">Search by Customer:</label>
+          <input type="text" id="search-customer" placeholder="Enter customer name" />
+        </div>
 
-      <label for="start-date">Start Date:</label>
-      <input type="date" id="start-date" />            
-      <label for="end-date">End Date:</label>
-      <input type="date" id="end-date" />    
-      
-      <label for="location-filter">Select Location:</label>
-      <select id="location-filter">
-        <option value="">-- Select Location --</option>
-      </select>
+        <div class="filter-group">
+          <label for="start-date">Start Date:</label>
+          <input type="date" id="start-date" />            
+        </div>
+        
+        <div class="filter-group">
+          <label for="end-date">End Date:</label>
+          <input type="date" id="end-date" />    
+        </div>
+        
+        <div class="filter-group">
+          <label for="location-filter">Select Location:</label>
+          <select id="location-filter">
+            <option value="">-- Select Location --</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="min-weight">Min Weight:</label>
+          <input type="number" id="min-weight" step="any" placeholder="Min weight" />
+        </div>
 
-      
-      <label for="min-weight">Min Weight:</label>
-      <input type="number" id="min-weight" step="any" placeholder="Min weight" />
+        <div class="filter-group">
+          <label for="max-weight">Max Weight:</label>
+          <input type="number" id="max-weight" step="any" placeholder="Max weight" />
+        </div>
 
-      <label for="max-weight">Max Weight:</label>
-      <input type="number" id="max-weight" step="any" placeholder="Max weight" />
-
-      <label for="address-filter">Address:</label>
-      <input type="text" id="address-filter" placeholder="Enter address" />
-    </div>
-  </div>
-
-    <!-- Modal for Editing Package -->
-<div id="edit-modal" class="modal-backdrop hidden">
-  <div class="modal-container">
-    <div class="modal-header">
-      <h3>Edit Package</h3>
-      <button class="close-btn" id="close-modal">&times;</button>
-    </div>
-    <div class="modal-body">
-      <p><strong>Package ID:</strong> <span id="edit-package-id">N/A</span></p>
-
-      <label for="edit-attribute">Select Attribute:</label>
-      <select id="edit-attribute">
-        <option value="location_id">Location</option>
-        <option value="weight">Weight</option>
-        <option value="dimensions">Dimensions</option>
-        <option value="address_from">Address From</option>
-        <option value="address_to">Address To</option>
-        <option value="status">Status</option>
-      </select>
-
-      <div id="edit-value-container">
-        <input type="text" id="edit-value" placeholder="Enter new value" />
-      </div>
-      
-      <div id="edit-location-container" class="hidden">
-        <label for="edit-location-dropdown">Select Location:</label>
-        <select id="edit-location-dropdown"></select>
-      </div>
-
-      <div class="modal-actions">
-        <button id="save-edit" class="save-btn">Save</button>
-        <button id="cancel-edit" class="cancel-btn">Cancel</button>
+        <div class="filter-group">
+          <label for="address-filter">Address:</label>
+          <input type="text" id="address-filter" placeholder="Enter address" />
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
+    <!-- Packages Table -->
+    <div class="package-container">
+      <h2>All Packages</h2>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Package ID</th>
+              <th>Created At</th>          
+              <th>Status</th>             
+              <th>Weight</th>
+              <th>Dimensions</th>
+              <th>From</th>
+              <th>To</th>
+              <th>Sender → Receiver</th>
+              <th>Location</th>           
+              <th>Manager</th>            
+              <th>Hours Open</th>          
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="package-table"></tbody>
+        </table>
+      </div>
+    </div>
 
-  <div class="package-container">
-    <h2>All Packages</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Package ID</th>
-          <th>Created At</th>          
-          <th>Status</th>             
-          <th>Weight</th>
-          <th>Dimensions</th>
-          <th>From</th>
-          <th>To</th>
-          <th>Sender → Receiver</th>
-          <th>Location</th>           
-          <th>Manager</th>            
-          <th>Hours Open</th>          
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="package-table"></tbody>
-    </table>
-  </div>
-
-  <div>
+    <!-- Services Section -->
     <section id="services" class="services">
       <h3>Our Services</h3>
       <p>We provide local and international shipping, express delivery, and secure parcel handling.</p>
     </section>
-    
-    <footer>
-      <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
-    </footer>
   </div>
 
+  <!-- Modal for Editing Package -->
+  <div id="edit-modal" class="modal-backdrop hidden">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3>Edit Package</h3>
+        <button class="close-btn" id="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Package ID:</strong> <span id="edit-package-id">N/A</span></p>
 
+        <label for="edit-attribute">Select Attribute:</label>
+        <select id="edit-attribute">
+          <option value="location_id">Location</option>
+          <option value="weight">Weight</option>
+          <option value="dimensions">Dimensions</option>
+          <option value="address_from">Address From</option>
+          <option value="address_to">Address To</option>
+          <option value="status">Status</option>
+        </select>
+
+        <div id="edit-value-container">
+          <input type="text" id="edit-value" placeholder="Enter new value" />
+        </div>
+        
+        <div id="edit-status-container" class="hidden">
+          <select id="edit-status-dropdown">
+            <option value="Pending">Pending</option>
+            <option value="Scheduled">Scheduled</option>
+            <option value="In Transit">In Transit</option>
+            <option value="Delivered">Delivered</option>
+          </select>
+        </div>
+        
+        <div id="edit-location-container" class="hidden">
+          <label for="edit-location-dropdown">Select Location:</label>
+          <select id="edit-location-dropdown"></select>
+        </div>
+
+        <div class="modal-actions">
+          <button id="save-edit" class="save-btn">Save</button>
+          <button id="cancel-edit" class="cancel-btn">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer>
+    <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
+  </footer>
 
   <script src="../scripts/employee.js"></script>
 </body>
