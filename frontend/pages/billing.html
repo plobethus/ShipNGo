@@ -1,4 +1,4 @@
-<!-- 
+<!--
  * /ShipNGo/frontend/pages/billing.html
  * Billing and invoicing page for ShipNGo.
  -->
@@ -10,29 +10,86 @@
    <title>Billing - ShipNGo</title>
    <link rel="stylesheet" href="../styles/styles.css">
    <link rel="stylesheet" href="../styles/nav.css" />
+   <link rel="stylesheet" href="../styles/billing.css"> <!-- Add this new stylesheet -->
  </head>
- <body> 
+ <body>
    <div id="header-include"></div>
    <script src="/scripts/header.js" defer></script>
  
-   <div class="login-container" id = "billing-container">
-    <div class="login-title">Billing and Invoicing Memo</div>
-    <div id = "login-form">
-        <p>Billing information will be sent to the provided customer email. For more percise information
-             over the billing and invoicing of your packages, please visit your local ShipNGo.
-        </p>
-    </div>
-    </div>
-
-   <div>
-   <section id="services" class="services">
-     <h3>Our Services</h3>
-     <p>We provide local and international shipping, express delivery, and secure parcel handling.</p>
-   </section>
-   
-   <footer>
-     <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
-   </footer>
-    </div>
+   <div class="container">
+     <div class="content-wrapper">
+       <!-- Calculator moved up -->
+       <div id="calculator-section" class="box-container">
+         <div class="box-title">Shipment Cost Calculator</div>
+         <form id="cost-form" class="box-content">
+           <label>
+             Distance (miles):
+             <input type="number" id="distance" required>
+           </label>
+     
+           <label>
+             Weight (kg):
+             <input type="number" id="weight" required>
+           </label>
+     
+           <label>
+             Dimensions (L x W x H in cm):
+             <input type="text" id="dimensions" placeholder="e.g. 40x30x20" required>
+           </label>
+     
+           <label>
+             Shipment Type:
+             <select id="type">
+               <option value="standard">Standard (5-7 days)</option>
+               <option value="express">Express (2-3 days)</option>
+               <option value="overnight">Overnight</option>
+             </select>
+           </label>
+     
+           <button type="submit" class="btn">Calculate Cost</button>
+           <div id="result"></div>
+         </form>
+       </div>
+ 
+       
+ 
+       <!-- Billing info moved to bottom -->
+       <div id="billing-section" class="box-container">
+         <div class="box-title">Billing and Invoicing Memo</div>
+         <div class="box-content">
+           <p>
+             Billing information will be sent to the provided customer email. For more precise
+             information over the billing and invoicing of your packages, please visit your local ShipNGo.
+           </p>
+         </div>
+       </div>
+     </div>
+ 
+     <footer>
+       <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
+     </footer>
+   </div>
+ 
+   <script>
+     document.getElementById("cost-form").addEventListener("submit", function(e) {
+       e.preventDefault();
+       const distance = parseFloat(document.getElementById("distance").value);
+       const weight = parseFloat(document.getElementById("weight").value);
+       const dims = document.getElementById("dimensions").value.split("x").map(Number);
+       const type = document.getElementById("type").value;
+       if (dims.length !== 3 || dims.some(isNaN)) {
+         document.getElementById("result").textContent = "Invalid dimensions format.";
+         return;
+       }
+       const volume = dims[0] * dims[1] * dims[2]; // cubic cm
+       let baseRate = 0.05; // default for standard
+       if (type === "express") baseRate = 0.08;
+       else if (type === "overnight") baseRate = 0.12;
+       // Cost formula: distance * baseRate + weight factor + volume factor
+       const cost = (distance * baseRate) + (weight * 2) + (volume / 1000);
+       document.getElementById("result").textContent = `Estimated Cost: $${cost.toFixed(2)}`;
+     });
+   </script>
  </body>
  </html>
+ 
