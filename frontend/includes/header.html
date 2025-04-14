@@ -1,58 +1,69 @@
 <nav>
-    <!-- Left side: Logo and links -->
-    <div class="nav-left">
-      <a href="/index.html"><h1 class="navbar">ShipNGo</h1></a>
-  
-      <!-- Support (always visible) -->
-      <ul class="main-nav">
-        <li>
-          <a href="#">Support</a>
-          <ul class="dropdown">
-            <li><a id="faq" href="/pages/faq.html">FAQ</a></li>
-            <li><a id="billing" href="/pages/billing.html">Billing & Invoicing</a></li>
-          </ul>
-        </li>
-      </ul>
-  
-      <!-- Protected nav links -->
-      <ul id="protected-nav">
-        <li><a href="#" id="shipping">Shipping</a>
-          <ul class="dropdown">
-            <li><a href="/pages/create-shipment.html">Create a Shipment</a></li>
-            <li><a href="/pages/returns.html">Manage a Return</a></li>
-          </ul>
-        </li>
-        <li><a href="#" id="store">Store</a>
-          <ul class="dropdown">
-            <li><a href="/pages/store.html">Packing & Shipping Supplies</a></li>
-          </ul>
-        </li>
-        <li><a href="#" id="routes">Routes</a>
-          <ul class="dropdown">
-            <li><a href="/pages/route_manage.html">Manage Routes</a></li>
-          </ul>
-        </li>
-        <li id="manager-status" style="display: none;">
-          <a href="/pages/status.html" id="status-link">Status</a>
-        </li>
-      </ul>
+  <!-- Left side: Logo and links -->
+  <div class="nav-left">
+    <a href="/index.html"><h1 class="navbar">ShipNGo</h1></a>
+
+    <!-- Support dropdown (visible for non-managers) -->
+    <ul id="support-nav" class="main-nav non-manager-element">
+      <li>
+        <a href="#">Support</a>
+        <ul class="dropdown">
+          <li><a id="faq" href="/pages/faq.html">FAQ</a></li>
+          <li><a id="billing" href="/pages/billing.html">Billing & Invoicing</a></li>
+          <li id="file-claim-item" class="customer-only-element" style="display: none;"><a href="/pages/claims.html">File A Claim</a></li>
+        </ul>
+      </li>
+    </ul>
+    
+    <!-- Reports dropdown (visible only for managers) -->
+    <ul id="reports-nav" class="main-nav manager-only-element" style="display: none;">
+      <li>
+        <a href="#">Reports</a>
+        <ul class="dropdown">
+          <li><a href="/pages/claim-view.html">Claims Report</a></li>
+          <li><a href="/pages/financialreport.html">Financial Report</a></li>
+        </ul>
+      </li>
+    </ul>
+
+    <!-- Protected nav links -->
+    <ul id="protected-nav">
+      <li><a href="#" id="shipping">Shipping</a>
+        <ul class="dropdown">
+          <li><a href="/pages/create-shipment.html">Create a Shipment</a></li>
+          <li><a href="/pages/returns.html">Manage a Return</a></li>
+        </ul>
+      </li>
+      <li><a href="#" id="store">Store</a>
+        <ul class="dropdown">
+          <li><a href="/pages/store.html">Packing & Shipping Supplies</a></li>
+        </ul>
+      </li>
+      <li><a href="#" id="routes">Routes</a>
+        <ul class="dropdown">
+          <li><a href="/pages/route_manage.html">Manage Routes</a></li>
+        </ul>
+      </li>
+      <li id="manager-status" style="display: none;">
+        <a href="/pages/status.html" id="status-link">Status</a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Right side: Dashboard, profile, login/logout -->
+  <div class="nav-right">
+    <a id="dashboard-link" href="#" class="dashboard-link">Dashboard</a>
+
+    <div class="profile-nav-button auth-only-element" id="profile-nav-button" style="display: none !important; visibility: hidden;">
+      <a href="/pages/profile.html" class="profile-btn">
+        <span class="profile-icon">👤</span>
+        <span>My Profile</span>
+      </a>
     </div>
-  
-    <!-- Right side: Dashboard, profile, login/logout -->
-    <div class="nav-right">
-      <a id="dashboard-link" href="#" class="dashboard-link">Dashboard</a>
-  
-      <div class="profile-nav-button auth-only-element" id="profile-nav-button" style="display: none !important; visibility: hidden;">
-        <a href="/pages/profile.html" class="profile-btn">
-          <span class="profile-icon">👤</span>
-          <span>My Profile</span>
-        </a>
-      </div>
-  
-      <div class="login">
-        <a id="login-btn" href="/pages/login.html" class="btn">Log In</a>
-        <button id="logout-btn" class="btn" style="display: none;">Logout</button>
-      </div>
+
+    <div class="login">
+      <a id="login-btn" href="/pages/login.html" class="btn">Log In</a>
+      <button id="logout-btn" class="btn" style="display: none;">Logout</button>
     </div>
-  </nav>
-  
+  </div>
+</nav>
