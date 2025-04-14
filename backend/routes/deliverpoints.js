@@ -1,6 +1,5 @@
-/*
-* /backend/routes/deliverpoints.js
-*/
+//backend/routes/deliverpoints.js
+
 
 const { sendJson } = require("../helpers");
 const deliveryPointsController = require("../controllers/deliveryPointsController");

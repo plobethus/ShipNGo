@@ -1,3 +1,5 @@
+//ShipNGo/backend/routes/store.js
+
 const { sendJson } = require("../helpers");
 const { readJsonBody } = require("../helpers");
 const db = require("mysql2").createPool({
@@ -19,7 +21,6 @@ async function purchaseSupplies(req, res) {
       return;
     }
 
-    // Start transaction
     const conn = await db.getConnection();
     try {
       await conn.beginTransaction();
@@ -27,12 +28,11 @@ async function purchaseSupplies(req, res) {
       for (const item of body) {
         const { name, quantity } = item;
 
-        // Validate input
         if (!name || typeof quantity !== "number" || quantity <= 0) {
           throw new Error(`Invalid item: ${JSON.stringify(item)}`);
         }
 
-        // Check available stock
+
         const [rows] = await conn.execute(
           "SELECT quantity FROM supplies WHERE name = ?",
           [name]
@@ -46,7 +46,6 @@ async function purchaseSupplies(req, res) {
           throw new Error(`Insufficient stock for item: ${name}`);
         }
 
-        // Decrement stock
         await conn.execute(
           "UPDATE supplies SET quantity = quantity - ? WHERE name = ?",
           [quantity, name]

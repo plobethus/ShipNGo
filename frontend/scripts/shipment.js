@@ -81,12 +81,12 @@ document.querySelector(".shipment-form").addEventListener("submit", async functi
   // Show price modal
   document.getElementById("priceModal").style.display = "block";
 
-  // 🟢 Add event listener to the "Proceed" button
+
   confirmBtn.onclick = async () => {
     document.getElementById("priceModal").style.display = "none";
   
   try {
-    const response = await fetch("/shipment", {
+    const response = await fetch("/packages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

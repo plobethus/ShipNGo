@@ -1,3 +1,5 @@
+//ShipNGo/backend/routes/financialreport.js
+
 const { sendJson } = require("../helpers");
 const { getSumPackageTransactions } = require("../controllers/financialController")
 const { getAllPackageTransactions } = require("../controllers/financialController")
@@ -24,22 +26,22 @@ async function fetchAllPackageTransactions(req,res){
     }  
 }
 
-async function fetchSumTransactions(req,res){
-    try{
+async function fetchSumTransactions(req, res) {
+    try {
         const sum = await getSumTransactions();
-        sendJson(res,200,sum);
-    }catch(err){
-        sendJson(res,500,{error:err.message});
+        sendJson(res, 200, sum);
+    } catch (err) {
+        sendJson(res, 500, { error: err.message });
     }
 }
 
-async function fetchAllTransactions(req,res){
-    try{
+async function fetchAllTransactions(req, res) {
+    try {
         const trans = await getAllTransactions();
-        sendJson(res,200,trans);
-    }catch(err){
-        sendJson(res,500,{error: err.message});
-    }  
+        sendJson(res, 200, trans);
+    } catch (err) {
+        sendJson(res, 500, { error: err.message });
+    }
 }
 
 async function fetchSumInsurance(req,res){
@@ -68,4 +70,3 @@ module.exports = {
     fetchSumInsurance,
     fetchAllInsuranceTransactions
   };
-    

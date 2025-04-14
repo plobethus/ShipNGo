@@ -1,0 +1,120 @@
+/* Main styles for ShipNGo billing page */
+body {
+    font-family: Arial, sans-serif;
+    background-color: white;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .content-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 20px;
+  }
+  
+  /* Box styling */
+  .box-container {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+  }
+  
+  .box-title {
+    background-color: #00408B; /* Dark blue header */
+    color: white;
+    padding: 12px 15px;
+    font-weight: bold;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+  
+  .box-content {
+    padding: 15px;
+  }
+  
+  /* Calculator specific styles */
+  #calculator-section {
+    order: 1; /* Move calculator up */
+  }
+  
+  #billing-section {
+    order: 3; /* Move billing info to bottom */
+    margin-top: auto; /* Push to bottom */
+  }
+  
+  #services-section {
+    order: 2; /* Services in the middle */
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+  }
+  
+  /* Form styling */
+  form label {
+    display: block;
+    margin-bottom: 12px;
+  }
+  
+  form input, form select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .btn {
+    background-color: #00408B; /* Dark blue button */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .btn:hover {
+    background-color: #00356f;
+  }
+  
+  #result {
+    margin-top: 15px;
+    font-weight: bold;
+    padding: 10px;
+    background-color: #f0f8ff;
+    border-radius: 4px;
+  }
+  
+  /* Services section styling */
+  .services {
+    padding: 20px;
+  }
+  
+  .services h3 {
+    color: #00408B;
+    margin-top: 0;
+  }
+  
+  /* Footer styling */
+  footer {
+    background-color: #f5f5f5;
+    padding: 15px;
+    text-align: center;
+    margin-top: 20px;
+    border-top: 1px solid #ddd;
+  }

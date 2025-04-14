@@ -56,8 +56,29 @@ th, td {
     font-size:28px;
 }
 
+.alert-dropdown {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    position: absolute;
+    top: 55px; /* adjust as needed depending on nav bar */
+    left: 20px;
+    min-width: 200px;
+    z-index: 999;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    display: none;
+  }
+  
+  .alert-dropdown p {
+    margin: 8px 0;
+    font-size: 14px;
+  }
+  
+
 #finance-container{
     background: #004080;
     color:white;
     margin:0px auto;
 }
+

@@ -5,7 +5,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 async function login(email, password) {
-  // Check both customers and employees
   const [customerRows] = await db.execute(
     "SELECT customer_id AS id, name, password, 'customer' AS role FROM customers WHERE email = ?",
     [email]
@@ -51,7 +50,6 @@ async function register(email, password, address, name, phone) {
 }
 
 function authMe(tokenData) {
-  // tokenData is the verified JWT payload
   if (!tokenData) {
     throw new Error("Invalid or missing token");
   }

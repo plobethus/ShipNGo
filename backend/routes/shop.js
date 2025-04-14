@@ -1,3 +1,5 @@
+//ShipNGo/backend/routes/shop.js
+
 const { sendJson, readJsonBody, verifyToken } = require("../helpers");
 const shopController = require("../controllers/shopController");
 
@@ -8,7 +10,7 @@ async function checkout(req, res) {
         const body = await readJsonBody(req);
 
 
-       
+
 
 
         if (!Array.isArray(body.items)) {

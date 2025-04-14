@@ -1,12 +1,9 @@
-/* 
-*   ShipNGo/backend/helpers.js
-*/
+//ShipNGo/backend/helpers.js
 
 const fs = require("fs");
 const path = require("path");
 const jwt = require("jsonwebtoken");
 
-// Read and parse JSON body from a request
 function readJsonBody(req) {
   return new Promise((resolve, reject) => {
     let data = "";
@@ -22,7 +19,6 @@ function readJsonBody(req) {
   });
 }
 
-// Parse cookies from request headers
 function parseCookies(req) {
   const cookieHeader = req.headers.cookie;
   const cookies = {};
@@ -35,13 +31,11 @@ function parseCookies(req) {
   return cookies;
 }
 
-// Send a JSON response
 function sendJson(res, status, data) {
   res.writeHead(status, { "Content-Type": "application/json" });
   res.end(JSON.stringify(data));
 }
 
-// Serve a static file from disk
 function serveFile(res, filePath) {
   fs.readFile(filePath, (err, data) => {
     if (err) {
@@ -60,7 +54,6 @@ function serveFile(res, filePath) {
   });
 }
 
-// Verify JWT token from cookies
 function verifyToken(req) {
   const cookies = parseCookies(req);
   if (!cookies.token) return null;

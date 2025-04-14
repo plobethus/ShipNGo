@@ -1,6 +1,6 @@
 /* /ShipNGo/frontend/styles/nav.css */
 
-/* Main nav container */
+/* Main nav container navbar container */ 
 nav {
   display: flex;
   align-items: center;
@@ -8,7 +8,30 @@ nav {
   background-color: #004080;
   padding: 20px 40px;
   color: white;
+  flex-wrap: wrap;
 }
+
+/* Split nav into left and right sections */
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.dashboard-link {
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+}
+
 
 /* Logo or brand text, e.g. ShipNGo */
 nav .navbar {
@@ -19,13 +42,23 @@ nav .navbar {
   margin-right:20px;
 }
 
+/* Wrap all nav links together */
+.title-and-dropdown {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap; /*  allows nav items to wrap if needed */
+  gap: 30px; /* spacing between brand and nav items */
+}
+
 /* The main UL elements for your nav lists */
 nav ul {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;  /* items horizontally aligned */
-  gap: 20px;      /* space between items */
+
+  gap: 30px;      /* space between items */
 }
 
 /* Public vs. protected nav lists */
@@ -33,9 +66,12 @@ nav ul {
 #protected-nav {
   display: flex;
   align-items: center;
+
+  gap: 30px; 
+  align-items: center;     /* space between items */
+
 }
 
-/* Individual nav items */
 nav ul li {
   position: relative; /* needed for dropdown positioning */
 }
@@ -48,6 +84,7 @@ nav ul li a {
   display: block;      /* ensures the link covers the li's area */
   padding: 5px 0;      /* slight vertical padding */
 }
+
 
 /* Dropdown sub-menu styling */
 .dropdown {
@@ -79,6 +116,7 @@ nav ul li:hover .dropdown {
   display: block;
 }
 
+
 /* The login container for login/logout buttons */
 .login {
   margin-left: 10px; /* Space between profile button and login buttons */
@@ -104,6 +142,7 @@ nav ul li:hover .dropdown {
   background-color: #ffdd22;
 }
 
+
 .profile {
   display: flex;
   flex-direction: row;
@@ -111,10 +150,6 @@ nav ul li:hover .dropdown {
   align-items: center;
 }
 
-.title-and-dropdown {
-  display: flex;
-  flex-direction: row;
-}
 
 /* Auth-only elements should be hidden by default */
 .auth-only-element {
@@ -147,3 +182,6 @@ nav ul li:hover .dropdown {
   font-size: 1.1rem;
   margin-right: 8px;
 }
+
+
+

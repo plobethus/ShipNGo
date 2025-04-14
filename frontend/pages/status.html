@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>System Status Report</title>
+  <link rel="stylesheet" href="/styles/styles.css" />
+  <link rel="stylesheet" href="/styles/nav.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+</head>
+<body>
+
+  <div id="header-include"></div>
+  <script src="/scripts/header.js" defer></script>
+
+  <div class="status-page-container">
+    <h1>System Status Report</h1>
+
+    <div class="charts-section" style="display: flex; gap: 2rem; flex-wrap: wrap;">
+      <div style="flex: 1 1 400px; max-width: 600px;">
+        <canvas id="chartShippedDelivered"></canvas>
+      </div>
+      <div style="flex: 1 1 400px; max-width: 600px;">
+        <canvas id="chartActiveDelayed"></canvas>
+      </div>
+    </div>
+
+    <section>
+      <h2>Top 5 Origins</h2>
+      <table id="tableOrigins" border="1" style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th>Origin Address</th>
+            <th>Count</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Top 5 Destinations</h2>
+      <table id="tableDestinations" border="1" style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th>Destination Address</th>
+            <th>Count</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+  </div>
+
+  <script src="/scripts/status.js"></script>
+</body>
+</html>
