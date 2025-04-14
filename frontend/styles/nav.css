@@ -1,6 +1,6 @@
 /* /ShipNGo/frontend/styles/nav.css */
 
-/* Main nav container */
+/* Main nav container navbar container */ 
 nav {
   display: flex;
   align-items: center;
@@ -148,3 +148,4 @@ nav ul li:hover .dropdown {
   font-size: 1.1rem;
   margin-right: 8px;
 }
+
