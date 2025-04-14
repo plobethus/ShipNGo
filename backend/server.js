@@ -203,16 +203,29 @@ else if (pathname.startsWith("/api/profile")) {
     }
 
     else if (tokenData.role === "manager" && pathname.startsWith("/api/claims/")){
-        if (req.method === "GET" && pathname === "/api/claims/") {
-          await managerRoutes.fetchAllClaims(req, res);
-          return;
+        if (req.method === "GET" && pathname === "/api/claims/sumpackage") {
+            await financeRoutes.fetchSumPackageTransactions(req,res);
+            return;
+    }   else if(req.method === "GET" && pathname === "/api/claims/transpackage"){
+            await financeRoutes.fetchAllPackageTransactions(req,res);
+            return;
     }   else if (req.method === "GET" && pathname === "/api/claims/sum") {
             await financeRoutes.fetchSumTransactions(req,res);
             return;
     }   else if(req.method === "GET" && pathname === "/api/claims/trans"){
             await financeRoutes.fetchAllTransactions(req,res);
             return;
-    }
+    }   else if (req.method === "GET" && pathname === "/api/claims/suminsure") {
+            await financeRoutes.fetchSumInsurance(req,res);
+            return;
+    }   else if(req.method === "GET" && pathname === "/api/claims/transinsure"){
+            await financeRoutes.fetchAllInsuranceTransactions(req,res);
+            return;
+}   
+    else if (req.method === "GET" && pathname === "/api/claims/") {
+            await managerRoutes.fetchAllClaims(req, res);
+            return;
+  }     
 }
 
     // If no protected route matched, attempt to serve a static file from the frontend folder.
