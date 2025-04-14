@@ -44,13 +44,13 @@ async function getAllPackages(filter) {
   const values = [];
   if (filter.status) {
     query += `
-      AND (
-        SELECT t2.new_status
+      AND COALESCE((
+        SELECT t2.status
         FROM package_tracking_log t2
         WHERE t2.package_id = p.package_id
         ORDER BY t2.changed_at DESC
         LIMIT 1
-      ) = ?
+      ), "Pending") = ?
     `;
     values.push(filter.status);
   }
