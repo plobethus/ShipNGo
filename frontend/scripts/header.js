@@ -65,7 +65,7 @@ function initializeHeader() {
 
         if (shipping) shipping.style.display = "none";
 
-        if (supportone) supportone.style.display = "none";
+        //if (supportone) supportone.style.display = "none";
         //if (shipping) shipping.style.display = "none";
 
         if (store) store.style.display = "none";
