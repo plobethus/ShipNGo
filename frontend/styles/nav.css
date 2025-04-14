@@ -1,6 +1,6 @@
 /* /ShipNGo/frontend/styles/nav.css */
 
-/* Main nav container */
+/* Main nav container navbar container */ 
 nav {
   display: flex;
   align-items: center;
@@ -10,6 +10,28 @@ nav {
   color: white;
   flex-wrap: wrap;
 }
+
+/* Split nav into left and right sections */
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.dashboard-link {
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+}
+
 
 /* Logo or brand text, e.g. ShipNGo */
 nav .navbar {
@@ -129,13 +151,6 @@ nav ul li:hover .dropdown {
 }
 
 
-.title-and-dropdown {
-  display: flex;
-  flex-direction: row;
-  gap: 50px;
-}
-
-
 /* Auth-only elements should be hidden by default */
 .auth-only-element {
   display: none !important;
@@ -168,12 +183,5 @@ nav ul li:hover .dropdown {
   margin-right: 8px;
 }
 
-
-/* Public vs. protected nav lists */
-.public-nav,
-#protected-nav {
-  display: flex;
-  align-items: center;
-}
 
 
