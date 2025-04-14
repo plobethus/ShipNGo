@@ -168,9 +168,35 @@ async function createPackage({
   dimensions,
   shipping_class,
 }) {
-  const shippingCost = parseFloat((5 + weight * 0.5).toFixed(2));
+  // Step 1: Count how many shipments this customer has
+  const [countResult] = await db.execute(
+    "SELECT COUNT(*) AS total FROM packages WHERE sender_id = ?",
+    [sender_id]
+  );
 
+  const totalShipments = countResult[0].total;
+  const nextShipmentNumber = totalShipments + 1;
 
+  // Step 2: Determine discount
+  let discount = 0;
+  let next_discount_unlocked = false;
+
+  if (nextShipmentNumber % 3 === 0) {
+    discount = 10; // 10% discount on every 3rd shipment
+  }
+
+  if (nextShipmentNumber === 2 || nextShipmentNumber % 3 === 2) {
+    next_discount_unlocked = true; // "You've unlocked a 10% discount for your next shipment!"
+  }
+
+  // Step 3: Calculate shipping cost
+  const baseCost = 5 + weight * 0.5;  // Base cost calculation
+  const shippingCost = parseFloat(baseCost.toFixed(2));  // Round to 2 decimal places
+
+  // Step 4: Final cost after applying discount
+  const finalCost = parseFloat((shippingCost * (1 - discount / 100)).toFixed(2));
+
+  // Step 5: Insert new package
   const sql = `
     INSERT INTO packages
       (sender_id, receiver_name, weight, dimensions, shipping_class, cost, address_from, address_to, created_at)
@@ -182,19 +208,12 @@ async function createPackage({
     weight,
     dimensions,
     shipping_class.charAt(0).toUpperCase() + shipping_class.slice(1),
-    shippingCost,
+    finalCost,
     address_from,
     address_to
   ];
 
   const [result] = await db.execute(sql, values);
-
-
-  const [rows] = await db.execute(
-    "SELECT discount_percentage FROM customers WHERE customer_id = ?",
-    [sender_id]
-  );
-  const discount = rows[0]?.discount_percentage || 0;
 
   return {
     package: {
@@ -205,12 +224,13 @@ async function createPackage({
       address_to,
       weight,
       shipping_class,
-      cost: shippingCost,
+      cost: finalCost,
       status: "Pending",
       location: address_to,
       created_at: new Date()
     },
-    discount_applied: discount
+    discount_applied: discount,
+    next_discount_unlocked: next_discount_unlocked
   };
 }
 
