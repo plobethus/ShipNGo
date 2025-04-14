@@ -70,7 +70,8 @@ async function createPackage(req, res) {
     sendJson(res, 201, {
       message: "Shipment created",
       package: result.package,
-      discount_applied: result.discount_applied
+      discount_applied: result.discount_applied,
+      next_discount_unlocked: result.next_discount_unlocked
     });
   } catch (err) {
     console.error("Error creating shipment:", err);

@@ -1,0 +1,191 @@
+<!-- 
+ * /ShipNGo/frontend/pages/employee-store.html
+ -->
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Inventory Management - ShipNGo</title>
+   <link rel="stylesheet" href="../styles/styles.css"/>
+   <link rel="stylesheet" href="../styles/employee-store.css">
+   <link rel="stylesheet" href="../styles/nav.css" />
+ </head>
+ <body>
+   <div id="header-include"></div>
+   <script src="/scripts/header.js" defer></script>
+ 
+   <div class="employee-store-page">
+     <div class="inventory-panel">
+       <h2 class="inventory-title">Inventory Management</h2>
+       
+       <div class="inventory-list">
+         <div class="inventory-item" data-name="Envelope" data-price="0.99">
+           <div class="item-info">
+             <div class="item-name">Envelope 📨</div>
+             <div class="item-price">$0.99 each</div>
+           </div>
+           <div class="stock-info">
+             <div class="stock-level">
+               <span>Current Stock:</span>
+               <span id="envelope-stock" class="stock-count"></span>
+             </div>
+             <div class="stock-controls">
+               <button class="stock-update" data-item="Envelope" data-action="add">+</button>
+               <input type="number" id="envelope-quantity" min="1">
+               <button class="stock-update" data-item="Envelope" data-action="remove">-</button>
+             </div>
+           </div>
+         </div>
+ 
+         <div class="inventory-item" data-name="Box" data-price="1.99">
+           <div class="item-info">
+             <div class="item-name">Box 📦</div>
+             <div class="item-price">$1.99 each</div>
+           </div>
+           <div class="stock-info">
+             <div class="stock-level">
+               <span>Current Stock:</span>
+               <span id="box-stock" class="stock-count"></span>
+             </div>
+             <div class="stock-controls">
+               <button class="stock-update" data-item="Box" data-action="add">+</button>
+               <input type="number" id="box-quantity" min="1">
+               <button class="stock-update" data-item="Box" data-action="remove">-</button>
+             </div>
+           </div>
+         </div>
+ 
+         <div class="inventory-item" data-name="Tape" data-price="1.99">
+           <div class="item-info">
+             <div class="item-name">Tape 🧻</div>
+             <div class="item-price">$1.99 a roll</div>
+           </div>
+           <div class="stock-info">
+             <div class="stock-level">
+               <span>Current Stock:</span>
+               <span id="tape-stock" class="stock-count"></span>
+             </div>
+             <div class="stock-controls">
+               <button class="stock-update" data-item="Tape" data-action="add">+</button>
+               <input type="number" id="tape-quantity" min="1">
+               <button class="stock-update" data-item="Tape" data-action="remove">-</button>
+             </div>
+           </div>
+         </div>
+ 
+         <div class="inventory-item" data-name="Stamps" data-price="9.99">
+           <div class="item-info">
+             <div class="item-name">Stamps 🏴󠁧󠁢󠁳󠁣󠁴󠁿</div>
+             <div class="item-price">$9.99 a book</div>
+           </div>
+           <div class="stock-info">
+             <div class="stock-level">
+               <span>Current Stock:</span>
+               <span id="stamps-stock" class="stock-count"></span>
+             </div>
+             <div class="stock-controls">
+               <button class="stock-update" data-item="Stamps" data-action="add">+</button>
+               <input type="number" id="stamps-quantity" min="1">
+               <button class="stock-update" data-item="Stamps" data-action="remove">-</button>
+             </div>
+           </div>
+         </div>
+ 
+         <div class="inventory-item" data-name="Labels" data-price="1.99">
+           <div class="item-info">
+             <div class="item-name">Labels 🏷</div>
+             <div class="item-price">$1.99 each</div>
+           </div>
+           <div class="stock-info">
+             <div class="stock-level">
+               <span>Current Stock:</span>
+               <span id="labels-stock" class="stock-count"></span>
+             </div>
+             <div class="stock-controls">
+               <button class="stock-update" data-item="Labels" data-action="add">+</button>
+               <input type="number" id="labels-quantity" min="1">
+               <button class="stock-update" data-item="Labels" data-action="remove">-</button>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+ 
+     <div class="inventory-status">
+       <h2 class="status-title">Inventory Status</h2>
+       
+       <div class="status-summary">
+         <div class="total-items">
+           <h3>Total Items in Stock</h3>
+           <div id="total-inventory" class="summary-count"></div>
+         </div>
+         
+         <div class="low-stock">
+           <h3>Low Stock Alerts</h3>
+           <ul id="low-stock-list">
+             <!-- Populated via JavaScript -->
+           </ul>
+         </div>
+       </div>
+ 
+       <div class="inventory-chart">
+         <h3>Stock Levels</h3>
+         <div class="chart-bars">
+           <div class="chart-item">
+             <div class="chart-label">Envelope</div>
+             <div class="chart-bar">
+               <div class="bar-fill" id="envelope-bar" style="width: 75%"></div>
+             </div>
+             <div class="chart-value" id="envelope-percent">75%</div>
+           </div>
+           
+           <div class="chart-item">
+             <div class="chart-label">Box</div>
+             <div class="chart-bar">
+               <div class="bar-fill" id="box-bar" style="width: 38%"></div>
+             </div>
+             <div class="chart-value" id="box-percent">38%</div>
+           </div>
+           
+           <div class="chart-item">
+             <div class="chart-label">Tape</div>
+             <div class="chart-bar">
+               <div class="bar-fill" id="tape-bar" style="width: 50%"></div>
+             </div>
+             <div class="chart-value" id="tape-percent">50%</div>
+           </div>
+           
+           <div class="chart-item">
+             <div class="chart-label">Stamps</div>
+             <div class="chart-bar">
+               <div class="bar-fill" id="stamps-bar" style="width: 25%"></div>
+             </div>
+             <div class="chart-value" id="stamps-percent">25%</div>
+           </div>
+           
+           <div class="chart-item">
+             <div class="chart-label">Labels</div>
+             <div class="chart-bar">
+               <div class="bar-fill" id="labels-bar" style="width: 100%"></div>
+             </div>
+             <div class="chart-value" id="labels-percent">100%</div>
+           </div>
+         </div>
+       </div>
+       
+       <div class="actions">
+         <button id="refresh-inventory" class="action-button">Refresh Inventory</button>
+         <button id="save-changes" class="action-button">Save Changes</button>
+         <button id="generate-report" class="action-button">Generate Report</button>
+       </div>
+     </div>
+   </div>
+ 
+   <footer>
+     <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
+   </footer>
+ 
+   <script src="../scripts/employee-store.js" defer></script>
+ </body>
+ </html>
