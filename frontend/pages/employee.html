@@ -20,6 +20,7 @@
       <select id="status-filter">
         <option value="">All</option>
         <option value="Pending">Pending</option>
+        <option value="Scheduled">Scheduled</option>
         <option value="In Transit">In Transit</option>
         <option value="Delivered">Delivered</option>
       </select>
@@ -30,7 +31,13 @@
       <label for="start-date">Start Date:</label>
       <input type="date" id="start-date" />            
       <label for="end-date">End Date:</label>
-      <input type="date" id="end-date" />              
+      <input type="date" id="end-date" />    
+      
+      <label for="location-filter">Select Location:</label>
+      <select id="location-filter">
+        <option value="">-- Select Location --</option>
+      </select>
+
       
       <label for="min-weight">Min Weight:</label>
       <input type="number" id="min-weight" step="any" placeholder="Min weight" />
@@ -42,6 +49,43 @@
       <input type="text" id="address-filter" placeholder="Enter address" />
     </div>
   </div>
+
+    <!-- Modal for Editing Package -->
+<div id="edit-modal" class="modal-backdrop hidden">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h3>Edit Package</h3>
+      <button class="close-btn" id="close-modal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p><strong>Package ID:</strong> <span id="edit-package-id">N/A</span></p>
+
+      <label for="edit-attribute">Select Attribute:</label>
+      <select id="edit-attribute">
+        <option value="location_id">Location</option>
+        <option value="weight">Weight</option>
+        <option value="dimensions">Dimensions</option>
+        <option value="address_from">Address From</option>
+        <option value="address_to">Address To</option>
+        <option value="status">Status</option>
+      </select>
+
+      <div id="edit-value-container">
+        <input type="text" id="edit-value" placeholder="Enter new value" />
+      </div>
+      
+      <div id="edit-location-container" class="hidden">
+        <label for="edit-location-dropdown">Select Location:</label>
+        <select id="edit-location-dropdown"></select>
+      </div>
+
+      <div class="modal-actions">
+        <button id="save-edit" class="save-btn">Save</button>
+        <button id="cancel-edit" class="cancel-btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
   <div class="package-container">
@@ -77,6 +121,8 @@
       <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
     </footer>
   </div>
+
+
 
   <script src="../scripts/employee.js"></script>
 </body>
