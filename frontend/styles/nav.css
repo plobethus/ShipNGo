@@ -11,6 +11,28 @@ nav {
   flex-wrap: wrap;
 }
 
+/* Split nav into left and right sections */
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.dashboard-link {
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+
 /* Logo or brand text, e.g. ShipNGo */
 nav .navbar {
   font-size: 1.5rem;
@@ -126,13 +148,6 @@ nav ul li:hover .dropdown {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-}
-
-
-.title-and-dropdown {
-  display: flex;
-  flex-direction: row;
-  gap: 50px;
 }
 
 
