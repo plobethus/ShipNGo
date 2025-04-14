@@ -15,12 +15,19 @@ const { serveFile, verifyToken, sendJson, readJsonBody } = require("./helpers");
 
 // Import route modules
 const authRoutes = require("./routes/auth");
+
 const claimsRoutes = require("./routes/claims");
+
 const deliverpointsRoutes = require("./routes/deliverpoints");
+
 const packageRoutes = require("./routes/packageRoutes");
 const trackingRoutes = require("./routes/tracking");
+
 const profileRoutes = require("./routes/profile"); 
+
 const shopRoutes = require("./routes/shop");
+
+const goalsRoutes = require("./routes/goals");
 const statusRoutes = require("./routes/status");
 
 const driverRoutes = require("./routes/drivers");
@@ -214,6 +221,19 @@ else if (pathname.startsWith("/api/profile")) {
         const parts = pathname.split("/");
         const id = parts[3];
         await driverRoutes.deleteStopFromRoute(req, res, id)
+        return;
+      }
+    }
+    else if (pathname === "/goals") {
+      // Only allow managers to access goals routes
+      if (tokenData.role !== "manager") {
+        return sendJson(res, 403, { success: false, message: "Access denied" });
+      }
+      if (req.method === "GET") {
+        await goalsRoutes.getGoals(req, res);
+        return;
+      } else if (req.method === "POST") {
+        await goalsRoutes.postGoals(req, res);
         return;
       }
     }

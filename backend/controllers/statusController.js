@@ -1,3 +1,4 @@
+// ShipNGo/backend/controllers/statusController.js
 const pool = require("../db");
 
 async function status(req, res) {
@@ -9,40 +10,79 @@ async function status(req, res) {
     const sqlTopOrigins = `
       SELECT p.address_from AS name, COUNT(*) AS count
       FROM packages p
-      WHERE p.status != 'Pending'
+      JOIN (
+          SELECT package_id, status
+          FROM package_tracking_log
+          WHERE log_id IN (
+              SELECT MAX(log_id)
+              FROM package_tracking_log
+              GROUP BY package_id
+          )
+      ) t ON t.package_id = p.package_id
+      WHERE t.status != 'Pending'
       GROUP BY p.address_from
       ORDER BY count DESC
       LIMIT 5
     `;
+
     const sqlTopDestinations = `
       SELECT p.address_to AS name, COUNT(*) AS count
       FROM packages p
-      WHERE p.status != 'Pending'
+      JOIN (
+          SELECT package_id, status
+          FROM package_tracking_log
+          WHERE log_id IN (
+              SELECT MAX(log_id)
+              FROM package_tracking_log
+              GROUP BY package_id
+          )
+      ) t ON t.package_id = p.package_id
+      WHERE t.status != 'Pending'
       GROUP BY p.address_to
       ORDER BY count DESC
       LIMIT 5
     `;
+
     const sqlShippedToday = `
       SELECT COUNT(*) AS shippedToday
-      FROM trackinghistory
+      FROM package_tracking_log
       WHERE status = 'Scheduled'
-        AND updated_at >= ?
+        AND changed_at >= ?
     `;
+
     const sqlDeliveredToday = `
       SELECT COUNT(*) AS deliveredToday
-      FROM trackinghistory
+      FROM package_tracking_log
       WHERE status = 'Completed'
-        AND updated_at >= ?
+        AND changed_at >= ?
     `;
+
     const sqlActive = `
       SELECT COUNT(*) AS activeCount
-      FROM packages
-      WHERE status = 'In Transit'
+      FROM (
+          SELECT package_id
+          FROM package_tracking_log
+          WHERE log_id IN (
+              SELECT MAX(log_id)
+              FROM package_tracking_log
+              GROUP BY package_id
+          )
+          AND status = 'In Transit'
+      ) AS sub
     `;
+
     const sqlDelayed = `
       SELECT COUNT(*) AS delayedCount
-      FROM packages
-      WHERE status = 'Delayed / Delivery Attempted'
+      FROM (
+          SELECT package_id
+          FROM package_tracking_log
+          WHERE log_id IN (
+              SELECT MAX(log_id)
+              FROM package_tracking_log
+              GROUP BY package_id
+          )
+          AND status = 'Delayed'
+      ) AS sub
     `;
 
     const [
