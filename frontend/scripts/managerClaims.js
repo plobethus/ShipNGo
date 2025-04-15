@@ -50,6 +50,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       document.getElementById("total-claims-count").textContent = "0";
       document.getElementById("pending-claims-count").textContent = "0";
       document.getElementById("resolution-rate").textContent = "0%";
+      document.getElementById("approved-cost").textContent = "$0.00";
       return;
     }
     
@@ -68,10 +69,31 @@ document.addEventListener("DOMContentLoaded", async function () {
     // Calculate resolution rate
     const resolutionRate = totalClaims > 0 ? Math.round((resolvedClaims / totalClaims) * 100) : 0;
     
+    // Calculate total cost of approved packages
+    const approvedClaims = claimsData.filter(claim => 
+      claim.refund_status === "Approved" && claim.package_id
+    );
+    
+    let totalApprovedCost = 0;
+    for (const claim of approvedClaims) {
+      if (claim.cost !== undefined && claim.cost !== null) {
+        // Convert to number if it's a string
+        const cost = typeof claim.cost === 'string' ? parseFloat(claim.cost) : claim.cost;
+        // Add to total if it's a valid number
+        if (!isNaN(cost)) {
+          totalApprovedCost += cost;
+        }
+      }
+    }
+    
+    // Format cost to 2 decimal places with dollar sign
+    const formattedCost = `$${totalApprovedCost.toFixed(2)}`;
+    
     // Update UI with values
     document.getElementById("total-claims-count").textContent = totalClaims;
     document.getElementById("pending-claims-count").textContent = pendingClaims;
     document.getElementById("resolution-rate").textContent = `${resolutionRate}%`;
+    document.getElementById("approved-cost").textContent = formattedCost;
   }
   
   // ===== Filter Setup Functions =====
@@ -181,7 +203,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     let specificHeaders = [];
     
     if (packageStatus === "with-package") {
-      specificHeaders = ["Package ID", "Weight", "Dimensions", "Customer ID", "Refund Status"];
+      specificHeaders = ["Package ID", "Weight", "Dimensions", "Cost($USD)", "Customer ID","Refund Status"];
     } else if (packageStatus === "without-package") {
       specificHeaders = ["Customer Name", "Customer ID", "Refund Status"];
     } else {
@@ -314,6 +336,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           <td>${claim.package_id || "N/A"}</td>
           <td>${claim.weight !== undefined && claim.weight !== null ? claim.weight : "N/A"}</td>
           <td>${claim.dimensions !== undefined && claim.dimensions !== null ? claim.dimensions : "N/A"}</td>
+          <td>${claim.cost !== undefined && claim.cost !== null ? claim.cost : "N/A"}</td>
           <td>${claim.customer_id || "N/A"}</td>
           <td>${claim.refund_status || "Pending"}</td>
         `;
@@ -334,6 +357,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           
           if (claim.weight !== undefined && claim.weight !== null) packageInfo += `<br>Weight: ${claim.weight}`;
           if (claim.dimensions !== undefined && claim.dimensions !== null) packageInfo += `<br>Dim: ${claim.dimensions}`;
+          if (claim.cost !== undefined && claim.cost !== null) packageInfo += `<br>Cost($USD): ${claim.cost}`;
         }
         
         row.innerHTML = `
@@ -374,6 +398,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         <p><strong>Package ID:</strong> ${claim.package_id}</p>
         <p><strong>Weight:</strong> ${claim.weight || "N/A"}</p>
         <p><strong>Dimensions:</strong> ${claim.dimensions || "N/A"}</p>
+        <p><strong>Cost($USD):</strong> ${claim.cost || "N/A"}</p>
       `;
     } else {
       packageDetails = `<p><strong>Package ID:</strong> No package associated</p>`;
