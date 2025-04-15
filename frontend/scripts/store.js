@@ -10,8 +10,9 @@ const itemMap = {
 };
 
 document.addEventListener("DOMContentLoaded", function () {
-  // Fetch the available stock from the backend when the page loads.
-  fetchStockData();
+  populateLocationDropdownForStore();
+
+  document.getElementById("location-selector").addEventListener("change", fetchStockData);
 
   const buttons = document.querySelectorAll(".cart");
   buttons.forEach(button => {
@@ -29,6 +30,31 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+async function populateLocationDropdownForStore() {
+  try {
+    const response = await fetch("/api/locations", {
+      method: "GET",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" }
+    });
+    const data = await response.json();
+    const dropdown = document.getElementById("location-selector");
+    // Start with a default option.
+    data.forEach(loc => {
+      if (loc.location_id == 0 || loc.location_type == "WAREHOUSE") {
+        return;
+      }
+      const option = document.createElement("option");
+      option.value = loc.location_id;
+      option.textContent = `${loc.location_name} at ${loc.address}`;
+      dropdown.appendChild(option);
+    });
+    fetchStockData();
+  } catch (err) {
+    console.error("Failed to load locations:", err);
+  }
+}
+  
   const checkoutButton = document.getElementById("checkout-button");
   if (checkoutButton) {
     checkoutButton.addEventListener("click", checkout);
@@ -38,7 +64,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 async function fetchStockData() {
   try {
-    const response = await fetch("/api/stocks");
+    const locId = document.getElementById("location-selector").value;
+    const response = await fetch(`/api/stocks?location_id=${locId}`);
     if (!response.ok) {
       throw new Error("Failed to fetch stock data");
     }
@@ -139,13 +166,15 @@ function checkout() {
     return;
   }
 
+  const locId = document.getElementById("location-selector").value;
+
   try {
     fetch('/api/checkout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ items })
+      body: JSON.stringify({ items, location_id: locId})
     }).then(res => {
       if (res.status === 200) {
         // Update the local stock data based on the purchased quantities.

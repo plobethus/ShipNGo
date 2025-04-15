@@ -4,20 +4,20 @@ const { sendJson, readJsonBody, verifyToken } = require("../helpers");
 const shopController = require("../controllers/shopController");
 
 
-async function checkout(req, res) {
+async function checkout(req, res, query) {
     try {
         const userId = await verifyToken(req);
         const body = await readJsonBody(req);
 
 
-
+        
 
 
         if (!Array.isArray(body.items)) {
             return sendJson(res, 400, { error: "Invalid items format" });
         }
 
-        await shopController.performCheckout(userId, body.items);
+        await shopController.performCheckout(userId, body.items, query.location_id);
 
         sendJson(res, 200, { success: true, message: "Checkout completed successfully" });
 
@@ -27,11 +27,11 @@ async function checkout(req, res) {
     }
 }
 
-async function getStocks(req, res) {
+async function getStocks(req, res, query) {
     try {
         let stocks = []
-        
-        const items = await shopController.getItems();
+        console.log(query);
+        const items = await shopController.getItems(query.location_id);
 
         items.forEach(item => {
             stocks.push({id: item.category, available: item.stock_quantity});
@@ -45,7 +45,7 @@ async function getStocks(req, res) {
     }
 }
 
-async function restock(req, res) {
+async function restock(req, res, query) {
     try {
         const body = await readJsonBody(req);
 
@@ -57,7 +57,7 @@ async function restock(req, res) {
             return sendJson(res, 400, { error: "Invalid items format" });
         }
 
-        await shopController.updateItems(body.updates);
+        await shopController.updateItems(body.updates, query.location_id);
 
         sendJson(res, 200, { success: true, message: "Restock completed successfully" });
 

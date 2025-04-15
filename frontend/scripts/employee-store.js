@@ -10,7 +10,10 @@ const targetStock = {
 };
 
 document.addEventListener("DOMContentLoaded", function () {
-  fetchInventoryData();
+  populateLocationDropdownForStore();
+
+
+  document.getElementById("location-selector").addEventListener("change", fetchInventoryData);
 
   document.querySelectorAll(".stock-update").forEach(button => {
     button.addEventListener("click", stockUpdateHandler);
@@ -21,9 +24,35 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("generate-report").addEventListener("click", generateReport);
 });
 
+async function populateLocationDropdownForStore() {
+  try {
+    const response = await fetch("/api/locations", {
+      method: "GET",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" }
+    });
+    const data = await response.json();
+    const dropdown = document.getElementById("location-selector");
+    // Start with a default option.
+    data.forEach(loc => {
+      if (loc.location_id == 0 || loc.location_type == "WAREHOUSE") {
+        return;
+      }
+      const option = document.createElement("option");
+      option.value = loc.location_id;
+      option.textContent = `${loc.location_name} at ${loc.address}`;
+      dropdown.appendChild(option);
+    });
+    await fetchInventoryData()
+    } catch (err) {
+    console.error("Failed to load locations:", err);
+  }
+}
+
 async function fetchInventoryData() {
   try {
-    const res = await fetch("/api/stocks");
+    const locId = document.getElementById("location-selector").value;
+    const res = await fetch(`/api/stocks?location_id=${locId}`);
     if (!res.ok) throw new Error("Failed to fetch stock data");
     const data = await res.json();
 
@@ -119,9 +148,10 @@ async function saveChanges() {
     alert("No changes to save.");
     return;
   }
-
+  const locId = document.getElementById("location-selector").value;
+  
   try {
-    const res = await fetch("/api/restock", {
+    const res = await fetch(`/api/restock?location_id=${locId}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ updates })
