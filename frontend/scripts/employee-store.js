@@ -1,7 +1,6 @@
 let inventoryData = {};
 let originalInventoryData = {};
 
-// Set all target stocks to 1000
 const targetStock = {
   'Envelope': 1000,
   'Box': 1000,
@@ -130,7 +129,7 @@ async function saveChanges() {
 
     if (res.ok) {
       alert("Inventory changes saved successfully!");
-      fetchInventoryData(); // Refresh everything after saving
+      fetchInventoryData();
     } else {
       alert("Failed to save inventory changes.");
     }

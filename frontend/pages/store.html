@@ -9,16 +9,13 @@
   <link rel="stylesheet" href="../styles/nav.css" />
 </head>
 <body>
-  <!-- Header include -->
   <div id="header-include"></div>
   <script src="/scripts/header.js" defer></script>
 
   <div class="store_page">
-    <!-- Product list -->
     <div class="items">
       <h2 class="item-title">Our Products</h2>
       <div class="item-list">
-        <!-- Envelope -->
         <div class="store_item" data-name="Envelope" data-price="0.99">
           <div>Envelope ($0.99 each) 📨</div>
           <div class="price">
@@ -30,11 +27,9 @@
               <option>100</option>
             </select>
           </div>
-          <!-- Stock will be loaded from the backend -->
           <div>In Stock: <span class="product-stock"></span></div>
         </div>
 
-        <!-- Box -->
         <div class="store_item" data-name="Box" data-price="1.99">
           <div>Box ($1.99 each) 📦</div>
           <div class="price">
@@ -49,7 +44,6 @@
           <div>In Stock: <span class="product-stock"></span></div>
         </div>
 
-        <!-- Tape -->
         <div class="store_item" data-name="Tape" data-price="1.99">
           <div>Tape ($1.99 per roll) 🧻</div>
           <div class="price">
@@ -64,7 +58,6 @@
           <div>In Stock: <span class="product-stock"></span></div>
         </div>
 
-        <!-- Stamps -->
         <div class="store_item" data-name="Stamps" data-price="9.99">
           <div>Stamps ($9.99 a book) 🏴</div>
           <div class="price">
@@ -79,7 +72,6 @@
           <div>In Stock: <span class="product-stock"></span></div>
         </div>
 
-        <!-- Labels -->
         <div class="store_item" data-name="Labels" data-price="1.99">
           <div>Labels ($1.99 each) 🏷</div>
           <div class="price">
@@ -96,7 +88,6 @@
       </div>
     </div>
 
-    <!-- Checkout summary -->
     <div class="checkout">
       <h2 style="margin-bottom:16px">Checkout</h2>
       <div class="total">
@@ -105,7 +96,6 @@
       </div>
 
       <div class="checkout-items">
-        <!-- Envelope checkout entry -->
         <div id="num-envelopes" class="store_item">
           <div>Envelopes 📨</div>
           <div style="display: flex; gap: 20px;">
@@ -115,7 +105,6 @@
           </div>
         </div>
 
-        <!-- Box checkout entry -->
         <div id="num-box" class="store_item">
           <div>Boxes 📦</div>
           <div style="display: flex; gap: 20px;">
@@ -125,7 +114,6 @@
           </div>
         </div>
 
-        <!-- Tape checkout entry -->
         <div id="num-tape" class="store_item">
           <div>Tape 🧻</div>
           <div style="display: flex; gap: 20px;">
@@ -135,7 +123,6 @@
           </div>
         </div>
 
-        <!-- Stamps checkout entry -->
         <div id="num-stamp" class="store_item">
           <div>Stamps 🏴</div>
           <div style="display: flex; gap: 20px;">
@@ -145,7 +132,6 @@
           </div>
         </div>
 
-        <!-- Labels checkout entry -->
         <div id="num-labels" class="store_item">
           <div>Labels 🏷</div>
           <div style="display: flex; gap: 20px;">
@@ -162,7 +148,6 @@
     </div>
   </div>
 
-  <!-- Services and footer -->
   <div>
     <section id="services" class="services">
       <h3>Our Services</h3>
@@ -176,7 +161,6 @@
     </footer>
   </div>
 
-  <!-- The main store JavaScript that handles fetching stocks and cart operations -->
   <script src="../scripts/store.js" defer></script>
 </body>
 </html>

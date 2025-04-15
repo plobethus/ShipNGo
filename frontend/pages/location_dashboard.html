@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Location Management Dashboard - ShipNGo</title>
+  <link rel="stylesheet" href="../styles/nav.css" />
+  <link rel="stylesheet" href="../styles/styles.css" />
+  <link rel="stylesheet" href="../styles/location-dashboard.css" />
+  <script src="../scripts/locations.js" defer></script>  
+</head>
+<body>
+  <div id="header-include"></div>
+  <script src="/scripts/header.js" defer></script>
+
+  <div class="page-content">
+    <h1 class="dashboard-title">Location Management Dashboard</h1>
+    
+    <!-- Stats Dashboard -->
+    <div class="stats-dashboard">
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-title">Total Locations</div>
+          <div class="stat-value" id="total-locations-count">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Active Locations</div>
+          <div class="stat-value" id="active-locations-count">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Inactive Locations</div>
+          <div class="stat-value" id="inactive-locations-count">-</div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Filter Controls -->
+    <div class="location-controls">
+      <div class="control-container">
+        <div class="filter-group">
+          <label for="location-type-filter">Filter by Location Type:</label>
+          <select id="location-type-filter">
+            <option value="">All Types</option>
+            <option value="Post Office">Post Office</option>
+            <option value="Warehouse">Warehouse</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="city-filter">Filter by City:</label>
+          <input type="text" id="city-filter" placeholder="Enter city" />
+        </div>
+        <div class="filter-group">
+          <label for="state-filter">Filter by State:</label>
+          <input type="text" id="state-filter" placeholder="Enter state" />
+        </div>
+        <div class="filter-group">
+          <button id="add-new-location-btn">Add New Location</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Locations Table -->
+    <div class="location-container">
+      <h2>All Locations</h2>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Location ID</th>
+              <th>Name</th>
+              <th>Type</th>
+              <th>State</th>
+              <th>Zip Code</th>
+              <th>Employees</th>
+              <th>Status</th>
+              <th>Hours</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="location-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+      <h3>Our Services</h3>
+      <p>We provide local and international shipping, express delivery, and secure parcel handling.</p>
+    </section>
+  </div>
+
+  <!-- Modal for Editing Location -->
+  <div id="edit-location-modal" class="modal-backdrop hidden">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3>Edit Location</h3>
+        <button class="close-btn" id="close-edit-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Location ID:</strong> <span id="edit-location-id">N/A</span></p>
+        
+        <label for="edit-location-name">Name:</label>
+        <input type="text" id="edit-location-name" placeholder="Enter location name" />
+
+        <label for="edit-location-type">Type:</label>
+        <select id="edit-location-type">
+          <option value="POST_OFFICE">Post Office</option>
+          <option value="WAREHOUSE">Warehouse</option>
+        </select>
+
+
+
+        <label for="edit-state">State:</label>
+        <input type="text" id="edit-state" placeholder="Enter state" />
+
+        <label for="edit-zip">Zip Code:</label>
+        <input type="text" id="edit-zip" placeholder="Enter zip code" />
+
+        <label for="edit-employees">Number of Employees:</label>
+        <input type="number" id="edit-employees" placeholder="Enter employee count" />
+
+        <label for="edit-status">Status:</label>
+        <select id="edit-status">
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+
+        <label for="edit-opening-time">Opening Time:</label>
+        <input type="time" id="edit-open-time" />
+
+        <label for="edit-closing-time">Closing Time:</label>
+        <input type="time" id="edit-close-time" />
+
+        <label for="edit-address">Address:</label>
+        <input type="text" id="edit-address" placeholder="Enter location address" />
+
+        <div class="modal-actions">
+          <button id="save-edit-location" class="save-btn">Save</button>
+          <button id="cancel-edit-location" class="cancel-btn">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Adding Location -->
+  <div id="add-location-modal" class="modal-backdrop hidden">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3>Add New Location</h3>
+        <button class="close-btn" id="close-add-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <label for="add-location-name">Name:</label>
+        <input type="text" id="add-location-name" placeholder="Enter location name" />
+
+        <label for="add-location-type">Type:</label>
+        <select id="add-location-type">
+          <option value="Post Office">Post Office</option>
+          <option value="Warehouse">Warehouse</option>
+        </select>
+
+        <label for="add-city">City:</label>
+        <input type="text" id="add-city" placeholder="Enter city" />
+
+        <label for="add-state">State:</label>
+        <input type="text" id="add-state" placeholder="Enter state" />
+
+        <label for="add-zip">Zip Code:</label>
+        <input type="text" id="add-zip" placeholder="Enter zip code" />
+
+        <label for="add-employees">Number of Employees:</label>
+        <input type="number" id="add-employees" placeholder="Enter employee count" />
+
+        <label for="add-status">Status:</label>
+        <select id="add-status">
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+
+        <label for="add-open-time">Opening Time:</label>
+        <input type="time" id="add-open-time" />
+
+        <label for="add-close-time">Closing Time:</label>
+        <input type="time" id="add-close-time" />
+
+        <label for="add-address">Address:</label>
+        <input type="text" id="add-address" placeholder="Enter location address" />
+
+        <div class="modal-actions">
+          <button id="save-add-location" class="save-btn">Add</button>
+          <button id="cancel-add-location" class="cancel-btn">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer>
+    <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
+  </footer>
+</body>
+</html>

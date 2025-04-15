@@ -2,7 +2,6 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    // Add event listeners for filters
     document.getElementById("status-filter")?.addEventListener("change", loadPackages);
     document.getElementById("search-customer")?.addEventListener("input", debounce(loadPackages, 500));
     document.getElementById("start-date")?.addEventListener("change", loadPackages);
@@ -20,7 +19,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-// Helper function to debounce filter inputs
 function debounce(func, delay) {
   let timeout;
   return function () {
@@ -29,7 +27,6 @@ function debounce(func, delay) {
   };
 }
 
-// Populate location dropdown
 async function populateLocationDropdown() {
   try {
     const response = await fetch("/api/locations", {
@@ -56,7 +53,7 @@ async function populateLocationDropdown() {
   }
 }
 
-// Load packages and update dashboard
+
 async function loadPackages() {
   const params = new URLSearchParams({
     status: document.getElementById("status-filter")?.value || "",
@@ -94,7 +91,6 @@ async function loadPackages() {
     
     packageTable.innerHTML = "";
     
-    // Update dashboard stats
     updateDashboardStats(data.packages || []);
     
     if (!data.packages || data.packages.length === 0) {
@@ -103,7 +99,6 @@ async function loadPackages() {
     }
 
     data.packages.forEach(pkg => {
-      // Determine status class for badge styling
       const statusClass = getStatusClass(pkg.latest_status || "Pending");
       
       const row = `
@@ -132,7 +127,6 @@ async function loadPackages() {
   }
 }
 
-// Helper function to get status class name
 function getStatusClass(status) {
   switch(status) {
     case "Pending": return "status-pending";
@@ -143,16 +137,13 @@ function getStatusClass(status) {
   }
 }
 
-// Update dashboard stats
 function updateDashboardStats(packages) {
   if (!Array.isArray(packages)) {
     packages = [];
   }
   
-  // Calculate stats
   const totalPackages = packages.length;
   
-  // Count packages by status
   const pendingPackages = packages.filter(pkg => 
     !pkg.latest_status || pkg.latest_status === "Pending"
   ).length;
@@ -169,7 +160,6 @@ function updateDashboardStats(packages) {
     pkg.latest_status === "Delivered"
   ).length;
   
-  // Update UI with values
   document.getElementById("total-packages-count").textContent = totalPackages;
   document.getElementById("pending-packages-count").textContent = pendingPackages;
   document.getElementById("scheduled-packages-count").textContent = scheduledPackages;
@@ -177,7 +167,6 @@ function updateDashboardStats(packages) {
   document.getElementById("delivered-packages-count").textContent = deliveredPackages;
 }
 
-// Edit package function
 let currentEditPackageId = null;
 
 function editPackage(packageId) {
@@ -187,7 +176,6 @@ function editPackage(packageId) {
   document.getElementById("edit-modal").classList.remove("hidden");
 }
 
-// Delete package function
 async function deletePackageUI(packageId) {
   if (!confirm("Are you sure you want to delete this package?")) {
     return;  
@@ -211,14 +199,13 @@ async function deletePackageUI(packageId) {
   }
 }
 
-// Show notification function
+
 function showNotification(message, type) {
-  // Create notification element
+
   const notification = document.createElement("div");
   notification.classList.add("notification", type);
   notification.textContent = message;
   
-  // Append to body
   document.body.appendChild(notification);
   
   setTimeout(() => {
@@ -229,7 +216,6 @@ function showNotification(message, type) {
   }, 3000);
 }
 
-// Modal event listeners
 document.getElementById("close-modal")?.addEventListener("click", () => {
   document.getElementById("edit-modal").classList.add("hidden");
 });
@@ -244,12 +230,10 @@ document.getElementById("edit-attribute")?.addEventListener("change", () => {
   const locDropdown = document.getElementById("edit-location-container");
   const statusDropdown = document.getElementById("edit-status-container");
 
-  // Hide all input containers first
   valInput.classList.add("hidden");
   locDropdown.classList.add("hidden");
   statusDropdown.classList.add("hidden");
 
-  // Show the correct input container based on the selected attribute
   if (attr === "location_id") {
     locDropdown.classList.remove("hidden");
   } else if (attr === "status") {
@@ -306,7 +290,6 @@ document.getElementById("save-edit")?.addEventListener("click", async () => {
   }
 });
 
-// Function to update package status
 async function quickUpdate(packageId, newStatus) {
   try {
     const response = await fetch(`/packages/${packageId}`, {
