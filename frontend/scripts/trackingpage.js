@@ -21,7 +21,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     const latest = history[0];
-    
+
+
+
     document.getElementById("tracking-id").textContent = latest.package_id;
     document.getElementById("tracking-status").textContent = latest.status;
     document.getElementById("warehouse").textContent = ((latest.location_type || "") + " " + (latest.location_name || "Unknown Location Name") + " (" + (latest.location_address || "Unknown Address") + ")" );
