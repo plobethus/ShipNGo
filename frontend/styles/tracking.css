@@ -1,0 +1,261 @@
+/* tracking.css - ShipNGo Tracking Page Styles */
+
+/* Main content */
+main {
+    flex: 1;
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  
+  /* Tracking container styling */
+  .tracking-container {
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 64, 128, 0.1);
+    overflow: hidden;
+    margin-bottom: 40px;
+    transition: transform 0.3s ease;
+  }
+  
+  .tracking-container:hover {
+    transform: translateY(-5px);
+  }
+  
+  .tracking-header {
+    background-color: #004080;
+    color: white;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .tracking-icon {
+    font-size: 24px;
+    margin-right: 15px;
+  }
+  
+  .tracking-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+  
+  .tracking-id-display {
+    background-color: #ffcc00;
+    color: #004080;
+    padding: 5px 15px;
+    border-radius: 50px;
+    font-weight: bold;
+    display: inline-block;
+  }
+  
+  .tracking-body {
+    padding: 30px;
+  }
+  
+  .tracking-status {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eaeaea;
+  }
+  
+  .status-icon {
+    background-color: #e6f7ff;
+    color: #004080;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    font-size: 24px;
+  }
+  
+  .status-details {
+    flex: 1;
+  }
+  
+  .status-label {
+    color: #666;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+  }
+  
+  .status-value {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #004080;
+  }
+  
+  .location-info {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+  }
+  
+  .location-info p {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .location-info .icon {
+    color: #004080;
+    margin-right: 10px;
+  }
+  
+  /* History timeline styling */
+  .history-section {
+    margin-top: 40px;
+  }
+  
+  .history-section h3 {
+    color: #004080;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .history-section h3::before {
+    content: "📋";
+    margin-right: 10px;
+  }
+  
+  .timeline {
+    position: relative;
+    padding-left: 30px;
+  }
+  
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    background-color: #ddd;
+  }
+  
+  .timeline-item {
+    position: relative;
+    padding-bottom: 25px;
+  }
+  
+  .timeline-item:last-child {
+    padding-bottom: 0;
+  }
+  
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -30px;
+    top: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #004080;
+    z-index: 1;
+  }
+  
+  .timeline-item.current::before {
+    background-color: #ffcc00;
+    box-shadow: 0 0 0 4px rgba(255, 204, 0, 0.2);
+  }
+  
+  .timeline-content {
+    background-color: #fff;
+    padding: 15px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+  }
+  
+  .timeline-content:hover {
+    transform: translateX(5px);
+  }
+  
+  .timeline-date {
+    color: #666;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+  }
+  
+  .timeline-status {
+    font-weight: bold;
+    color: #004080;
+    margin-bottom: 5px;
+  }
+  
+  .timeline-location {
+    font-size: 0.95rem;
+  }
+  
+  /* Services section styling in tracking page */
+  .services {
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 64, 128, 0.1);
+    text-align: center;
+    margin: 0 auto;
+  }
+  
+  .services h3 {
+    color: #004080;
+    margin-bottom: 15px;
+  }
+  
+  /* Logo styling */
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .logo span {
+    color: #ffcc00;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .tracking-header {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .tracking-id-display {
+      margin-top: 10px;
+    }
+    
+    .tracking-status {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .status-icon {
+      margin-right: 0;
+      margin-bottom: 15px;
+    }
+    
+    .timeline {
+      padding-left: 25px;
+    }
+    
+    .timeline::before {
+      left: 7px;
+    }
+    
+    .timeline-item::before {
+      width: 15px;
+      height: 15px;
+      left: -25px;
+    }
+  }
