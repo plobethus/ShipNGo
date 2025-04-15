@@ -40,32 +40,132 @@
     <div>
       <form class="shipment-form">
         <div style="display:flex; flex-direction:row; gap:25px;">
-            <input style="width:90%" type="text" id="sender-Fname" name="sender-Fname" placeholder="Sender First Name (John)" required />
-            <input style="width:90%" type="text" id="sender-Lname" name="sender-Lname" placeholder="Sender Last Name (Smith)" required />
+            <input style="width:90%" type="text" id="sender-Fname" name="sender-Fname" placeholder="Sender First Name" required />
+            <input style="width:90%" type="text" id="sender-Lname" name="sender-Lname" placeholder="Sender Last Name" required />
         </div>
         <div style="display:flex; flex-direction:row; gap:24px;margin-bottom:25px;">
-            <input type="text" id="sender-street" name="sender-street" placeholder="Street (11111 Apple St.)" required />
-            <input type="text" id="sender-city" name="sender-city" placeholder="City (Houston)" required />
-            <input type="text" id="sender-state" name="sender-state" placeholder="State (TX)" required />
-            <input type="text" id="sender-zipcode" name="sender-zipcode" placeholder="Zipcode (22222)" required />
+            <input type="text" id="sender-street" name="sender-street" placeholder="Street" required />
+            <input type="text" id="sender-city" name="sender-city" placeholder="City" required />
+            <select id="sender-state" name="sender-state">
+                <option>AL</option>
+                <option>AK</option>
+                <option>AZ</option>
+                <option>AR</option>
+                <option>CA</option>
+                <option>CO</option>
+                <option>CT</option>
+                <option>DE</option>
+                <option>FL</option>
+                <option>GA</option>
+                <option>HI</option>
+                <option>ID</option>
+                <option>IL</option>
+                <option>IN</option>
+                <option>IA</option>
+                <option>KS</option>
+                <option>KY</option>
+                <option>LA</option>
+                <option>ME</option>
+                <option>MD</option>
+                <option>MA</option>
+                <option>MI</option>
+                <option>MN</option>
+                <option>MS</option>
+                <option>MO</option>
+                <option>MT</option>
+                <option>NE</option>
+                <option>NV</option>
+                <option>NH</option>
+                <option>NJ</option>
+                <option>NM</option>
+                <option>NY</option>
+                <option>NC</option>
+                <option>ND</option>
+                <option>OH</option>
+                <option>OK</option>
+                <option>OR</option>
+                <option>PA</option>
+                <option>RI</option>
+                <option>SD</option>
+                <option>TN</option>
+                <option>TX</option>
+                <option>UT</option>
+                <option>VT</option>
+                <option>VA</option>
+                <option>WA</option>
+                <option>WV</option>
+                <option>WI</option>
+                <option>WY</option>
+            </select>
+            <input type="text" id="sender-zipcode" name="sender-zipcode" placeholder="Zipcode" required />
         </div>
         <div style="display:flex; flex-direction:row; gap:25px;">
-            <input style="width:90%" type="text" id="receiver-Fname" name="receiver-Fname" placeholder="Recipient First Name (Jane)" required />
-            <input style="width:90%" type="text" id="receiver-Lname" name="receiver-Lname" placeholder="Recipient Last Name (Doe)" required />
+            <input style="width:90%" type="text" id="receiver-Fname" name="receiver-Fname" placeholder="Recipient First Name" required />
+            <input style="width:90%" type="text" id="receiver-Lname" name="receiver-Lname" placeholder="Recipient Last Name" required />
         </div>
         <div style="display:flex; flex-direction:row; gap:24px;margin-bottom:25px;">
-            <input type="text" id="receiver-street" name="receiver-street" placeholder="Street (11111 Apple St.)" required />
-            <input type="text" id="receiver-city" name="receiver-city" placeholder="City (Houston)" required />
-            <input type="text" id="receiver-state" name="receiver-state" placeholder="State (TX)" required />
-            <input type="text" id="receiver-zipcode" name="receiver-zipcode" placeholder="Zipcode (22222)" required />
+            <input type="text" id="receiver-street" name="receiver-street" placeholder="Street" required />
+            <input type="text" id="receiver-city" name="receiver-city" placeholder="City" required />
+            <select id="receiver-state" name="receiver-state">
+                <option>AL</option>
+                <option>AK</option>
+                <option>AZ</option>
+                <option>AR</option>
+                <option>CA</option>
+                <option>CO</option>
+                <option>CT</option>
+                <option>DE</option>
+                <option>FL</option>
+                <option>GA</option>
+                <option>HI</option>
+                <option>ID</option>
+                <option>IL</option>
+                <option>IN</option>
+                <option>IA</option>
+                <option>KS</option>
+                <option>KY</option>
+                <option>LA</option>
+                <option>ME</option>
+                <option>MD</option>
+                <option>MA</option>
+                <option>MI</option>
+                <option>MN</option>
+                <option>MS</option>
+                <option>MO</option>
+                <option>MT</option>
+                <option>NE</option>
+                <option>NV</option>
+                <option>NH</option>
+                <option>NJ</option>
+                <option>NM</option>
+                <option>NY</option>
+                <option>NC</option>
+                <option>ND</option>
+                <option>OH</option>
+                <option>OK</option>
+                <option>OR</option>
+                <option>PA</option>
+                <option>RI</option>
+                <option>SD</option>
+                <option>TN</option>
+                <option>TX</option>
+                <option>UT</option>
+                <option>VT</option>
+                <option>VA</option>
+                <option>WA</option>
+                <option>WV</option>
+                <option>WI</option>
+                <option>WY</option>
+            </select>
+            <input type="text" id="receiver-zipcode" name="receiver-zipcode" placeholder="Zipcode" required />
         </div>
         <input type="number" id="package-weight" name="package-weight" placeholder="Package Weight (lbs)" required />
         
         <!-- New Package Dimensions Section -->
-        <div style="display:flex; flex-direction:row; gap:24px;margin-bottom:10px;">
-            <input type="number" id="package-length" name="package-length" placeholder="Length (cm)" required />
-            <input type="number" id="package-width" name="package-width" placeholder="Width (cm)" required />
-            <input type="number" id="package-height" name="package-height" placeholder="Height (cm)" required />
+        <div style="display:flex; flex-direction:row; gap:24px;margin-bottom:10px; margin: 0 auto; width:100%;">
+            <input type="number" id="package-length" name="package-length" placeholder="Length (cm)" style="width:33%;" required />
+            <input type="number" id="package-width" name="package-width" placeholder="Width (cm)" style="width:33%;" required />
+            <input type="number" id="package-height" name="package-height" placeholder="Height (cm)" style="width:33%;" required />
         </div>
         <p style="text-align:left; font-size:12px; margin-top:-5px; margin-bottom:10px; color:#e0e0e0;">Enter package dimensions in centimeters</p>
         

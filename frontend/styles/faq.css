@@ -1,5 +1,11 @@
-#FAQ-container{
+#faq-container{
     background: #004080;
     color: white;
     margin:0px auto;
+    width:70%;
+    height:300px;
+    border-radius:15px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
 }
