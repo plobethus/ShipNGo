@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const latest = history[0];
 
-    console.log(latest);
+
 
     document.getElementById("tracking-id").textContent = latest.package_id;
     document.getElementById("tracking-status").textContent = latest.status;
