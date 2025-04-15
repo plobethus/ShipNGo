@@ -16,8 +16,7 @@
   <div class="page-content">
     <div class="manager-container">
       <h1>Claim Management Dashboard</h1>
-      
-      <!-- Stats Dashboard -->
+      <!-- Stats dashboard -->
       <div class="stats-dashboard">
         <div class="stats-container">
           <div class="stat-card">
@@ -32,6 +31,10 @@
             <div class="stat-title">Resolution Rate</div>
             <div class="stat-value" id="resolution-rate">-</div>
           </div>
+          <div class="stat-card">
+            <div class="stat-title">Total Refunds</div>
+            <div class="stat-value" id="approved-cost">$0.00</div>
+          </div>
         </div>
       </div>
       
@@ -39,58 +42,71 @@
         <h2>Customer Claims</h2>
         <div id="complaint-container">
           <!-- Filter Controls -->
-          <div class="filter-controls">
-            <div class="filter-group">
-              <label for="date-filter">Date:</label>
-              <select id="date-filter">
-                <option value="">All Dates</option>
-                <option value="today">Today</option>
-                <option value="yesterday">Yesterday</option>
-                <option value="last7">Last 7 Days</option>
-                <option value="last30">Last 30 Days</option>
-              </select>
+          <div class="filter-bar">
+            <div class="filter-row">
+              <div class="filter-item">
+                <div class="filter-label">Filter by Status:</div>
+                <select id="status-filter" class="filter-input">
+                  <option value="">All</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Rejected">Rejected</option>
+                  <option value="Processing">Processing</option>
+                </select>
+              </div>
+              
+              <div class="filter-item">
+                <div class="filter-label">Search by Customer:</div>
+                <input type="text" id="customer-filter" class="filter-input" placeholder="Enter customer ID">
+              </div>
+              
+              <div class="filter-item">
+                <div class="filter-label">Start Date:</div>
+                <input type="date" id="date-from" class="filter-input date-input">
+              </div>
+              
+              <div class="filter-item">
+                <div class="filter-label">End Date:</div>
+                <input type="date" id="date-to" class="filter-input date-input">
+              </div>
+              
+              <div class="filter-item">
+                <div class="filter-label">Select Issue Type:</div>
+                <select id="issue-type-filter" class="filter-input">
+                  <option value="">All Issues</option>
+                </select>
+              </div>
             </div>
             
-            <div class="filter-group">
-              <label for="package-status-filter">Contains Package:</label>
-              <select id="package-status-filter">
-                <option value="all">All Claims</option>
-                <option value="with-package">With Package</option>
-                <option value="without-package">Without Package</option>
-              </select>
-            </div>
-            
-            <div class="filter-group">
-              <label for="customer-filter">Customer ID:</label>
-              <input type="text" id="customer-filter" placeholder="Enter Customer ID">
-            </div>
-            
-            <div class="filter-group">
-              <label for="package-filter">Package ID:</label>
-              <input type="text" id="package-filter" placeholder="Enter Package ID">
-            </div>
-            
-            <div class="filter-group">
-              <label for="status-filter">Status:</label>
-              <select id="status-filter">
-                <option value="">All Status</option>
-                <option value="Pending">Pending</option>
-                <option value="Approved">Approved</option>
-                <option value="Rejected">Rejected</option>
-                <option value="Processing">Processing</option>
-              </select>
-            </div>
-            
-            <div class="filter-group">
-              <label for="issue-type-filter">Issue Type:</label>
-              <select id="issue-type-filter">
-                <option value="">All Issues</option>
-              </select>
-            </div>
-            
-            <div class="filter-buttons">
-              <button class="filter-btn apply-filter" id="apply-filters">Apply Filters</button>
-              <button class="filter-btn reset-filter" id="reset-filters">Reset</button>
+            <div class="filter-row">
+              <div class="filter-item">
+                <div class="filter-label">Package ID:</div>
+                <input type="text" id="package-filter" class="filter-input" placeholder="Enter Package ID">
+              </div>
+              
+              <div class="filter-item">
+                <div class="filter-label">Contains Package:</div>
+                <select id="package-status-filter" class="filter-input">
+                  <option value="all">All Claims</option>
+                  <option value="with-package">With Package</option>
+                  <option value="without-package">Without Package</option>
+                </select>
+              </div>
+              
+              <div class="filter-item">
+                <div class="filter-label">Min Weight:</div>
+                <input type="number" id="min-weight-filter" class="filter-input" placeholder="Min weight">
+              </div>
+              
+              <div class="filter-item">
+                <div class="filter-label">Max Weight:</div>
+                <input type="number" id="max-weight-filter" class="filter-input" placeholder="Max weight">
+              </div>
+              
+              <div class="filter-item filter-buttons">
+                <button id="apply-filters" class="filter-btn apply-filter">Apply Filters</button>
+                <button id="reset-filters" class="filter-btn reset-filter">Reset</button>
+              </div>
             </div>
           </div>
           
