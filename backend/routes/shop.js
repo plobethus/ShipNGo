@@ -30,7 +30,6 @@ async function checkout(req, res, query) {
 async function getStocks(req, res, query) {
     try {
         let stocks = []
-        console.log(query);
         const items = await shopController.getItems(query.location_id);
 
         items.forEach(item => {

@@ -2,6 +2,7 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
+    // Add event listeners for filters
     document.getElementById("status-filter")?.addEventListener("change", loadPackages);
     document.getElementById("search-customer")?.addEventListener("input", debounce(loadPackages, 500));
     document.getElementById("start-date")?.addEventListener("change", loadPackages);
@@ -10,6 +11,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("min-weight")?.addEventListener("input", debounce(loadPackages, 500));
     document.getElementById("max-weight")?.addEventListener("input", debounce(loadPackages, 500));
     document.getElementById("address-filter")?.addEventListener("input", debounce(loadPackages, 500));
+
+    // Initialize Edit Attribute change event
+    document.getElementById("edit-attribute")?.addEventListener("change", handleEditAttributeChange);
+
+    // Initialize modal event listeners
+    document.getElementById("close-modal")?.addEventListener("click", () => {
+      document.getElementById("edit-modal").classList.add("hidden");
+    });
+
+    document.getElementById("cancel-edit")?.addEventListener("click", () => {
+      document.getElementById("edit-modal").classList.add("hidden");
+    });
+
+    document.getElementById("save-edit")?.addEventListener("click", savePackageChanges);
 
     await loadPackages();
     await populateLocationDropdown();
@@ -27,6 +42,7 @@ function debounce(func, delay) {
   };
 }
 
+// Populate location dropdown
 async function populateLocationDropdown() {
   try {
     const response = await fetch("/api/locations", {
@@ -36,24 +52,31 @@ async function populateLocationDropdown() {
     });
     const data = await response.json();
 
-    const dropdown = document.getElementById("location-filter");
-    const dropdown2 = document.getElementById("edit-location-dropdown");
-    dropdown.innerHTML = '<option value="">-- Select Location --</option>';
-    dropdown2.innerHTML = '<option value="">-- Select Location --</option>';
+    const filterDropdown = document.getElementById("location-filter");
+    const editDropdown = document.getElementById("edit-location-dropdown");
+    
+    filterDropdown.innerHTML = '<option value="">-- Select Location --</option>';
+    editDropdown.innerHTML = '<option value="">-- Select Location --</option>';
+    
+    // Add new options based on fetched locations
     data.forEach(loc => {
       const option = document.createElement("option");
       option.value = loc.location_id;
       option.textContent = `${loc.location_name} - ${loc.location_type} at ${loc.address}`;
       
-      dropdown.appendChild(option);
-      dropdown2.appendChild(option.cloneNode(true));
+      // Add to filter dropdown
+      filterDropdown.appendChild(option);
+      
+      // Add to edit dropdown
+      const editOption = option.cloneNode(true);
+      editDropdown.appendChild(editOption);
     });
   } catch (err) {
     console.error("Failed to load locations:", err);
   }
 }
 
-
+// Load packages and update dashboard
 async function loadPackages() {
   const params = new URLSearchParams({
     status: document.getElementById("status-filter")?.value || "",
@@ -91,6 +114,7 @@ async function loadPackages() {
     
     packageTable.innerHTML = "";
     
+    // Update dashboard stats
     updateDashboardStats(data.packages || []);
     
     if (!data.packages || data.packages.length === 0) {
@@ -99,6 +123,7 @@ async function loadPackages() {
     }
 
     data.packages.forEach(pkg => {
+      // Determine status class for badge styling
       const statusClass = getStatusClass(pkg.latest_status || "Pending");
       
       const row = `
@@ -127,6 +152,7 @@ async function loadPackages() {
   }
 }
 
+// Helper function to get status class name
 function getStatusClass(status) {
   switch(status) {
     case "Pending": return "status-pending";
@@ -137,13 +163,16 @@ function getStatusClass(status) {
   }
 }
 
+// Update dashboard stats
 function updateDashboardStats(packages) {
   if (!Array.isArray(packages)) {
     packages = [];
   }
   
+  // Calculate stats
   const totalPackages = packages.length;
   
+  // Count packages by status
   const pendingPackages = packages.filter(pkg => 
     !pkg.latest_status || pkg.latest_status === "Pending"
   ).length;
@@ -160,6 +189,7 @@ function updateDashboardStats(packages) {
     pkg.latest_status === "Delivered"
   ).length;
   
+  // Update UI with values
   document.getElementById("total-packages-count").textContent = totalPackages;
   document.getElementById("pending-packages-count").textContent = pendingPackages;
   document.getElementById("scheduled-packages-count").textContent = scheduledPackages;
@@ -167,6 +197,7 @@ function updateDashboardStats(packages) {
   document.getElementById("delivered-packages-count").textContent = deliveredPackages;
 }
 
+// Edit package function
 let currentEditPackageId = null;
 
 function editPackage(packageId) {
@@ -174,57 +205,11 @@ function editPackage(packageId) {
   document.getElementById("edit-package-id").textContent = packageId;
   document.getElementById("edit-value").value = "";
   document.getElementById("edit-modal").classList.remove("hidden");
-}
-
-async function deletePackageUI(packageId) {
-  if (!confirm("Are you sure you want to delete this package?")) {
-    return;  
-  }
-  try {
-    const response = await fetch(`/packages/${packageId}`, {
-      method: "DELETE",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" }
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      showNotification(`Error deleting package: ${data.message}`, "error");
-      return;
-    }
-    showNotification("Package deleted successfully.", "success");
-    await loadPackages();
-  } catch (error) {
-    console.error("Error deleting package:", error);
-    showNotification("Error deleting package. Please try again.", "error");
-  }
-}
-
-
-function showNotification(message, type) {
-
-  const notification = document.createElement("div");
-  notification.classList.add("notification", type);
-  notification.textContent = message;
   
-  document.body.appendChild(notification);
-  
-  setTimeout(() => {
-    notification.classList.add("fade-out");
-    setTimeout(() => {
-      document.body.removeChild(notification);
-    }, 300);
-  }, 3000);
+  handleEditAttributeChange();
 }
 
-document.getElementById("close-modal")?.addEventListener("click", () => {
-  document.getElementById("edit-modal").classList.add("hidden");
-});
-
-document.getElementById("cancel-edit")?.addEventListener("click", () => {
-  document.getElementById("edit-modal").classList.add("hidden");
-});
-
-document.getElementById("edit-attribute")?.addEventListener("change", () => {
+function handleEditAttributeChange() {
   const attr = document.getElementById("edit-attribute").value;
   const valInput = document.getElementById("edit-value-container");
   const locDropdown = document.getElementById("edit-location-container");
@@ -241,9 +226,10 @@ document.getElementById("edit-attribute")?.addEventListener("change", () => {
   } else {
     valInput.classList.remove("hidden");
   }
-});
+}
 
-document.getElementById("save-edit")?.addEventListener("click", async () => {
+// Save package changes
+async function savePackageChanges() {
   const attribute = document.getElementById("edit-attribute").value;
   const payload = {};
 
@@ -288,8 +274,51 @@ document.getElementById("save-edit")?.addEventListener("click", async () => {
     console.error("Error updating package:", error);
     showNotification("Error updating package. Please try again.", "error");
   }
-});
+}
 
+// Delete package function
+async function deletePackageUI(packageId) {
+  if (!confirm("Are you sure you want to delete this package?")) {
+    return;  
+  }
+  try {
+    const response = await fetch(`/packages/${packageId}`, {
+      method: "DELETE",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" }
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      showNotification(`Error deleting package: ${data.message}`, "error");
+      return;
+    }
+    showNotification("Package deleted successfully.", "success");
+    await loadPackages();
+  } catch (error) {
+    console.error("Error deleting package:", error);
+    showNotification("Error deleting package. Please try again.", "error");
+  }
+}
+
+// Show notification function
+function showNotification(message, type) {
+  // Create notification element
+  const notification = document.createElement("div");
+  notification.classList.add("notification", type);
+  notification.textContent = message;
+  
+  // Append to body
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.classList.add("fade-out");
+    setTimeout(() => {
+      document.body.removeChild(notification);
+    }, 300);
+  }, 3000);
+}
+
+// Function to update package status
 async function quickUpdate(packageId, newStatus) {
   try {
     const response = await fetch(`/packages/${packageId}`, {

@@ -197,7 +197,7 @@ else if (pathname.startsWith("/api/profile")) {
 }
     else if (pathname.startsWith("/api/checkout")) {
       if (req.method === "POST" && pathname === "/api/checkout") {
-        await shopRoutes.checkout(req, res);
+        await shopRoutes.checkout(req, res, parsedUrl.query);
         return;
       }
     }
@@ -224,11 +224,11 @@ else if (pathname.startsWith("/api/profile")) {
       }
     } 
     else if (pathname == "/api/stocks" && req.method == "GET"){
-      await shopRoutes.getStocks(req, res);
+      await shopRoutes.getStocks(req, res, parsedUrl.query);
       return;
     }
     else if ((tokenData.role == "employee" || tokenData.role == "manager") && pathname == "/api/restock" && req.method == "POST"){
-      await shopRoutes.restock(req, res);
+      await shopRoutes.restock(req, res, parsedUrl.query);
       return;
     }
     else if (tokenData.role == "employee" && pathname.startsWith("/driver")){

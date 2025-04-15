@@ -1,57 +1,139 @@
-<!-- ShipNGo/frontend/pages/status.html-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>System Status Report</title>
-  <link rel="stylesheet" href="/styles/styles.css" />
-  <link rel="stylesheet" href="/styles/nav.css" />
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShipNGo - System Status Report</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="/styles/styles.css">
+  <link rel="stylesheet" href="/styles/nav.css">
+  <link rel="stylesheet" href="/styles/status.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
-
+<body style="margin: 0; padding: 0;">
   <div id="header-include"></div>
   <script src="/scripts/header.js" defer></script>
 
-  <div class="status-page-container">
-    <h1>System Status Report</h1>
+  <div class="container">
+    <!-- Loader -->
+    <div class="loader" id="loader">
+      <div class="loader-spin"></div>
+    </div>
+    
+    <!-- Error message -->
+    <div class="error-message" id="errorMessage">
+      Unable to load status data. Please try again later.
+    </div>
 
-    <div class="charts-section" style="display: flex; gap: 2rem; flex-wrap: wrap;">
-      <div style="flex: 1 1 400px; max-width: 600px;">
-        <canvas id="chartShippedDelivered"></canvas>
-      </div>
-      <div style="flex: 1 1 400px; max-width: 600px;">
-        <canvas id="chartActiveDelayed"></canvas>
+    <div class="top-row">
+      <div class="clock-card">
+        <div class="card time">
+          <div class="card-icon">
+            <i class="far fa-clock"></i>
+          </div>
+          <h3>Current Time</h3>
+          <div class="time-display" id="time-display">--:--:--</div>
+        </div>
       </div>
     </div>
 
-    <section>
-      <h2>Top 5 Origins</h2>
-      <table id="tableOrigins" border="1" style="width: 100%; border-collapse: collapse;">
-        <thead>
-          <tr>
-            <th>Origin Address</th>
-            <th>Count</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </section>
+    <!-- Status Cards -->
+    <div class="status-cards">
+      <div class="card shipped">
+        <div class="card-icon">
+          <i class="fas fa-box"></i>
+        </div>
+        <h3>SHIPPED TODAY</h3>
+        <div class="number" id="shippedCount">0</div>
+      </div>
+      
+      <div class="card delivered">
+        <div class="card-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <h3>DELIVERED TODAY</h3>
+        <div class="number" id="deliveredCount">0</div>
+      </div>
+      
+      <div class="card active">
+        <div class="card-icon">
+          <i class="fas fa-truck"></i>
+        </div>
+        <h3>IN TRANSIT</h3>
+        <div class="number" id="activeCount">0</div>
+      </div>
+      
+      <div class="card delayed">
+        <div class="card-icon">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h3>DELAYED</h3>
+        <div class="number" id="delayedCount">0</div>
+      </div>
+    </div>
 
-    <section>
-      <h2>Top 5 Destinations</h2>
-      <table id="tableDestinations" border="1" style="width: 100%; border-collapse: collapse;">
-        <thead>
-          <tr>
-            <th>Destination Address</th>
-            <th>Count</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </section>
+    <!-- Charts -->
+    <div class="charts-section">
+      <div class="chart-container">
+        <h2 class="chart-title">
+          <i class="fas fa-chart-bar"></i>
+          Daily Movement
+        </h2>
+        <div class="chart-wrapper">
+          <canvas id="chartShippedDelivered"></canvas>
+        </div>
+      </div>
+      
+      <div class="chart-container">
+        <h2 class="chart-title">
+          <i class="fas fa-chart-pie"></i>
+          Current Distribution
+        </h2>
+        <div class="chart-wrapper">
+          <canvas id="chartActiveDelayed"></canvas>
+        </div>
+      </div>
+    </div>
 
+    <!-- Tables -->
+    <div class="tables-section">
+      <div class="table-container">
+        <h2 class="table-title">
+          <i class="fas fa-map-marker-alt"></i>
+          Top 5 Origins
+        </h2>
+        <table id="tableOrigins">
+          <thead>
+            <tr>
+              <th>Origin Address</th>
+              <th>Count</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      
+      <div class="table-container">
+        <h2 class="table-title">
+          <i class="fas fa-flag-checkered"></i>
+          Top 5 Destinations
+        </h2>
+        <table id="tableDestinations">
+          <thead>
+            <tr>
+              <th>Destination Address</th>
+              <th>Count</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>© 2025 ShipNGo Inc. All Rights Reserved. Last updated: <span id="lastUpdated"></span></p>
+    </footer>
   </div>
 
   <script src="/scripts/status.js"></script>

@@ -1,4 +1,3 @@
-<!-- /ShipNGo/frontend/pages/trackingpage.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,36 +6,49 @@
   <title>Tracking - ShipNGo</title>
   <link rel="stylesheet" href="../styles/styles.css" />
   <link rel="stylesheet" href="../styles/nav.css"/>
+  <link rel="stylesheet" href="../styles/tracking.css"/>
 </head>
 <body>
   <div id="header-include"></div>
   <script src="/scripts/header.js" defer></script>
 
-  <div class="login-container">
-    <div class="login-title">
-      <h4><strong>Tracking ID:</strong> <span id="tracking-id"></span></h4>
+  <main>
+    <div class="tracking-container">
+      <div class="tracking-header">
+        <h2><span class="tracking-icon">📦</span> Package Tracking</h2>
+        <div class="tracking-id-display" id="tracking-id">Loading...</div>
+      </div>
+      
+      <div class="tracking-body">
+        <div class="tracking-status">
+          <div class="status-icon">📍</div>
+          <div class="status-details">
+            <div class="status-label">Current Status:</div>
+            <div class="status-value" id="tracking-status">Loading...</div>
+          </div>
+        </div>
+        
+        <div class="location-info">
+          <p><span class="icon">🏢</span> <strong>Current Location:</strong> <span id="warehouse">Loading...</span></p>
+        </div>
+        
+        <div class="history-section">
+          <h3>Tracking History</h3>
+          <div class="timeline" id="history-list">
+          </div>
+        </div>
+      </div>
     </div>
-    <div id="tracking-info">
-      <p><strong>Latest Status:</strong> <span id="tracking-status"></span></p>
-      <p><strong>Location:</strong> <span id="warehouse"></span></p>
-    </div>
-  
-    <div id="tracking-history" style="margin-top: 20px;">
-      <h4>Tracking History</h4>
-      <ul id="history-list"></ul>
-    </div>
-  </div>
-  
-  <div>
-  <section id="services" class="services">
-    <h3>Our Services</h3>
-    <p>We provide local and international shipping, express delivery, and secure parcel handling.</p>
-  </section>
+    
+    <section class="services">
+      <h3>Our Services</h3>
+      <p>We provide local and international shipping, express delivery, and secure parcel handling.</p>
+    </section>
+  </main>
   
   <footer>
     <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
   </footer>
-    </div>
 
   <script src="../scripts/trackingpage.js"></script>
 </body>
