@@ -4,7 +4,8 @@ document.addEventListener("DOMContentLoaded", async function () {
   const packageId = urlParams.get('trackingNumber');
 
   if (!packageId) {
-    document.getElementById("tracking-info").innerHTML = "<p style='color:red;'>No package ID provided in URL.</p>";
+    document.querySelector('.tracking-body').innerHTML = "<p style='color:red; padding: 20px; text-align: center;'>No package ID provided in URL. Please check your tracking number and try again.</p>";
+    document.getElementById("tracking-id").textContent = "Not Found";
     return;
   }
 
@@ -13,9 +14,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     const response = await fetch(fetchUrl);
     const history = (await response.json()).history;
 
-    
     if (!response.ok || !Array.isArray(history) || history.length === 0) {
-      document.getElementById("tracking-info").innerHTML = "<p style='color:red;'>Tracking info not found.</p>";
+      document.querySelector('.tracking-body').innerHTML = "<p style='color:red; padding: 20px; text-align: center;'>Tracking information not found. Please check your tracking number and try again.</p>";
+      document.getElementById("tracking-id").textContent = packageId;
       return;
     }
 
@@ -25,21 +26,29 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     document.getElementById("tracking-id").textContent = latest.package_id;
     document.getElementById("tracking-status").textContent = latest.status;
-    document.getElementById("warehouse").textContent = ((latest.location_type || "") + " " + (latest.location_name || "Unknown Location Name") + " (" + (latest.location_address || "Unknown Address") + ")" ) ;
+    document.getElementById("warehouse").textContent = ((latest.location_type || "") + " " + (latest.location_name || "Unknown Location Name") + " (" + (latest.location_address || "Unknown Address") + ")" );
 
     const historyList = document.getElementById("history-list");
-    history.forEach(entry => {
-      const li = document.createElement("li");
-      li.innerHTML = `
-        <strong>${entry.status}</strong> at 
-        <em>${((entry.location_type || "") + " " +(entry.location_name || "Unknown Location Name") + " (" + (entry.location_address || "Unknown Address") + ")")}</em> /
-        on ${new Date(entry.changed_at).toLocaleString()}
+    historyList.innerHTML = '';
+    
+    history.forEach((entry, index) => {
+      const timelineItem = document.createElement("div");
+      timelineItem.className = `timeline-item ${index === 0 ? 'current' : ''}`;
+      
+      timelineItem.innerHTML = `
+        <div class="timeline-content">
+          <div class="timeline-date">${new Date(entry.changed_at).toLocaleString()}</div>
+          <div class="timeline-status">${entry.status}</div>
+          <div class="timeline-location">${((entry.location_type || "") + " " + (entry.location_name || "Unknown Location Name") + " (" + (entry.location_address || "Unknown Address") + ")")}</div>
+        </div>
       `;
-      historyList.appendChild(li);
+      
+      historyList.appendChild(timelineItem);
     });
 
   } catch (error) {
     console.error("Error fetching tracking info:", error);
-    document.getElementById("tracking-info").innerHTML = "<p style='color:red;'>An error occurred while fetching tracking details.</p>";
+    document.querySelector('.tracking-body').innerHTML = "<p style='color:red; padding: 20px; text-align: center;'>An error occurred while fetching tracking details. Please try again later.</p>";
+    document.getElementById("tracking-id").textContent = packageId || "Error";
   }
 });
