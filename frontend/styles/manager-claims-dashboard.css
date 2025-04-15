@@ -35,7 +35,7 @@ footer {
   padding-bottom: 15px;
 }
 
-/* Stats Dashboard - Improved Styling */
+/* Stats Dashboard*/
 .stats-dashboard {
   margin-bottom: 30px;
   padding: 0;
@@ -302,7 +302,6 @@ footer {
   transform: translateY(-2px);
 }
 
-/* Table Styling Enhancements */
 table {
   width: 100%;
   border-collapse: separate;
@@ -511,5 +510,218 @@ tbody tr:nth-child(even) {
   
   table {
     min-width: 650px;
+  }
+}
+
+.date-range-container {
+  flex-basis: 100%;
+}
+
+.date-inputs {
+  display: flex;
+  gap: 15px;
+  width: 100%;
+}
+
+.date-input-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.date-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #0a4275;
+  margin-bottom: 4px;
+}
+
+.date-input {
+  padding: 12px 15px;
+  border: 1px solid #ccddf1;
+  border-radius: 8px;
+  background-color: #f9fafc;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  color: #333;
+  width: 100%;
+}
+
+.date-input:focus {
+  border-color: #0a4275;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(10, 66, 117, 0.1);
+  background-color: white;
+}
+
+@media (max-width: 768px) {
+  .date-inputs {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+
+/* Add to manager-claims-dashboard.css */
+.date-range-container {
+  flex-basis: auto;
+  min-width: 240px;
+}
+
+.date-inputs {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.date-input-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.date-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #0a4275;
+  margin-bottom: 2px;
+}
+
+.date-input {
+  padding: 8px 10px;
+  border: 1px solid #ccddf1;
+  border-radius: 6px;
+  background-color: #f9fafc;
+  font-size: 13px;
+  transition: all 0.2s ease;
+  color: #333;
+  width: 100%;
+}
+
+.date-input:focus {
+  border-color: #0a4275;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(10, 66, 117, 0.1);
+  background-color: white;
+}
+
+@media (max-width: 768px) {
+  .date-inputs {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.filter-bar {
+  margin-bottom: 20px;
+  background-color: white;
+  border-radius: 8px;
+  padding: 15px 15px 5px 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e6eef5;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.filter-item {
+  flex: 1;
+  min-width: 170px;
+  margin-bottom: 10px;
+}
+
+.filter-label {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #0a4275;
+}
+
+.filter-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccddf1;
+  border-radius: 4px;
+  font-size: 13px;
+  background-color: #f9fafc;
+}
+
+.filter-input:focus {
+  outline: none;
+  border-color: #0a4275;
+  box-shadow: 0 0 0 2px rgba(10, 66, 117, 0.1);
+}
+
+select.filter-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%230a4275' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px;
+}
+
+.date-input {
+  padding: 7px 10px;
+  font-size: 13px;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  min-width: 220px;
+}
+
+.filter-btn {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  flex: 1;
+}
+
+.apply-filter {
+  background-color: #0a4275;
+  color: white;
+}
+
+.apply-filter:hover {
+  background-color: #053058;
+}
+
+.reset-filter {
+  background-color: #e6eef5;
+  color: #0a4275;
+}
+
+.reset-filter:hover {
+  background-color: #d0e0f0;
+}
+
+@media (max-width: 992px) {
+  .filter-item {
+    min-width: 160px;
+  }
+  
+  .filter-buttons {
+    min-width: 100%;
+    margin-top: 5px;
+  }
+}
+
+@media (max-width: 768px) {
+  .filter-item {
+    min-width: 100%;
+  }
+  
+  .filter-row {
+    flex-direction: column;
+    gap: 8px;
   }
 }

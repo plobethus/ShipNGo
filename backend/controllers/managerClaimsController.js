@@ -16,7 +16,8 @@ async function getAllClaims() {
           u.first_name,
           u.last_name,
           p.weight,
-          p.dimensions
+          p.dimensions,
+          p.cost
         FROM 
           claims c
         LEFT JOIN 
