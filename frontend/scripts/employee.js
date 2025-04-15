@@ -32,7 +32,7 @@ function debounce(func, delay) {
 // Populate location dropdown
 async function populateLocationDropdown() {
   try {
-    const response = await fetch("/locations", {
+    const response = await fetch("/api/locations", {
       method: "GET",
       credentials: "include",
       headers: { "Content-Type": "application/json" }

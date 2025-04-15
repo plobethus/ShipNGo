@@ -1,168 +1,182 @@
-<!-- 
- * /ShipNGo/frontend/pages/store.html
- * Store page for packing & shipping supplies.
- -->
- <!DOCTYPE html>
- <html lang="en">
- <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Store - ShipNGo</title>
-   <link rel="stylesheet" href="../styles/styles.css"/>
-   <link rel="stylesheet" href="../styles/store.css">
-   <link rel="stylesheet" href="../styles/nav.css" />
- </head>
- <body>
-   <div id="header-include"></div>
-   <script src="/scripts/header.js" defer></script>
- 
-   <div class="store_page">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Store - ShipNGo</title>
+  <link rel="stylesheet" href="../styles/styles.css" />
+  <link rel="stylesheet" href="../styles/store.css" />
+  <link rel="stylesheet" href="../styles/nav.css" />
+</head>
+<body>
+  <!-- Header include -->
+  <div id="header-include"></div>
+  <script src="/scripts/header.js" defer></script>
+
+  <div class="store_page">
+    <!-- Product list -->
     <div class="items">
-        <h2 class="item-title">Our Products</h2>
-        
-        <div class = item-list>
-            <div class="store_item" data-name="Envelope" data-price="0.99">
-                <div>Envelope ($0.99 each) 📨</div>
-                <div class="price">
-                    <button id="envbut" class="cart" data-amount="1">Add</button>
-                    <button id="envbut" class="cart" data-amount="-1">Remove</button>
-                    <select>
-                        <option>1</option>
-                        <option>10</option>
-                        <option>100</option>
-                    </select>
-                </div>
-            </div> 
+      <h2 class="item-title">Our Products</h2>
+      <div class="item-list">
+        <!-- Envelope -->
+        <div class="store_item" data-name="Envelope" data-price="0.99">
+          <div>Envelope ($0.99 each) 📨</div>
+          <div class="price">
+            <button class="cart" data-amount="1">Add</button>
+            <button class="cart" data-amount="-1">Remove</button>
+            <select>
+              <option>1</option>
+              <option>10</option>
+              <option>100</option>
+            </select>
+          </div>
+          <!-- Stock will be loaded from the backend -->
+          <div>In Stock: <span class="product-stock"></span></div>
+        </div>
 
-            
-       <div class="store_item" data-name="Box" data-price="1.99">
-         <div>Box ($1.99 each) 📦</div>
-         <div class="price">
-           <button class="cart" data-amount="1">Add</button>
-           <button class="cart" data-amount="-1">Remove</button>
-           <select>
-             <option>1</option>
-             <option>10</option>
-             <option>100</option>
-           </select>
-         </div>
-       </div>
-
-            <div class="store_item" data-name="Box" data-price="1.99">
-                <div>Tape ($1.99 a roll) 🧻</div>
-                <div class="price">
-                    <button class="cart" data-amount="1">Add</button>
-                    <button class="cart" data-amount="-1">Remove</button>
-                    <select>
-                        <option>1</option>
-                        <option>10</option>
-                        <option>100</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="store_item" data-name="Box" data-price="9.99">
-                <div>Stamps ($9.99 a book) 🏴󠁧󠁢󠁳󠁣󠁴󠁿</div>
-                <div class="price">
-                    <button class="cart" data-amount="1">Add</button>
-                    <button class="cart" data-amount="-1">Remove</button>
-                    <select>
-                        <option>1</option>
-                        <option>10</option>
-                        <option>100</option>
-                    </select>
-                </div>
-            </div>
-
+        <!-- Box -->
         <div class="store_item" data-name="Box" data-price="1.99">
-            <div>Labels ($1.99 each) 🏷</div>
-            <div class="price">
-              <button class="cart" data-amount="1">Add</button>
-              <button class="cart" data-amount="-1">Remove</button>
-              <select>
-                <option>1</option>
-                <option>10</option>
-                <option>100</option>
-              </select>
-            </div>
+          <div>Box ($1.99 each) 📦</div>
+          <div class="price">
+            <button class="cart" data-amount="1">Add</button>
+            <button class="cart" data-amount="-1">Remove</button>
+            <select>
+              <option>1</option>
+              <option>10</option>
+              <option>100</option>
+            </select>
+          </div>
+          <div>In Stock: <span class="product-stock"></span></div>
         </div>
 
-    </div>
-       <!-- More store items can be added here -->
-    </div>
-
-     <div class="checkout">
-       <h2 style="margin-bottom:16px">Checkout</h2>
-       <div class="total">
-         <div>Total Items: <span id="total-items">0</span></div>
-         <div>Total Cost: $<span id="total-cost">0.00</span></div>
-       </div>
-
-       <div class="checkout-items">
-       <div id="num-envelopes" class="store_item">
-            <div>Envelopes 📨</div>
-            <div style="display:flex; flex-direction:row; gap:20px;">
-                <div>Items: <span id="tot-env">0</span></div>
-                <div>Cost: $<span id="env-cost">0.00</span></div>
-            </div>
-       </div>
-      
-
-       <div id="num-box" class="store_item">
-            <div>Boxes 📦</div>
-            <div style="display:flex; flex-direction:row; gap:20px;">
-                <div>Items: <span id="tot-box">0</span></div>
-                <div>Cost: $<span id="box-cost">0.00</span></div>
-            </div>
+        <!-- Tape -->
+        <div class="store_item" data-name="Tape" data-price="1.99">
+          <div>Tape ($1.99 per roll) 🧻</div>
+          <div class="price">
+            <button class="cart" data-amount="1">Add</button>
+            <button class="cart" data-amount="-1">Remove</button>
+            <select>
+              <option>1</option>
+              <option>10</option>
+              <option>100</option>
+            </select>
+          </div>
+          <div>In Stock: <span class="product-stock"></span></div>
         </div>
 
+        <!-- Stamps -->
+        <div class="store_item" data-name="Stamps" data-price="9.99">
+          <div>Stamps ($9.99 a book) 🏴</div>
+          <div class="price">
+            <button class="cart" data-amount="1">Add</button>
+            <button class="cart" data-amount="-1">Remove</button>
+            <select>
+              <option>1</option>
+              <option>10</option>
+              <option>100</option>
+            </select>
+          </div>
+          <div>In Stock: <span class="product-stock"></span></div>
+        </div>
+
+        <!-- Labels -->
+        <div class="store_item" data-name="Labels" data-price="1.99">
+          <div>Labels ($1.99 each) 🏷</div>
+          <div class="price">
+            <button class="cart" data-amount="1">Add</button>
+            <button class="cart" data-amount="-1">Remove</button>
+            <select>
+              <option>1</option>
+              <option>10</option>
+              <option>100</option>
+            </select>
+          </div>
+          <div>In Stock: <span class="product-stock"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Checkout summary -->
+    <div class="checkout">
+      <h2 style="margin-bottom:16px">Checkout</h2>
+      <div class="total">
+        <div>Total Items: <span id="total-items">0</span></div>
+        <div>Total Cost: $<span id="total-cost">0.00</span></div>
+      </div>
+
+      <div class="checkout-items">
+        <!-- Envelope checkout entry -->
+        <div id="num-envelopes" class="store_item">
+          <div>Envelopes 📨</div>
+          <div style="display: flex; gap: 20px;">
+            <div>Items: <span id="tot-env">0</span></div>
+            <div>Cost: $<span id="env-cost">0.00</span></div>
+            <div>Stock: <span id="env-stock"></span></div>
+          </div>
+        </div>
+
+        <!-- Box checkout entry -->
+        <div id="num-box" class="store_item">
+          <div>Boxes 📦</div>
+          <div style="display: flex; gap: 20px;">
+            <div>Items: <span id="tot-box">0</span></div>
+            <div>Cost: $<span id="box-cost">0.00</span></div>
+            <div>Stock: <span id="box-stock"></span></div>
+          </div>
+        </div>
+
+        <!-- Tape checkout entry -->
         <div id="num-tape" class="store_item">
-            <div>Tape 🧻</div>
-            <div style="display:flex; flex-direction:row; gap:20px;">
-                <div>Items: <span id="tot-tape">0</span></div>
-                <div>Cost: $<span id="tape-cost">0.00</span></div>
-            </div>
+          <div>Tape 🧻</div>
+          <div style="display: flex; gap: 20px;">
+            <div>Items: <span id="tot-tape">0</span></div>
+            <div>Cost: $<span id="tape-cost">0.00</span></div>
+            <div>Stock: <span id="tape-stock"></span></div>
+          </div>
         </div>
 
+        <!-- Stamps checkout entry -->
         <div id="num-stamp" class="store_item">
-            <div>Stamps 🏴󠁧󠁢󠁳󠁣󠁴󠁿</div>
-            <div style="display:flex; flex-direction:row; gap:20px;">
-                <div>Items: <span id="tot-stamp">0</span></div>
-                <div>Cost: $<span id="stamp-cost">0.00</span></div>
-            </div>
+          <div>Stamps 🏴</div>
+          <div style="display: flex; gap: 20px;">
+            <div>Items: <span id="tot-stamp">0</span></div>
+            <div>Cost: $<span id="stamp-cost">0.00</span></div>
+            <div>Stock: <span id="stamp-stock"></span></div>
+          </div>
         </div>
 
+        <!-- Labels checkout entry -->
         <div id="num-labels" class="store_item">
-            <div>Label 🏷</div>
-            <div style="display:flex; flex-direction:row; gap:20px;">
-                <div>Items: <span id="tot-label">0</span></div>
-                <div>Cost: $<span id="label-cost">0.00</span></div>
-            </div>
+          <div>Labels 🏷</div>
+          <div style="display: flex; gap: 20px;">
+            <div>Items: <span id="tot-label">0</span></div>
+            <div>Cost: $<span id="label-cost">0.00</span></div>
+            <div>Stock: <span id="label-stock"></span></div>
+          </div>
         </div>
+      </div>
 
-
-
-        </div>
-
-
-        <div style="margin-top: 20px; text-align: center;">
-          <button onclick="checkout()" style="padding: 10px 20px; font-size: 16px;">Checkout</button>
-        </div>
-
-     </div>
+      <div style="margin-top: 20px; text-align: center;">
+        <button onclick="checkout()" style="padding: 10px 20px; font-size: 16px;">Checkout</button>
+      </div>
     </div>
- 
-   <div>
+  </div>
+
+  <!-- Services and footer -->
+  <div>
     <section id="services" class="services">
       <h3>Our Services</h3>
-      <p>We provide local and international shipping, express delivery, and secure parcel handling.</p>
+      <p>
+        We provide local and international shipping, express delivery, and secure
+        parcel handling.
+      </p>
     </section>
-    
     <footer>
       <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
     </footer>
-      </div>
- 
-   <script src="../scripts/store.js" defer></script>
- </body>
- </html>
+  </div>
+
+  <!-- The main store JavaScript that handles fetching stocks and cart operations -->
+  <script src="../scripts/store.js" defer></script>
+</body>
+</html>

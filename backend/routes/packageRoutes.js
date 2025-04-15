@@ -86,6 +86,7 @@ async function deletePackage(req, res, id) {
       sendJson(res, 404, { message: "Package not found." });
       return;
     }
+
     sendJson(res, 200, { message: "Package deleted successfully." });
   } catch (err) {
     sendJson(res, 500, { message: err.message });

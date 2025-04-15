@@ -195,14 +195,22 @@ else if (pathname.startsWith("/api/profile")) {
     return;
   }
 }
-    else if (pathname.startsWith("/checkout")) {
-      if (req.method === "POST" && pathname === "/checkout") {
+    else if (pathname.startsWith("/api/checkout")) {
+      if (req.method === "POST" && pathname === "/api/checkout") {
         await shopRoutes.checkout(req, res);
         return;
       }
     }
-    else if (pathname == "/locations" && req.method == "GET"){
+    else if (pathname == "/api/locations" && req.method == "GET"){
       await locatoinsRoutes.getAllLocations(req, res);
+      return;
+    }
+    else if (pathname == "/api/stocks" && req.method == "GET"){
+      await shopRoutes.getStocks(req, res);
+      return;
+    }
+    else if ((tokenData.role == "employee" || tokenData.role == "manager") && pathname == "/api/restock" && req.method == "POST"){
+      await shopRoutes.restock(req, res);
       return;
     }
     else if (tokenData.role == "employee" && pathname.startsWith("/driver")){

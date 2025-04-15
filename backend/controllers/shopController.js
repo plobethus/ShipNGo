@@ -41,6 +41,29 @@ async function performCheckout(user, items) {
 }
 
 
+async function getItems() {
+  const [supplyRows] = await db.execute(
+    "SELECT * FROM supplies",
+  );
+  return supplyRows
+}
+
+
+async function updateItems(items) {
+  for (const item of items) {
+    const [rows] = await db.execute(
+      `UPDATE supplies SET stock_quantity = GREATEST(stock_quantity + ?, 0) WHERE category = ?`,
+      [item.change, item.category]
+    );
+
+    if (rows.affectedRows == 0){
+      throw new Error(`No supply found ${item.category}`);
+    }
+  }
+}
+
 module.exports = {
-  performCheckout
+  performCheckout,
+  getItems,
+  updateItems
 }
