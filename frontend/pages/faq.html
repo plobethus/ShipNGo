@@ -1,35 +1,288 @@
-<!-- 
- * /ShipNGo/frontend/pages/faq.html
- * FAQ page for ShipNGo.
- -->
- <!DOCTYPE html>
- <html lang="en">
- <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>FAQ - ShipNGo</title>
-   <link rel="stylesheet" href="../styles/styles.css">
-   <link rel="stylesheet" href="../styles/nav.css" />
-   <link rel="stylesheet" href="../styles/faq.css">
- </head>
- <body>
-   <div id="header-include"></div>
-   <script src="/scripts/header.js" defer></script>
-   
-    <div id="faq-container">
-        <h2 style="margin-top:15px;">Frequently Asked Questions</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ - ShipNGo</title>
+  <!-- Original style links preserved but we'll add internal styling to ensure it works -->
+  <link rel="stylesheet" href="../styles/styles.css">
+  <link rel="stylesheet" href="../styles/nav.css">
+  <link rel="stylesheet" href="../styles/faq.css">
+  
+  <!-- Internal styling to ensure everything renders properly -->
+  <style>
+    :root {
+      --primary: #004080;
+      --primary-light: #0061c2;
+      --accent: #ff9800;
+      --text-light: #ffffff;
+      --text-dark: #333333;
+      --background-light: #f9f9f9;
+      --shadow: rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f5fa;
+      margin: 0;
+      padding: 0;
+      color: var(--text-dark);
+    }
+
+    /* Header styling */
+    .page-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: var(--text-light);
+      padding: 40px 0;
+      text-align: center;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px var(--shadow);
+    }
+
+    .page-header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: 100;
+    }
+
+    /* FAQ Section styling - overriding any conflicting styles */
+    .faq-section {
+      width: 85% !important;
+      min-height: 820px;
+      max-width: 1000px !important;
+      margin: 0 auto 50px !important;
+      padding: 0 !important;
+      border-radius: 15px !important;
+      overflow: hidden !important;
+      box-shadow: 0 8px 30px rgba(0, 64, 128, 0.15) !important;
+      background-color: var(--text-light) !important;
+      height: auto !important; /* Overriding any fixed height */
+      display: block !important; /* Ensuring proper display property */
+    }
+
+    .faq-header {
+      background: var(--primary) !important;
+      color: var(--text-light) !important;
+      padding: 25px !important;
+      text-align: center !important;
+      border-top-left-radius: 15px !important;
+      border-top-right-radius: 15px !important;
+    }
+
+    .faq-header h2 {
+      margin: 0 !important;
+      font-size: 1.8rem !important;
+      font-weight: 600 !important;
+      color: var(--text-light) !important;
+    }
+
+    .faq-content {
+      padding: 30px !important;
+      background-color: white !important;
+    }
+
+    /* FAQ Item styling */
+    .faq-item {
+      margin-bottom: 20px !important;
+      border-radius: 10px !important;
+      background-color: var(--background-light) !important;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05) !important;
+      overflow: hidden !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .faq-item:hover {
+      transform: translateY(-3px) !important;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .faq-item h4 {
+      margin: 0 !important;
+      padding: 18px 20px !important;
+      font-size: 1.1rem !important;
+      color: var(--primary) !important;
+      background-color: rgba(0, 64, 128, 0.05) !important;
+      display: flex !important;
+      align-items: center !important;
+      cursor: pointer !important;
+      font-weight: 600 !important;
+      position: relative !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .faq-item h4:hover {
+      background-color: rgba(0, 64, 128, 0.1) !important;
+    }
+
+    .faq-item h4::after {
+      content: '+' !important;
+      position: absolute !important;
+      right: 20px !important;
+      font-size: 1.5rem !important;
+      font-weight: 300 !important;
+      transition: transform 0.3s ease !important;
+    }
+
+    .faq-item.active h4::after {
+      transform: rotate(45deg) !important;
+    }
+
+    .faq-item h4 span {
+      margin-right: 12px !important;
+      font-size: 1.2rem !important;
+    }
+
+    .faq-item p {
+      display: none !important;
+      margin: 0 !important;
+      padding: 20px !important;
+      line-height: 1.6 !important;
+      color: #505050 !important;
+      border-top: 1px solid rgba(0, 64, 128, 0.1) !important;
+    }
+
+    .faq-item.active p {
+      display: block !important;
+      animation: fadeIn 0.4s ease !important;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .faq-item a {
+      color: var(--primary-light) !important;
+      text-decoration: none !important;
+      font-weight: 500 !important;
+      transition: color 0.2s ease !important;
+    }
+
+    .faq-item a:hover {
+      color: var(--accent) !important;
+      text-decoration: underline !important;
+    }
+
+    /* Services section styling */
+    .services {
+      background: linear-gradient(to right, var(--primary-light), var(--primary)) !important;
+      color: var(--text-light) !important;
+      padding: 40px 20px !important;
+      text-align: center !important;
+      margin-top: 40px !important;
+    }
+
+    .services h3 {
+      margin-top: 0 !important;
+      font-size: 1.8rem !important;
+      color: var(--text-light) !important;
+    }
+
+    /* Footer styling */
+    footer {
+      background-color: #002040 !important;
+      color: var(--text-light) !important;
+      text-align: center !important;
+      padding: 20px !important;
+      margin-top: 30px !important;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      .faq-section {
+        width: 95% !important;
+      }
+      
+      .faq-header h2 {
+        font-size: 1.5rem !important;
+      }
+      
+      .faq-item h4 {
+        font-size: 1rem !important;
+        padding: 15px !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="header-include"></div>
+  <!--<script src="/scripts/header.js" defer></script> -->
+
+  </style>
+  
+  <div class="page-header">
+    <h1>How Can We Help You?</h1>
+  </div>
+
+  <div class="faq-section">
+    <div class="faq-header">
+      <h2>Frequently Asked Questions</h2>
     </div>
 
-
-   <div>
-    <section id="services" class="services">
-      <h3>Our Services</h3>
-      <p>We provide local and international shipping, express delivery, and secure parcel handling.</p>
-    </section>
-    
-    <footer>
-      <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
-    </footer>
+    <div class="faq-content">
+      <div class="faq-item">
+        <h4><span>📦</span> How do I track my shipment?</h4>
+        <p>You can track your shipment using your tracking ID on the <a href="/pages/index.html">Tracking Page</a>. Enter your tracking number and click "Track" to get real-time updates on your package location and estimated delivery time.</p>
       </div>
- </body>
- </html>
+
+      <div class="faq-item">
+        <h4><span>💼</span> What shipping classes do you offer?</h4>
+        <p>We offer three main shipping options to meet your delivery needs:<br>
+        - <strong>Standard:</strong> 3-5 business days<br>
+        - <strong>Express:</strong> 1-2 business days<br>
+        - <strong>Overnight:</strong> Next business day delivery</p>
+      </div>
+
+      <div class="faq-item">
+        <h4><span>🚨</span> What should I do if my package is lost or damaged?</h4>
+        <p>If your package is lost or damaged, you can file a claim by logging into your account and navigating to the Claims section. Our customer service team will process your claim within 24-48 hours.</p>
+      </div>
+
+      <div class="faq-item">
+        <h4><span>🔐</span> Is my shipment insured?</h4>
+        <p>All packages are covered under basic insurance up to $100. Additional insurance can be purchased at checkout for higher-value items to ensure full coverage in case of loss or damage.</p>
+      </div>
+
+      <div class="faq-item">
+        <h4><span>🕒</span> What are the delivery hours?</h4>
+        <p>We deliver packages Monday through Saturday from 8:00 AM to 8:00 PM local time. Sunday deliveries are available in select areas for an additional fee.</p>
+      </div>
+
+      <div class="faq-item">
+        <h4><span>💳</span> What payment methods do you accept?</h4>
+        <p>We accept all major credit/debit cards (Visa, Mastercard, American Express, Discover), PayPal, Apple Pay, and Google Pay for your convenience.</p>
+      </div>
+
+
+  <section class="services">
+    <h3>Our Services</h3>
+    <p>We provide local and international shipping, express delivery, and secure parcel handling for businesses and individuals alike. Our dedicated team ensures your packages arrive safely and on time, every time.</p>
+  </section>
+  
+  <footer>
+    <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Inline JavaScript to ensure functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      // Select all FAQ question headers
+      document.querySelectorAll('.faq-item h4').forEach((header) => {
+        header.addEventListener('click', () => {
+          const item = header.parentElement;
+          
+          // Close all other open items
+          document.querySelectorAll('.faq-item.active').forEach((openItem) => {
+            if (openItem !== item) {
+              openItem.classList.remove('active');
+            }
+          });
+          
+          // Toggle current item
+          item.classList.toggle('active');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
