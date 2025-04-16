@@ -148,7 +148,7 @@ async function getCustomerPackages(customerId) {
   COALESCE(t.status, 'Pending') AS status
   FROM packages p
   LEFT JOIN (
-      SELECT t1.package_id, t1.status,
+      SELECT t1.package_id, t1.status
       FROM package_tracking_log t1
       JOIN (
           SELECT package_id, MAX(changed_at) AS max_changed_at
@@ -160,7 +160,6 @@ async function getCustomerPackages(customerId) {
     OR p.address_to = (SELECT address FROM customers WHERE customer_id = ?)
 `;
   const [packages] = await db.execute(query, [customerId, customerId]);
-  console.log(package);
   return packages;
 }
 
