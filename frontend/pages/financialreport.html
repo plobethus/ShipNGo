@@ -13,8 +13,19 @@
   <script src="../scripts/header.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <div style="width:1100px; margin: 0 auto; margin-top:64px;">
-    <canvas id="weeklyRevenueChart" ></canvas>
+  <div class="week-navigation" style="display:flex; flex-direction:column; align-items:center;">
+        <h2 style="color:white;">Graph Filters</h2>
+        <div style="display:flex;flex-direction:row;gap:20px;">
+            <button id="prevWeekBtn">Previous Week</button>
+            <button id="nextWeekBtn">Next Week</button>
+            <button id="togglePackagesBtn">Hide Packages</button>
+            <button id="toggleSuppliesBtn">Hide Supplies</button>
+        </div>
+  </div>
+
+
+  <div >
+    <canvas id="weeklyRevenueChart" style="width:1100px; height:400px; margin: 0 auto;"></canvas>
   </div> 
     <!-- Package transaction report -->
             <div class = "manager-container">
@@ -84,41 +95,6 @@
                         </tr>
                     </thead>
                     <tbody id="supply-table"></tbody>
-                </table>
-            </div>
-        <div>
-
-        <!-- insurance transaction reports -->
-        <div class = "manager-container">
-
-
-            <div class = "filter">
-                <h2>Insurance Transaction Filters</h2>
-                <div class="filter-boxes">
-                    <input type="text" id="insurance-filter-name" placeholder="Filter by Name">
-                    <input type="text" id="filter-fee" placeholder="Filter by Fee">
-                    <input type="date" id="insurance-filter-date" placeholder="Filter by Date">
-                </div>
-            </div>
-
-            <div class="container">
-                <h2 style="color:white">Insurance Transactions Report</h2>
-
-                <div id="insurance-total-container" style="color:white;"></div>
-
-
-                <table style="margin-top:20px;">
-                    <thead>
-                        <tr>
-                            <th>Insurance Id</th>
-                            <th>Package ID</th>
-                            <th>Customer Name</th>
-                            <th>Insured Value</th>
-                            <th>Insured Fee</th>
-                            <th>Claim Date</th>
-                        </tr>
-                    </thead>
-                    <tbody id="insurance-table"></tbody>
                 </table>
             </div>
         <div>
