@@ -30,7 +30,7 @@ async function getAllInsuranceTransactions(){
     const [rows] = await db.query("SELECT I.insurance_id, I.package_id, C.name, I.insured_value, I.insured_fee, I.claim_date FROM insurancepolicies AS I, packages AS P, customers AS C WHERE I.package_id = P.package_id AND P.sender_id = C.customer_id");
     return rows;
 }
-
+  
   module.exports = {
     getSumPackageTransactions,
     getAllPackageTransactions,

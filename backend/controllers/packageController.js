@@ -25,7 +25,13 @@ async function getAllPackages(filter) {
         WHERE t.package_id = p.package_id
         ORDER BY t.changed_at DESC
         LIMIT 1
-      ) AS latest_status                     
+      ) AS latest_status,
+      (
+        SELECT e.name                      
+        FROM employees e
+        WHERE e.employee_id = l.manager_id
+        LIMIT 1
+      ) AS manager_name  
     FROM packages p
     LEFT JOIN customers c1 ON p.sender_id = c1.customer_id
     LEFT JOIN (
@@ -139,10 +145,10 @@ async function getCustomerPackages(customerId) {
   p.address_from,
   p.address_to,
   p.receiver_name,
-  COALESCE(t.status, 'Scheduled') AS status
+  COALESCE(t.status, 'Pending') AS status
   FROM packages p
   LEFT JOIN (
-      SELECT t1.package_id, t1.status
+      SELECT t1.package_id, t1.status,
       FROM package_tracking_log t1
       JOIN (
           SELECT package_id, MAX(changed_at) AS max_changed_at
@@ -153,8 +159,8 @@ async function getCustomerPackages(customerId) {
   WHERE p.sender_id = ?
     OR p.address_to = (SELECT address FROM customers WHERE customer_id = ?)
 `;
-  console.log("customerId in route:", customerId);
   const [packages] = await db.execute(query, [customerId, customerId]);
+  console.log(package);
   return packages;
 }
 

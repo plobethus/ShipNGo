@@ -137,8 +137,8 @@ async function loadPackages() {
           <td>${pkg.address_to || "N/A"}</td>
           <td>${pkg.sender_name || "Unknown"} → ${pkg.receiver_name || "Unknown"}</td>
           <td>${pkg.location_name || (pkg.location_id === 0 ? "Post Office" : "N/A")}</td>
-          <td>${pkg.manager_of_location || "N/A"}</td>
-          <td>${pkg.hours_open || "N/A"}</td>
+          <td>${pkg.manager_name || "N/A"}</td>
+          <td>${(pkg.opening_time || "N/A") + " - " + (pkg.closing_time || "N/A")}</td>
           <td>
             <button onclick="editPackage(${pkg.package_id})">Edit</button>
             <button onclick="deletePackageUI(${pkg.package_id})">Delete</button>
