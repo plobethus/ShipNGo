@@ -99,10 +99,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         .forEach(s => {
           supBody.insertAdjacentHTML("beforeend", `
             <tr>
-              <td>${s.supply_transaction_id}</td><td>${s.name}</td>
+              <td>${s.supply_transaction_id}</td><td>${s.customer_name}</td>
               <td>${s.category}</td><td>${s.quantity}</td>
               <td>$${s.total_cost}</td>
               <td>${new Date(s.purchase_date).toLocaleDateString()}</td>
+              <td>${s.location_name}</td>
             </tr>`);
         });
     }

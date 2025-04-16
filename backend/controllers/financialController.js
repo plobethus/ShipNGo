@@ -17,8 +17,26 @@ async function getSumTransactions(){
 
 async function getAllTransactions() {
   const [rows] = await db.query(
-    "SELECT ST.supply_transaction_id, C.name, S.category, ST.quantity, ST.total_cost, ST.purchase_date FROM customers AS C, supplies AS s, supplytransactions AS ST WHERE C.customer_id = ST.user_id AND S.supply_id = ST.supply_id");
-  return rows;
+    `SELECT 
+      ST.supply_transaction_id,
+      C.name AS customer_name,
+      S.category,
+      ST.quantity,
+      ST.total_cost,
+      ST.purchase_date,
+      L.location_id,
+      L.location_name,
+      L.address
+    FROM 
+      customers AS C
+    JOIN 
+      supplytransactions AS ST ON C.customer_id = ST.user_id
+    JOIN 
+      supplies AS S ON S.supply_id = ST.supply_id
+    LEFT JOIN 
+      locations AS L ON S.location_id = L.location_id`);
+
+    return rows;
 }
 
 async function getSumInsurance(){
