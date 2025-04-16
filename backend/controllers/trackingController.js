@@ -9,6 +9,7 @@ async function getTrackingInfo(package_id) {
         w.address AS location_address,
         w.location_type as location_type,
         w.location_name as location_name,
+        w.location_id as location_id,
         th.status,
         th.changed_at
       FROM package_tracking_log th

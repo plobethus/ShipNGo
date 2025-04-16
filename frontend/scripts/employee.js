@@ -62,8 +62,12 @@ async function populateLocationDropdown() {
     data.forEach(loc => {
       const option = document.createElement("option");
       option.value = loc.location_id;
-      option.textContent = `${loc.location_name} - ${loc.location_type} at ${loc.address}`;
       
+      if (loc.location_id == 0){
+        option.textContent = "Awaiting drop off";
+      } else{
+        option.textContent = `${loc.location_name} - ${loc.location_type} at ${loc.address}`;
+      }
       // Add to filter dropdown
       filterDropdown.appendChild(option);
       
