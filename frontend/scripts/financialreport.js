@@ -156,7 +156,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           supBody.insertAdjacentHTML("beforeend", `
             <tr>
               <td>${s.supply_transaction_id || 'N/A'}</td>
-              <td>${s.name || 'N/A'}</td>
+              <td>${s.customer_name || 'N/A'}</td>
               <td>${s.category || 'N/A'}</td>
               <td>${s.quantity || 'N/A'}</td>
               <td>${formatCurrency(s.total_cost)}</td>
