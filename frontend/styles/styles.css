@@ -528,3 +528,8 @@ select {
 .hidden {
   display: none;
 }
+
+.highlight-row {
+  background-color: #e9e3ac !important;
+  font-weight: bold;
+}
