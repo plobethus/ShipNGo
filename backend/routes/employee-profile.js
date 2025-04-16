@@ -19,7 +19,7 @@ async function getEmployeeProfile(req, res) {
     console.log("Employee ID from token:", employeeId);
 
     // Fixed condition: Changed OR to AND, fixed variable name 'employee' to string "employee"
-    if (req.tokenData.role !== "employee") {
+    if (req.tokenData.role !== "employee" && req.tokenData.role !== "manager") {
       console.log("Unauthorized role attempted to access employee profile:", req.tokenData.role);
       return sendJson(res, 403, {
         success: false,
@@ -63,7 +63,7 @@ async function updateEmployeeProfile(req, res) {
     }
 
     // Make sure only employees can update employee profiles
-    if (req.tokenData.role !== "employee") {
+    if (req.tokenData.role !== "employee" && req.tokenData.role !== "manager") {
       return sendJson(res, 403, {
         success: false,
         message: "Access denied. Employee access only."
@@ -112,7 +112,7 @@ async function changePassword(req, res) {
     }
 
     // Make sure only employees can change employee passwords
-    if (req.tokenData.role !== "employee") {
+    if (req.tokenData.role !== "employee" && req.tokenData.role !== "manager") {
       return sendJson(res, 403, {
         success: false,
         message: "Access denied. Employee access only."

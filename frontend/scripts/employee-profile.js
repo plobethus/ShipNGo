@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       
       // Check user role from auth response
       const authData = await authResponse.json();
-      if (authData.role !== 'employee') {
+      if (authData.role !== 'employee' && authData.role !== 'manager') {
         console.error("Not authorized as employee");
         window.location.href = '/index.html';
         return;
