@@ -97,3 +97,12 @@ th, td {
     gap:20px;
 
 }
+
+.week-navigation{
+    display:flex;
+    justify-content:center;
+    background:#004080;
+    border-radius:10px;
+    margin:32px auto;
+    width:80%;
+}
