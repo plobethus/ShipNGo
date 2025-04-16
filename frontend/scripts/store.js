@@ -169,12 +169,12 @@ function checkout() {
   const locId = document.getElementById("location-selector").value;
 
   try {
-    fetch('/api/checkout', {
+    fetch(`/api/checkout?location_id=${locId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ items, location_id: locId})
+      body: JSON.stringify({ items})
     }).then(res => {
       if (res.status === 200) {
         // Update the local stock data based on the purchased quantities.

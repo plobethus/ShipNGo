@@ -24,6 +24,7 @@ const packageRoutes = require("./routes/packageRoutes");
 const trackingRoutes = require("./routes/tracking");
 
 const profileRoutes = require("./routes/profile"); 
+const employeeProfileRoutes = require("./routes/employee-profile"); 
 
 const shopRoutes = require("./routes/shop");
 
@@ -86,6 +87,7 @@ const server = http.createServer(async (req, res) => {
       pathname === "/pages/customer_registration.html" ||
       pathname === "/pages/trackingpage.html" ||
       pathname === "/pages/profile.html" ||  
+      pathname === "/pages/employee-profile.html" || 
       pathname.endsWith(".css") ||
       pathname.endsWith(".js") ||
       pathname.endsWith(".png") ||
@@ -192,6 +194,26 @@ else if (pathname.startsWith("/api/profile")) {
     return;
   } else if (req.method === "PUT" && pathname === "/api/profile/change-password") {
     await profileRoutes.changePassword(req, res);
+    return;
+  }
+}
+else if (pathname.startsWith("/api/employee-profile")) {
+  // Ensure only customers can access profile routes
+  if (tokenData.role !== "employee") {
+    return sendJson(res, 403, { 
+      success: false, 
+      message: "Access denied. Employee access only." 
+    });
+  }
+  
+  if (req.method === "GET" && pathname === "/api/employee-profile") {
+    await employeeProfileRoutes.getEmployeeProfile(req, res);
+    return;
+  } else if (req.method === "PUT" && pathname === "/api/employee-profile/update") {
+    await employeeProfileRoutes.updateEmployeeProfile(req, res);
+    return;
+  } else if (req.method === "PUT" && pathname === "/api/employee-profile/change-password") {
+    await employeeProfileRoutes.changePassword(req, res);
     return;
   }
 }

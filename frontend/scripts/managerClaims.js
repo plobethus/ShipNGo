@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   let allClaimsData = [];
   
   try {
-    // Show loading state in table
     document.getElementById("claims-table").innerHTML = `<tr><td colspan="8" style="text-align:center;">Loading claims data...</td></tr>`;
     
     // Fetch claims data
@@ -23,17 +22,14 @@ document.addEventListener("DOMContentLoaded", async function () {
     
     // Display claims in table
     if (allClaimsData.length > 0) {
-      // Initialize with "all" view
       updateTableHeaders("all");
       displayClaims(allClaimsData);
     } else {
       document.getElementById("claims-table").innerHTML = `<tr><td colspan="8" style="text-align:center;">No claims available</td></tr>`;
     }
     
-    // Set up filter options
     populateIssueTypeFilters(allClaimsData);
     
-    // Set up filter button event listeners
     setupFilters();
     
   } catch (err) {
@@ -50,10 +46,11 @@ document.addEventListener("DOMContentLoaded", async function () {
       document.getElementById("total-claims-count").textContent = "0";
       document.getElementById("pending-claims-count").textContent = "0";
       document.getElementById("resolution-rate").textContent = "0%";
+      document.getElementById("approved-cost").textContent = "$0.00";
       return;
     }
     
-    // Calculate statistics
+    // Calculate stats
     const totalClaims = claimsData.length;
     
     // Count by status
@@ -68,17 +65,36 @@ document.addEventListener("DOMContentLoaded", async function () {
     // Calculate resolution rate
     const resolutionRate = totalClaims > 0 ? Math.round((resolvedClaims / totalClaims) * 100) : 0;
     
-    // Update UI with values
+    // Calculate total cost of approved packages
+    const approvedClaims = claimsData.filter(claim => 
+      claim.refund_status === "Approved" && claim.package_id
+    );
+    
+    let totalApprovedCost = 0;
+    for (const claim of approvedClaims) {
+      if (claim.cost !== undefined && claim.cost !== null) {
+        // Convert to number if it's a string
+        const cost = typeof claim.cost === 'string' ? parseFloat(claim.cost) : claim.cost;
+        // Add to total if it's a valid number
+        if (!isNaN(cost)) {
+          totalApprovedCost += cost;
+        }
+      }
+    }
+    
+    // Format cost to 2 decimal places
+    const formattedCost = `$${totalApprovedCost.toFixed(2)}`;
+
     document.getElementById("total-claims-count").textContent = totalClaims;
     document.getElementById("pending-claims-count").textContent = pendingClaims;
     document.getElementById("resolution-rate").textContent = `${resolutionRate}%`;
+    document.getElementById("approved-cost").textContent = formattedCost;
   }
   
   // ===== Filter Setup Functions =====
   
   // Populate issue type filter dropdowns
   function populateIssueTypeFilters(claimsData) {
-    // Extract unique issue types
     const issueTypes = new Set();
     claimsData.forEach(claim => {
       if (claim.issue_type && claim.issue_type.trim() !== '') {
@@ -113,7 +129,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       applyFiltersBtn.addEventListener("click", function() {
         const packageStatusFilter = document.getElementById("package-status-filter").value;
         
-        // First filter based on package status
         let initialFilteredData = allClaimsData;
         
         if (packageStatusFilter === "with-package") {
@@ -122,13 +137,15 @@ document.addEventListener("DOMContentLoaded", async function () {
           initialFilteredData = allClaimsData.filter(claim => !claim.package_id);
         }
         
-        // Then apply other filters
         const filteredClaims = filterClaims(initialFilteredData, {
-          dateFilter: document.getElementById("date-filter").value,
+          dateFrom: document.getElementById("date-from").value,
+          dateTo: document.getElementById("date-to").value,
           customerFilter: document.getElementById("customer-filter").value.trim(),
           packageFilter: document.getElementById("package-filter").value.trim(),
           statusFilter: document.getElementById("status-filter").value,
-          issueTypeFilter: document.getElementById("issue-type-filter").value
+          issueTypeFilter: document.getElementById("issue-type-filter").value,
+          minWeight: document.getElementById("min-weight-filter").value,
+          maxWeight: document.getElementById("max-weight-filter").value
         });
         
         // Update table headers based on package status filter
@@ -137,19 +154,23 @@ document.addEventListener("DOMContentLoaded", async function () {
         // Update table data
         displayClaims(filteredClaims);
         
-        // Update dashboard statistics
+        // Update dashboard stats
         updateDashboardStats(filteredClaims);
       });
     }
     
     if (resetFiltersBtn) {
       resetFiltersBtn.addEventListener("click", function() {
-        document.getElementById("date-filter").value = "";
+        // Reset all filter inputs to their default values
+        document.getElementById("date-from").value = "";
+        document.getElementById("date-to").value = "";
         document.getElementById("package-status-filter").value = "all";
         document.getElementById("customer-filter").value = "";
         document.getElementById("package-filter").value = "";
         document.getElementById("status-filter").value = "";
         document.getElementById("issue-type-filter").value = "";
+        document.getElementById("min-weight-filter").value = "";
+        document.getElementById("max-weight-filter").value = "";
         
         // Reset table headers to show all columns
         updateTableHeaders("all");
@@ -161,9 +182,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         updateDashboardStats(allClaimsData);
       });
     }
-    
-    // Remove the immediate feedback event listener from package status filter
-    // This is the key change to prevent immediate UI updates when changing filters
   }
   
   // Update table headers based on package status selection
@@ -181,7 +199,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     let specificHeaders = [];
     
     if (packageStatus === "with-package") {
-      specificHeaders = ["Package ID", "Weight", "Dimensions", "Customer ID", "Refund Status"];
+      specificHeaders = ["Package ID", "Weight", "Dimensions", "Cost($USD)", "Customer ID","Refund Status"];
     } else if (packageStatus === "without-package") {
       specificHeaders = ["Customer Name", "Customer ID", "Refund Status"];
     } else {
@@ -201,38 +219,28 @@ document.addEventListener("DOMContentLoaded", async function () {
   function filterClaims(claims, filters) {
     let filteredClaims = [...claims];
     
-    // Apply date filter
-    if (filters.dateFilter) {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      
-      const yesterday = new Date(today);
-      yesterday.setDate(yesterday.getDate() - 1);
-      
-      const last7Days = new Date(today);
-      last7Days.setDate(last7Days.getDate() - 7);
-      
-      const last30Days = new Date(today);
-      last30Days.setDate(last30Days.getDate() - 30);
-      
+    // Apply date range filter
+    if (filters.dateFrom || filters.dateTo) {
       filteredClaims = filteredClaims.filter(claim => {
         if (!claim.processed_date) return false;
         
         const claimDate = new Date(claim.processed_date);
-        claimDate.setHours(0, 0, 0, 0);
         
-        switch (filters.dateFilter) {
-          case "today":
-            return claimDate.getTime() === today.getTime();
-          case "yesterday":
-            return claimDate.getTime() === yesterday.getTime();
-          case "last7":
-            return claimDate >= last7Days;
-          case "last30":
-            return claimDate >= last30Days;
-          default:
-            return true;
+        // Check if date is after dateFrom (if specified)
+        if (filters.dateFrom && new Date(filters.dateFrom) > claimDate) {
+          return false;
         }
+        
+        // Check if date is before dateTo (if specified)
+        if (filters.dateTo) {
+          const toDate = new Date(filters.dateTo);
+          toDate.setHours(23, 59, 59, 999); // End of the day
+          if (toDate < claimDate) {
+            return false;
+          }
+        }
+        
+        return true;
       });
     }
     
@@ -264,6 +272,34 @@ document.addEventListener("DOMContentLoaded", async function () {
       );
     }
     
+    // Apply weight range filter
+    if (filters.minWeight || filters.maxWeight) {
+      filteredClaims = filteredClaims.filter(claim => {
+        // Only apply to claims with package and weight info
+        if (!claim.weight) return false;
+        
+        // Convert weight to number if it's a string
+        const weight = typeof claim.weight === 'string' 
+          ? parseFloat(claim.weight) 
+          : claim.weight;
+        
+        // Skip if weight is not a valid number
+        if (isNaN(weight)) return false;
+        
+        // Check if weight is >= minWeight
+        if (filters.minWeight && parseFloat(filters.minWeight) > weight) {
+          return false;
+        }
+        
+        // Check if weight is <= maxWeight
+        if (filters.maxWeight && parseFloat(filters.maxWeight) < weight) {
+          return false;
+        }
+        
+        return true;
+      });
+    }
+    
     return filteredClaims;
   }
   
@@ -282,7 +318,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       
       // Adjust colspan based on filter
       if (packageStatusFilter === "with-package") {
-        colspan = 8;
+        colspan = 9;
       } else if (packageStatusFilter === "without-package") {
         colspan = 6;
       }
@@ -314,6 +350,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           <td>${claim.package_id || "N/A"}</td>
           <td>${claim.weight !== undefined && claim.weight !== null ? claim.weight : "N/A"}</td>
           <td>${claim.dimensions !== undefined && claim.dimensions !== null ? claim.dimensions : "N/A"}</td>
+          <td>${claim.cost !== undefined && claim.cost !== null ? claim.cost : "N/A"}</td>
           <td>${claim.customer_id || "N/A"}</td>
           <td>${claim.refund_status || "Pending"}</td>
         `;
@@ -334,6 +371,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           
           if (claim.weight !== undefined && claim.weight !== null) packageInfo += `<br>Weight: ${claim.weight}`;
           if (claim.dimensions !== undefined && claim.dimensions !== null) packageInfo += `<br>Dim: ${claim.dimensions}`;
+          if (claim.cost !== undefined && claim.cost !== null) packageInfo += `<br>Cost($USD): ${claim.cost}`;
         }
         
         row.innerHTML = `
@@ -354,32 +392,32 @@ document.addEventListener("DOMContentLoaded", async function () {
   
   // Show claim details in a modal
   function showClaimDetails(claim) {
-    // Create modal backdrop
+    // modal backdrop
     const modalBackdrop = document.createElement("div");
     modalBackdrop.classList.add("modal-backdrop");
     
-    // Create modal container
+    // modal container
     const modalContainer = document.createElement("div");
     modalContainer.classList.add("modal-container");
     
-    // Create a fullname from first_name and last_name
     const fullName = (claim.first_name && claim.last_name) 
       ? `${claim.first_name} ${claim.last_name}` 
       : "Unknown";
     
-    // Create package details section
+    // package details section
     let packageDetails = "";
     if (claim.package_id) {
       packageDetails = `
         <p><strong>Package ID:</strong> ${claim.package_id}</p>
         <p><strong>Weight:</strong> ${claim.weight || "N/A"}</p>
         <p><strong>Dimensions:</strong> ${claim.dimensions || "N/A"}</p>
+        <p><strong>Cost($USD):</strong> ${claim.cost || "N/A"}</p>
       `;
     } else {
       packageDetails = `<p><strong>Package ID:</strong> No package associated</p>`;
     }
     
-    // Build refund status controls
+    // refund status controls
     const statusOptions = ["Pending", "Processing", "Approved", "Rejected"];
     let statusSelect = `
       <div class="status-update">
@@ -554,7 +592,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     // Append to body
     document.body.appendChild(notification);
     
-    // Remove after 3 seconds
     setTimeout(() => {
       notification.classList.add("fade-out");
       setTimeout(() => {
