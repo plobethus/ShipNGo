@@ -423,9 +423,10 @@ select {
 
 
 .alert-container {
-  position: relative;
-  display: inline-block;
-  margin: 10px;
+  position: absolute;
+  top: 90px; /* adjust depending on navbar height */
+  left : 20px;
+  z-index: 999;
 }
 
 .alert-button {
