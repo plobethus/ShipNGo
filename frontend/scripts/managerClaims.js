@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", async function () {
   // Store all claims data for filtering
   let allClaimsData = [];
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const highlightMsg = urlParams.get('highlight');
   
   try {
     document.getElementById("claims-table").innerHTML = `<tr><td colspan="8" style="text-align:center;">Loading claims data...</td></tr>`;
@@ -329,9 +332,19 @@ document.addEventListener("DOMContentLoaded", async function () {
     
     const packageStatusFilter = document.getElementById("package-status-filter").value;
     
-    claims.forEach(claim => {
+    claims.forEach((claim, index)=> {
       const row = document.createElement("tr");
-      row.classList.add("clickable-row");
+
+      console.log("Highlighting this row:", claim.ticket_id, claim.issue_type, highlightMsg);
+
+      if (
+        highlightMsg &&
+        claim.issue_type &&
+        claim.issue_type.toLowerCase() === "lost" &&
+        !document.querySelector(".highlight-row")
+      ) {
+        row.classList.add("highlight-row");
+      }
       
       // Add click event to show claim details
       row.addEventListener("click", () => {

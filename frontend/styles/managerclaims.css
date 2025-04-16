@@ -190,3 +190,7 @@ tbody tr:hover {
   }
 }
 
+.highlight-row {
+  background-color: #c4a861 !important;
+  font-weight: bold !important;
+}

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login - ShipNGo</title>
+  <title>Financial Reports - ShipNGo</title>
   <link rel="stylesheet" href="../styles/financereport.css"/>
   <link rel="stylesheet" href="../styles/styles.css">
   <link rel="stylesheet" href="../styles/nav.css" />
@@ -13,112 +13,144 @@
   <script src="../scripts/header.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <div class="week-navigation" style="display:flex; flex-direction:column; align-items:center;">
-        <h2 style="color:white;">Graph Filters</h2>
-        <div style="display:flex;flex-direction:row;gap:20px;">
-            <button id="prevWeekBtn">Previous Week</button>
-            <button id="nextWeekBtn">Next Week</button>
-            <button id="togglePackagesBtn">Hide Packages</button>
-            <button id="toggleSuppliesBtn">Hide Supplies</button>
+  <div class="page-content">
+    <div class="manager-container">
+      <h1>Financial Reports Dashboard</h1>
+      <div class="dashboard-caption">
+        This dashboard provides a comprehensive overview of ShipNGo's financial performance, displaying package and supply transaction data. Use the filters to analyze revenue trends, track shipping costs, and monitor business performance across different time periods.
+      </div>
+      
+      <!-- Chart Navigation -->
+      <div class="week-navigation">
+        <h2>Revenue Chart</h2>
+        <div>
+          <button id="prevWeekBtn">Previous Week</button>
+          <button id="nextWeekBtn">Next Week</button>
+          <button id="togglePackagesBtn">Hide Packages</button>
+          <button id="toggleSuppliesBtn">Hide Supplies</button>
             
+          <div class="date-range-group">
             <label for="rangeStart">Start Date:</label>
             <input type="date" id="rangeStart" />
             <label for="rangeEnd">End Date:</label>
             <input type="date" id="rangeEnd" />
             
             <button id="applyRangeBtn">Apply Range</button>
+          </div>
         </div>
-  </div>
-
-
-  <div >
-    <canvas id="weeklyRevenueChart" style="width:1100px; height:400px; margin: 0 auto;"></canvas>
-  </div> 
-    <!-- Package transaction report -->
-            <div class = "manager-container">
-                <div class = "filter">
-                    <h2>Package Transaction Filters</h2>
-                    <div class="filter-boxes">
-                        <input type="text" id="filter-package-name" placeholder="Filter by Name">
-                        <input type="text" id="filter-weight" placeholder="Filter by Weight">
-                        <input type="text" id="filter-dim" placeholder="Filter by Dimensions">
-                        <input type="text" id="filter-class" placeholder="Filter by Shipping Class">
-                        <input type="int" id="filter-cost" placeholder="Filter by cost">
-                    </div>
-                </div>
-
-                <div class="container">
-                    <h2 style="color:white">Packages Transactions Report</h2>
-
-                    <div id="package-total-container" style="color:white;"></div>
-
-
-                    <table style="margin-top:20px;">
-                        <thead>
-                            <tr>
-                                <th>Package Id</th>
-                                <th>Customer Name</th>
-                                <th>Weight</th>
-                                <th>Dimensions</th>
-                                <th>Shipping Class</th>
-                                <th>Cost</th>
-                                <th>Created At</th>
-                            </tr>
-                        </thead>
-                        <tbody id="package-table"></tbody>
-                    </table>
-                </div>
-            </div>
+      </div>
+      
+      <!-- Chart Container -->
+      <div class="chart-container">
+        <canvas id="weeklyRevenueChart"></canvas>
+      </div> 
+      
+      <!-- Package Transactions Section -->
+      <div class="filter">
+        <h2>Package Transaction Filters</h2>
+        <div class="filter-boxes">
+          <input type="text" id="filter-package-name" placeholder="Filter by Name">
+          <input type="text" id="filter-weight" placeholder="Filter by Weight">
+          <input type="text" id="filter-dim" placeholder="Filter by Dimensions">
+          <input type="text" id="filter-class" placeholder="Filter by Shipping Class">
+          <input type="int" id="filter-cost" placeholder="Filter by Cost">
         </div>
+        
+        <!-- Date range filters for packages -->
+        <div class="date-filter-container">
+          <div class="date-filter-header">Date Range Filter</div>
+          <div class="date-group">
+            <label for="filter-package-start-date">From Date</label>
+            <input type="date" id="filter-package-start-date">
+          </div>
+          <div class="date-group">
+            <label for="filter-package-end-date">To Date</label>
+            <input type="date" id="filter-package-end-date">
+          </div>
+        </div>
+        
+        <div class="filter-actions">
+          <button class="apply-filter-btn" data-section="package">Apply Filters</button>
+          <button class="clear-filter-btn" data-section="package">Clear All Filters</button>
+        </div>
+      </div>
 
-        <!-- supply transaction reports -->
-        <div class = "manager-container">
+      <div class="container">
+        <h2>Package Transactions Report</h2>
+        <div id="package-total-container">Loading package revenue data...</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Package ID</th>
+              <th>Customer Name</th>
+              <th>Weight</th>
+              <th>Dimensions</th>
+              <th>Shipping Class</th>
+              <th>Cost</th>
+              <th>Created At</th>
+            </tr>
+          </thead>
+          <tbody id="package-table"></tbody>
+        </table>
+      </div>
+      
+      <!-- Supply Transactions Section -->
+      <div class="filter">
+        <h2>Supply Transaction Filters</h2>
+        <div class="filter-boxes">
+          <input type="text" id="filter-name" placeholder="Filter by Name">
+          <input type="text" id="filter-item" placeholder="Filter by Item">
+        </div>
+        
+        <!-- Date range filters for supplies -->
+        <div class="date-filter-container">
+          <div class="date-filter-header">Date Range Filter</div>
+          <div class="date-group">
+            <label for="filter-supply-start-date">From Date</label>
+            <input type="date" id="filter-supply-start-date">
+          </div>
+          <div class="date-group">
+            <label for="filter-supply-end-date">To Date</label>
+            <input type="date" id="filter-supply-end-date">
+          </div>
+        </div>
+        
+        <div class="filter-actions">
+          <button class="apply-filter-btn" data-section="supply">Apply Filters</button>
+          <button class="clear-filter-btn" data-section="supply">Clear All Filters</button>
+        </div>
+      </div>
 
-
-            <div class = "filter">
-                <h2>Supply Transaction Filters</h2>
-                <div class="filter-boxes">
-                    <input type="text" id="filter-name" placeholder="Filter by Name">
-                    <input type="text" id="filter-item" placeholder="Filter by Item">
-                    <input type="date" id="filter-date" placeholder="Filter by Date">
-                </div>
-            </div>
-
-            <div class="container">
-                <h2 style="color:white">Supply Transactions Report</h2>
-
-                <div id="supply-total-container" style="color:white;"></div>
-
-
-                <table style="margin-top:20px;">
-                    <thead>
-                        <tr>
-                            <th>Transaction Id</th>
-                            <th>Customer Name</th>
-                            <th>Item</th>
-                            <th>Quantity</th>
-                            <th>Total Cost</th>
-                            <th>Purchase Date</th>
-                            <th>Location</th>
-                        </tr>
-                    </thead>
-                    <tbody id="supply-table"></tbody>
-                </table>
-            </div>
-        <div>
+      <div class="container">
+        <h2>Supply Transactions Report</h2>
+        <div id="supply-total-container">Loading supply revenue data...</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Transaction ID</th>
+              <th>Customer Name</th>
+              <th>Item</th>
+              <th>Quantity</th>
+              <th>Total Cost</th>
+              <th>Purchase Date</th>
+              <th>Location</th>
+            </tr>
+          </thead>
+          <tbody id="supply-table"></tbody>
+        </table>
+      </div>
+    </div>
 
     <section id="services" class="services">
       <h3>Our Services</h3>
       <p>We provide local and international shipping, express delivery, and secure parcel handling.</p>
     </section>
+  </div>
     
-    <footer>
-      <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
-    </footer>
-      </div>
+  <footer>
+    <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
+  </footer>
 
   <script src="../scripts/financialreport.js"></script>
-  
-
 </body>
 </html>

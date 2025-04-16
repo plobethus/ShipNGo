@@ -34,7 +34,8 @@ const statusRoutes = require("./routes/status");
 const driverRoutes = require("./routes/drivers");
 const managerRoutes = require("./routes/manager");
 
-const alertsRoutes = require('./routes/alerts');
+//const alertsRoutes = require('./routes/alerts');
+const { getAlerts, clearAlerts } = require("./routes/alerts");
 
 const financeRoutes = require("./routes/financialreport");
 
@@ -112,8 +113,11 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (pathname === "/api/alerts" && req.method === "GET") {
-      await alertsRoutes.getAlerts(req, res);
-      return;
+      return getAlerts(req, res);
+    }
+    
+    if (pathname === "/api/alerts/clear" && req.method === "POST") {
+      return clearAlerts(req, res);
     }
 
     // ---- Protected Routes (login required) ----
