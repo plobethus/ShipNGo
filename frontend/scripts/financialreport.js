@@ -1,506 +1,639 @@
-console.log("financialreport.js script is loaded and running...");
+/* financialreport.js – Tables + Stacked/Goal Chart */
+document.addEventListener("DOMContentLoaded", async () => {
+  // —— Helpers ——
 
-document.addEventListener("DOMContentLoaded", async function () {
-  // 1 Packages
+  await populateLocationDropdown();
+  const $ = id => document.getElementById(id);
+  const parseDate = v => v ? new Date(`${v}T00:00:00`) : null;
+  const sameDay   = (a,b)=> a?.toDateString()===b?.toDateString();
+  const monday    = off => {
+    const d=new Date(); d.setHours(0,0,0,0);
+    d.setDate(d.getDate()-((d.getDay()+6)%7)+off*7);
+    return d;
+  };
+  const span = (s,e)=>{
+    const a=[],c=new Date(s);
+    while(c<=e){ a.push(new Date(c)); c.setDate(c.getDate()+1); }
+    return a;
+  };
+  const label = d=>d.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});
+  const formatCurrency = value => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2
+    }).format(value);
+  };
 
-  let packageData = [];
+  let packages = [], supplies = [];
+  let viewPkg = [], viewSup = [];
+  let customRange = null, weekOffset = 0;
+  let showPkg = true, showSup = true, chart = null;
+  let autoRefresh = true;
 
+  async function fetchJSON(url){
+    try {
+      const res = await fetch(url);
+      if(!res.ok) throw new Error(`${url} → ${res.status}`);
+      return res.json();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      showNotification("Failed to load data. Please try again later.", "error");
+      return [];
+    }
+  }
+  
   try {
-    const sumRes = await fetch("/api/claims/sumpackage");
-    if (!sumRes.ok) {
-      throw new Error(`Package sum error: ${sumRes.status}`);
-    }
-    const sumData = await sumRes.json();
-    let packageTotal = 0;
-    if (Array.isArray(sumData)) {
-      if (sumData.length > 0 && sumData[0].cost != null) {
-        packageTotal = sumData[0].cost;
-      }
-    } else if (sumData && sumData.cost != null) {
-      packageTotal = sumData.cost;
-    }
-    const pkgTotalEl = document.getElementById("package-total-container");
-    if (pkgTotalEl) {
-      pkgTotalEl.innerHTML = `
-        <h3 style="margin-right:150px;">
-          Package Total Cost: $${Number(packageTotal).toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-          })}
-        </h3>
-      `;
-    }
-  } catch (err) {
-    console.error("Error fetching package total:", err);
+    [ packages, supplies ] = await Promise.all([
+      fetchJSON("/api/claims/transpackage"),
+      fetchJSON("/api/claims/trans")
+    ]);
+  } catch (error) {
+    console.error("Error loading initial data:", error);
+    packages = [];
+    supplies = [];
   }
 
-  try {
-    const transRes = await fetch("/api/claims/transpackage");
-    if (!transRes.ok) {
-      throw new Error(`Package transactions error: ${transRes.status}`);
-    }
-    packageData = await transRes.json();
-    console.log("Fetched packageData:", packageData);
-    renderPackageTransactions(packageData);
-  } catch (err) {
-    console.error("Error fetching package transactions:", err);
-  }
+  function applyFilters() {
+    const start = customRange ? customRange.start : monday(weekOffset);
+    const end   = customRange ? customRange.end   : new Date(start.getTime()+6*864e5);
 
-  const pkgNameInput = document.getElementById("filter-package-name");
-  const pkgWeightInput = document.getElementById("filter-weight");
-  const pkgDimInput = document.getElementById("filter-dim");
-  const pkgClassInput = document.getElementById("filter-class");
-  const pkgCostInput = document.getElementById("filter-cost");
+    // Package filters
+    const pName   = $("filter-package-name").value.trim().toLowerCase();
+    const pWt     = $("filter-weight").value.trim();
+    const pDim    = $("filter-dim").value.trim().toLowerCase();
+    const pCls    = $("filter-class").value.trim().toLowerCase();
+    const pCost   = $("filter-cost").value.trim();
+    const pStartDate = parseDate($("filter-package-start-date").value.trim());
+    const pEndDate = parseDate($("filter-package-end-date").value.trim());
 
-  function filterAndRenderPackages() {
-    const nameVal = (pkgNameInput?.value || "").trim().toLowerCase();
-    const weightVal = (pkgWeightInput?.value || "").trim().toLowerCase();
-    const dimVal = (pkgDimInput?.value || "").trim().toLowerCase();
-    const classVal = (pkgClassInput?.value || "").trim().toLowerCase();
-    const costVal = (pkgCostInput?.value || "").trim();
-
-    const filtered = packageData.filter(pkg => {
-      const matchName = nameVal === "" || (pkg.name && pkg.name.toLowerCase().includes(nameVal));
-      const matchWeight = weightVal === "" || (pkg.weight && pkg.weight.toString().toLowerCase().includes(weightVal));
-      const matchDim = dimVal === "" || (pkg.dimensions && pkg.dimensions.toLowerCase().includes(dimVal));
-      const matchClass = classVal === "" || (pkg.shipping_class && pkg.shipping_class.toLowerCase().includes(classVal));
-
-      let matchCost = true;
-      if (costVal) {
-        const costNum = parseFloat(costVal);
-        if (!isNaN(costNum) && pkg.cost != null) {
-          matchCost = Number(pkg.cost) <= costNum;
-        } else {
-          matchCost = false;
-        }
+    viewPkg = packages.filter(p => {
+      const d = new Date(p.created_at);
+      
+      if (pStartDate && d < pStartDate) return false;
+      if (pEndDate) {
+        const endOfDay = new Date(pEndDate);
+        endOfDay.setHours(23, 59, 59, 999);
+        if (d > endOfDay) return false;
       }
-      return matchName && matchWeight && matchDim && matchClass && matchCost;
+      
+      if (!pStartDate && !pEndDate && (d < start || d > end)) return false;
+      
+      if(pName && !(p.name||"").toLowerCase().includes(pName)) return false;
+      if(pWt   && !(p.weight||"").toString().includes(pWt)) return false;
+      if(pDim  && !(p.dimensions||"").toLowerCase().includes(pDim)) return false;
+      if(pCls  && !(p.shipping_class||"").toLowerCase().includes(pCls)) return false;
+      if(pCost){
+        const th = parseFloat(pCost);
+        if(isNaN(th) || Number(p.cost) > th) return false;
+      }
+      return true;
     });
-    renderPackageTransactions(filtered);
+
+    // Supply filters
+    const sName = $("filter-name").value.trim().toLowerCase();
+    const sItem = $("filter-item").value.trim().toLowerCase();
+    const sStartDate = parseDate($("filter-supply-start-date").value.trim());
+    const sEndDate = parseDate($("filter-supply-end-date").value.trim());
+
+    viewSup = supplies.filter(s => {
+      const d = new Date(s.purchase_date);
+      
+      if (sStartDate && d < sStartDate) return false;
+      if (sEndDate) {
+        const endOfDay = new Date(sEndDate);
+        endOfDay.setHours(23, 59, 59, 999);
+        if (d > endOfDay) return false;
+      }
+      
+      if (!sStartDate && !sEndDate && (d < start || d > end)) return false;
+      
+      if(sName && !(s.name||"").toLowerCase().includes(sName)) return false;
+      if(sItem && !(s.category||"").toLowerCase().includes(sItem)) return false;
+      return true;
+    });
+    
+    // Update totals
+    const pkgTotal = viewPkg.reduce((sum, p) => sum + Number(p.cost || 0), 0);
+    $("package-total-container").innerHTML = `Total Package Revenue: ${formatCurrency(pkgTotal)}`;
+    
+    const supTotal = viewSup.reduce((sum, s) => sum + Number(s.total_cost || 0), 0);
+    $("supply-total-container").innerHTML = `Total Supply Revenue: ${formatCurrency(supTotal)}`;
   }
 
-  pkgNameInput?.addEventListener("input", filterAndRenderPackages);
-  pkgWeightInput?.addEventListener("input", filterAndRenderPackages);
-  pkgDimInput?.addEventListener("input", filterAndRenderPackages);
-  pkgClassInput?.addEventListener("input", filterAndRenderPackages);
-  pkgCostInput?.addEventListener("input", filterAndRenderPackages);
-
-  function renderPackageTransactions(list) {
-    const tableBody = document.getElementById("package-table");
-    if (!tableBody) return;
-
-    tableBody.innerHTML = "";
-    if (list.length > 0) {
-      list.sort((a, b) => {
-        if (a.created_at && b.created_at) {
-          return new Date(b.created_at) - new Date(a.created_at);
-        }
-        return (b.package_id || 0) - (a.package_id || 0);
-      });
-      const recent = list.slice(0, 10);
-      recent.forEach(pkg => {
-        let dateCell = "";
-        if (pkg.created_at) {
-          dateCell = new Date(pkg.created_at).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric"
-          });
-        }
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${pkg.package_id || ""}</td>
-          <td>${pkg.name || ""}</td>
-          <td>${pkg.weight || ""}</td>
-          <td>${pkg.dimensions || ""}</td>
-          <td>${pkg.shipping_class || ""}</td>
-          <td>$${pkg.cost || ""}</td>
-          <td>${dateCell}</td>
-        `;
-        tableBody.appendChild(row);
-      });
+  function renderTables() {
+    const pkgBody = $("package-table");
+    pkgBody.innerHTML = "";
+    
+    if (viewPkg.length === 0) {
+      pkgBody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:20px;">No package data matches your filters</td></tr>`;
     } else {
-      tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center;">No package transactions available</td></tr>`;
+      viewPkg
+        .sort((a,b)=> new Date(b.created_at) - new Date(a.created_at))
+        .slice(0,10)
+        .forEach(p => {
+          pkgBody.insertAdjacentHTML("beforeend", `
+            <tr>
+              <td>${p.package_id || 'N/A'}</td>
+              <td>${p.name || 'N/A'}</td>
+              <td>${p.weight || 'N/A'}</td>
+              <td>${p.dimensions || 'N/A'}</td>
+              <td>${p.shipping_class || 'N/A'}</td>
+              <td>${formatCurrency(p.cost)}</td>
+              <td>${new Date(p.created_at).toLocaleDateString()}</td>
+            </tr>`);
+        });
     }
-  }
 
-  // 2 Supply transactions
-  let supplyData = [];
+    const supBody = $("supply-table");
+    supBody.innerHTML = "";
 
-  try {
-    const supplySumRes = await fetch("/api/claims/sum");
-    if (!supplySumRes.ok) {
-      throw new Error(`Supply sum error: ${supplySumRes.status}`);
-    }
-    const sumData = await supplySumRes.json();
-    let supplyTotal = 0;
-    if (Array.isArray(sumData)) {
-      if (sumData.length > 0 && sumData[0].total_sum != null) {
-        supplyTotal = sumData[0].total_sum;
-      }
-    } else if (sumData && sumData.total_sum != null) {
-      supplyTotal = sumData.total_sum;
-    }
-    const supTotalEl = document.getElementById("supply-total-container");
-    if (supTotalEl) {
-      supTotalEl.innerHTML = `
-        <h3 style="margin-right:150px;">
-          Supply Total Cost: $${Number(supplyTotal).toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-          })}
-        </h3>
-      `;
-    }
-  } catch (err) {
-    console.error("Error fetching supply total:", err);
-  }
-
-  try {
-    const supplyTransRes = await fetch("/api/claims/trans");
-    if (!supplyTransRes.ok) {
-      throw new Error(`Supply transactions error: ${supplyTransRes.status}`);
-    }
-    supplyData = await supplyTransRes.json();
-    console.log("Fetched supplyData:", supplyData);
-    renderSupplyTransactions(supplyData);
-  } catch (err) {
-    console.error("Error fetching supply transactions:", err);
-  }
-
-  const supNameInput = document.getElementById("filter-name");
-  const supItemInput = document.getElementById("filter-item");
-  const supDateInput = document.getElementById("filter-date");
-
-  function filterSuppliesAndRender() {
-    const nameVal = supNameInput?.value.trim().toLowerCase() || "";
-    const itemVal = supItemInput?.value.trim().toLowerCase() || "";
-    const dateVal = supDateInput?.value || "";
-
-    const filtered = supplyData.filter(s => {
-      const matchName = nameVal === "" || (s.name && s.name.toLowerCase().includes(nameVal));
-      const matchCat = itemVal === "" || (s.category && s.category.toLowerCase().includes(itemVal));
-      let matchDate = true;
-      if (dateVal) {
-        if (s.purchase_date) {
-          const d = new Date(s.purchase_date);
-          const isoDate = d.toISOString().split("T")[0];
-          matchDate = isoDate === dateVal;
-        } else {
-          matchDate = false;
-        }
-      }
-      return matchName && matchCat && matchDate;
-    });
-    renderSupplyTransactions(filtered);
-  }
-
-  supNameInput?.addEventListener("input", filterSuppliesAndRender);
-  supItemInput?.addEventListener("input", filterSuppliesAndRender);
-  supDateInput?.addEventListener("input", filterSuppliesAndRender);
-
-  function renderSupplyTransactions(list) {
-    const tableBody = document.getElementById("supply-table");
-    if (!tableBody) return;
-
-    tableBody.innerHTML = "";
-    if (list.length > 0) {
-      list.sort((a, b) => new Date(b.purchase_date) - new Date(a.purchase_date));
-      const recent = list.slice(0, 10);
-      recent.forEach(s => {
-        const formatted = s.purchase_date
-          ? new Date(s.purchase_date).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "numeric"
-            })
-          : "";
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${s.supply_transaction_id || ""}</td>
-          <td>${s.name || ""}</td>
-          <td>${s.category || ""}</td>
-          <td>${s.quantity || ""}</td>
-          <td>$${s.total_cost || ""}</td>
-          <td>${formatted}</td>
-        `;
-        tableBody.appendChild(row);
-      });
+    const location = document.getElementById("location-filter")?.value;
+    
+    if (viewSup.length === 0) {
+      supBody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;">No supply data matches your filters</td></tr>`;
     } else {
-      tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No supply transactions available</td></tr>`;
-    }
-  }
-
-  // 3 Insurance transactions
-  let insuranceData = [];
-
-  try {
-    const insSumRes = await fetch("/api/claims/suminsure");
-    if (!insSumRes.ok) {
-      throw new Error(`Insurance sum error: ${insSumRes.status}`);
-    }
-    const sumData = await insSumRes.json();
-    let feeSum = 0;
-    if (Array.isArray(sumData)) {
-      if (sumData.length > 0 && sumData[0].insurance_fee != null) {
-        feeSum = sumData[0].insurance_fee;
-      }
-    } else if (sumData && sumData.insurance_fee != null) {
-      feeSum = sumData.insurance_fee;
-    }
-    const insTotalEl = document.getElementById("insurance-total-container");
-    if (insTotalEl) {
-      insTotalEl.innerHTML = `
-        <h3 style="margin-right:150px;">
-          Total Insurance Fee: $${Number(feeSum).toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-          })}
-        </h3>
-      `;
-    }
-  } catch (err) {
-    console.error("Error fetching insurance total:", err);
-  }
-
-  try {
-    const insTransRes = await fetch("/api/claims/transinsure");
-    if (!insTransRes.ok) {
-      throw new Error(`Insurance transactions error: ${insTransRes.status}`);
-    }
-    insuranceData = await insTransRes.json();
-    console.log("Fetched insuranceData:", insuranceData);
-    renderInsuranceTransactions(insuranceData);
-  } catch (err) {
-    console.error("Error fetching insurance transactions:", err);
-  }
-
-  const insNameInput = document.getElementById("insurance-filter-name");
-  const insFeeInput = document.getElementById("filter-fee");
-  const insDateInput = document.getElementById("insurance-filter-date");
-
-  function filterInsuranceAndRender() {
-    const nameVal = insNameInput?.value.trim().toLowerCase() || "";
-    const feeVal = insFeeInput?.value.trim().toLowerCase() || "";
-    const dateVal = insDateInput?.value || "";
-
-    const filtered = insuranceData.filter(i => {
-      const matchName = nameVal === "" || (i.name && i.name.toLowerCase().includes(nameVal));
-      const matchFee = feeVal === "" || (i.insured_fee != null && i.insured_fee.toString().toLowerCase().includes(feeVal));
-      let matchDate = true;
-      if (dateVal) {
-        if (i.claim_date) {
-          const d = new Date(i.claim_date);
-          const isoDate = d.toISOString().split("T")[0];
-          matchDate = isoDate === dateVal;
-        } else {
-          matchDate = false;
-        }
-      }
-      return matchName && matchFee && matchDate;
-    });
-    renderInsuranceTransactions(filtered);
-  }
-
-  insNameInput?.addEventListener("input", filterInsuranceAndRender);
-  insFeeInput?.addEventListener("input", filterInsuranceAndRender);
-  insDateInput?.addEventListener("input", filterInsuranceAndRender);
-
-  function renderInsuranceTransactions(list) {
-    const tableBody = document.getElementById("insurance-table");
-    if (!tableBody) return;
-
-    tableBody.innerHTML = "";
-    if (list.length > 0) {
-      list.sort((a, b) => {
-        if (a.claim_date && b.claim_date) {
-          return new Date(b.claim_date) - new Date(a.claim_date);
-        }
-        return (b.insurance_id || 0) - (a.insurance_id || 0);
-      });
-      const recent = list.slice(0, 10);
-      recent.forEach(ins => {
-        const formatted = ins.claim_date
-          ? new Date(ins.claim_date).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "numeric"
-            })
-          : "";
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${ins.insurance_id || ""}</td>
-          <td>${ins.package_id || ""}</td>
-          <td>${ins.name || ""}</td>
-          <td>$${ins.insured_value || ""}</td>
-          <td>$${ins.insured_fee || ""}</td>
-          <td>${formatted}</td>
-        `;
-        tableBody.appendChild(row);
-      });
-    } else {
-      tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No insurance transactions available</td></tr>`;
-    }
-  }
-
-  // 4) bar chart over days of the week
-  function getMondayOfCurrentWeek() {
-    const now = new Date();
-    // getDay(): 0=Sunday,1=Monday,2=Tue,...
-    const day = now.getDay();
-    // distance to Monday (1)
-    const distance = (day + 6) % 7; 
-    now.setHours(0, 0, 0, 0);
-    now.setDate(now.getDate() - distance);
-    return now;
-  }
-
-  function sameDay(d1, d2) {
-    return d1.getFullYear()===d2.getFullYear() &&
-           d1.getMonth()===d2.getMonth() &&
-           d1.getDate()===d2.getDate();
-  }
-
-  function formatDayAndDate(d) {
-    const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-    const dayName = days[d.getDay()];
-    const opts = { month:"short", day:"numeric" };
-    const datePart = d.toLocaleDateString("en-US", opts);
-    return `${dayName} (${datePart})`;
-  }
-
-  function renderWeekSideBySide() {
-    console.log("Rendering Monday->Sunday: 2 bars per day => stacked actual + single goal...");
-    const mon = getMondayOfCurrentWeek();
-    const week = [];
-    for (let i=0; i<7; i++){
-      const tmp = new Date(mon);
-      tmp.setDate(tmp.getDate()+i);
-      week.push({
-        dateObj: tmp,
-        packages: 0,
-        supplies: 0,
-        insurance: 0
-      });
-    }
-
-    // 2) aggregator
-    // packages
-    packageData.forEach(pkg => {
-      if (pkg.created_at && pkg.cost != null){
-        const rowDate = new Date(pkg.created_at);
-        for(let i=0; i<7; i++){
-          if(sameDay(rowDate, week[i].dateObj)){
-            week[i].packages += Number(pkg.cost);
-            break;
+      viewSup
+        .sort((a,b)=> new Date(b.purchase_date) - new Date(a.purchase_date))
+        .slice(0,10)
+        .forEach(s => {
+          if (location && s.location_id != location){
+            return;
           }
-        }
-      }
+          supBody.insertAdjacentHTML("beforeend", `
+            <tr>
+              <td>${s.supply_transaction_id || 'N/A'}</td>
+              <td>${s.customer_name || 'N/A'}</td>
+              <td>${s.category || 'N/A'}</td>
+              <td>${s.quantity || 'N/A'}</td>
+              <td>${formatCurrency(s.total_cost)}</td>
+              <td>${new Date(s.purchase_date).toLocaleDateString()}</td>
+              <td>${s.location_name || "N/A"}</td>
+            </tr>`);
+        });
+    }
+  }
+
+  function renderChart() {
+    const start = customRange ? customRange.start : monday(weekOffset);
+    const end   = customRange ? customRange.end   : new Date(start.getTime()+6*864e5);
+    const days  = span(start,end).map(d=>({d,pk:0,sp:0}));
+
+    viewPkg.forEach(p => {
+      const rd = new Date(p.created_at);
+      days.forEach(x=> sameDay(rd,x.d) && (x.pk += Number(p.cost || 0)));
+    });
+    viewSup.forEach(s => {
+      const rd = new Date(s.purchase_date);
+      days.forEach(x=> sameDay(rd,x.d) && (x.sp += Number(s.total_cost || 0)));
     });
 
-    // supplies
-    supplyData.forEach(s => {
-      if(s.purchase_date && s.total_cost!=null){
-        const rowDate = new Date(s.purchase_date);
-        for(let i=0;i<7;i++){
-          if(sameDay(rowDate, week[i].dateObj)){
-            week[i].supplies += Number(s.total_cost);
-            break;
-          }
-        }
-      }
-    });
+    const labels = days.map(x=>label(x.d));
+    const pkArr  = days.map(x=>x.pk);
+    const spArr  = days.map(x=>x.sp);
+    const goal   = days.map(_=>500);
 
-    insuranceData.forEach(i => {
-      if(i.claim_date && i.insured_fee!=null){
-        const rowDate = new Date(i.claim_date);
-        for(let d=0; d<7; d++){
-          if(sameDay(rowDate, week[d].dateObj)){
-            week[d].insurance += Number(i.insured_fee);
-            break;
-          }
-        }
-      }
-    });
-
-    const labels = [];
-    const packagesArr = [];
-    const suppliesArr = [];
-    const insuranceArr = [];
-    const goalArr = [];
-
-    for(let i=0; i<7; i++){
-      labels.push( formatDayAndDate(week[i].dateObj) );
-      packagesArr.push( week[i].packages );
-      suppliesArr.push( week[i].supplies );
-      insuranceArr.push( week[i].insurance );
-      goalArr.push( 500 );
-    }
-
-    const cvs = document.getElementById("weeklyRevenueChart");
-    if(!cvs){
-      console.error("No canvas with id=weeklyRevenueChart found!");
-      return;
-    }
-    const ctx = cvs.getContext("2d");
-
-    new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            label: "Packages",
-            data: packagesArr,
-            backgroundColor: "rgba(75, 192, 192, 0.7)", // teal
-            stack: "actual" 
-          },
-          {
-            label: "Supplies",
-            data: suppliesArr,
-            backgroundColor: "rgba(255, 206, 86, 0.7)", // yellow
-            stack: "actual"
-          },
-          {
-            label: "Insurance",
-            data: insuranceArr,
-            backgroundColor: "rgba(153, 102, 255, 0.7)", // purple
-            stack: "actual"
-          },
-          {
-            label: "$500 Goal",
-            data: goalArr,
-            backgroundColor: "rgba(255, 99, 132, 0.7)", // pink
-            stack: "goal"
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          x: {
-            // side-by-side 2 columns: 1 "actual" stacked bar + 1 "goal" bar
-            stacked: false,
-            title: { display: true, text: "Date" }
-          },
-          y: {
-            beginAtZero: true,
-            stacked: false, 
-            title: { display: true, text: "Dollar Amount" },
-            ticks: {
-              callback: value => `$${value}`
+    if(!chart){
+      const ctx = $("weeklyRevenueChart").getContext("2d");
+      chart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [
+            { 
+              label: "Packages",  
+              data: pkArr,  
+              backgroundColor: "rgba(54, 162, 235, 0.7)", 
+              borderColor: "rgba(54, 162, 235, 1)",
+              borderWidth: 1,
+              stack: "actual" 
+            },
+            { 
+              label: "Supplies",  
+              data: spArr,  
+              backgroundColor: "rgba(255, 205, 86, 0.7)", 
+              borderColor: "rgba(255, 205, 86, 1)",
+              borderWidth: 1,
+              stack: "actual" 
+            },
+            { 
+              label: "$500 Goal", 
+              data: goal,   
+              backgroundColor: "rgba(255, 99, 132, 0.6)", 
+              borderColor: "rgba(255, 99, 132, 1)",
+              borderWidth: 1,
+              stack: "goal" 
             }
-          }
+          ]
         },
-        plugins: {
-          legend: { position: "top" }
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { 
+            legend: { 
+              position: "top",
+              labels: {
+                font: {
+                  size: 14
+                },
+                padding: 20
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  let label = context.dataset.label || '';
+                  if (label) {
+                    label += ': ';
+                  }
+                  if (context.parsed.y !== null) {
+                    label += formatCurrency(context.parsed.y);
+                  }
+                  return label;
+                }
+              }
+            } 
+          },
+          scales: {
+            x: { 
+              stacked: false, 
+              grid: {
+                display: false
+              },
+              title: {
+                display: true,
+                text: "Date",
+                font: {
+                  size: 14,
+                  weight: 'bold'
+                },
+                padding: {top: 10, bottom: 0}
+              }
+            },
+            y: { 
+              beginAtZero: true, 
+              stacked: false, 
+              grid: {
+                color: "rgba(0, 0, 0, 0.05)"
+              },
+              ticks: {
+                callback: function(value) {
+                  return formatCurrency(value);
+                }
+              },
+              title: {
+                display: true,
+                text: "Revenue",
+                font: {
+                  size: 14,
+                  weight: 'bold'
+                },
+                padding: {top: 0, bottom: 10}
+              }
+            }
+          },
+          animation: {
+            duration: 1000,
+            easing: 'easeOutQuart'
+          }
         }
-      }
-    });
+      });
+    } else {
+      chart.data.labels           = labels;
+      chart.data.datasets[0].data = pkArr;
+      chart.data.datasets[1].data = spArr;
+      chart.data.datasets[2].data = goal;
+      chart.setDatasetVisibility(0, showPkg);
+      chart.setDatasetVisibility(1, showSup);
+      chart.update({
+        duration: 500,
+        easing: 'easeOutCubic'
+      });
+    }
+    
+    const chartTitle = customRange 
+      ? `Revenue from ${start.toLocaleDateString()} to ${end.toLocaleDateString()}` 
+      : `Weekly Revenue (${start.toLocaleDateString()} - ${end.toLocaleDateString()})`;
+    
+    $("togglePackagesBtn").textContent = showPkg ? "Hide Packages" : "Show Packages";
+    $("toggleSuppliesBtn").textContent = showSup ? "Hide Supplies" : "Show Supplies";
   }
 
-  setTimeout(() => {
-    console.log("Rendering 7 days => stacked actual bar + separate goal bar...");
-    renderWeekSideBySide();
-  }, 1500);
+  const refresh = ()=>{
+    applyFilters();
+    renderTables();
+    renderChart();
+  };
+
+  // —— Show notification —— 
+  function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.classList.add('fade-out');
+      setTimeout(() => {
+        notification.remove();
+      }, 300);
+    }, 3000);
+  }
+
+  function clearSectionFilters(section) {
+    if (section === 'package') {
+      autoRefresh = false;
+      
+      $("filter-package-name").value = '';
+      $("filter-weight").value = '';
+      $("filter-dim").value = '';
+      $("filter-class").value = '';
+      $("filter-cost").value = '';
+      
+      const startInput = $("filter-package-start-date");
+      const endInput = $("filter-package-end-date");
+      startInput.value = '';
+      endInput.value = '';
+      startInput.removeAttribute('max');
+      endInput.removeAttribute('min');
+      
+      autoRefresh = true;
+      refresh();
+      showNotification('Package filters cleared');
+      
+      const container = startInput.closest('.filter');
+      container.style.transition = 'background-color 0.3s ease';
+      container.style.backgroundColor = 'rgba(76, 175, 80, 0.05)';
+      setTimeout(() => {
+        container.style.backgroundColor = '';
+      }, 500);
+    } 
+    else if (section === 'supply') {
+      autoRefresh = false;
+      
+      $("filter-name").value = '';
+      $("filter-item").value = '';
+      
+      const startInput = $("filter-supply-start-date");
+      const endInput = $("filter-supply-end-date");
+      startInput.value = '';
+      endInput.value = '';
+      startInput.removeAttribute('max');
+      endInput.removeAttribute('min');
+      
+      autoRefresh = true;
+      refresh();
+      showNotification('Supply filters cleared');
+      
+      const container = startInput.closest('.filter');
+      container.style.transition = 'background-color 0.3s ease';
+      container.style.backgroundColor = 'rgba(76, 175, 80, 0.05)';
+      setTimeout(() => {
+        container.style.backgroundColor = '';
+      }, 500);
+    }
+  }
+
+  $("applyRangeBtn").addEventListener("click",()=>{
+    const s = parseDate($("rangeStart").value);
+    const e = parseDate($("rangeEnd").value);
+    if(!s||!e||s>e){ 
+      showNotification('Invalid date range. Please ensure the start date is before the end date.', 'error');
+      return; 
+    }
+    customRange = {start:s,end:e};
+    $("prevWeekBtn").disabled = $("nextWeekBtn").disabled = true;
+    refresh();
+    showNotification('Date range applied successfully');
+  });
+  
+  $("prevWeekBtn").addEventListener("click",()=>{
+    if(!customRange){ 
+      weekOffset--; 
+      refresh(); 
+    }
+  });
+  
+  $("nextWeekBtn").addEventListener("click",()=>{
+    if(!customRange){ 
+      weekOffset++; 
+      refresh(); 
+    }
+  });
+  
+  $("togglePackagesBtn").addEventListener("click", () => {
+    showPkg = !showPkg;
+    $("togglePackagesBtn").textContent = showPkg ? "Hide Packages" : "Show Packages";
+    $("togglePackagesBtn").style.backgroundColor = showPkg ? "rgba(54, 162, 235, 0.8)" : "#e74c3c";
+    
+    if (chart) {
+      chart.setDatasetVisibility(0, showPkg);
+      chart.update();
+    }
+  });
+  
+  $("toggleSuppliesBtn").addEventListener("click", () => {
+    showSup = !showSup;
+    $("toggleSuppliesBtn").textContent = showSup ? "Hide Supplies" : "Show Supplies";
+    $("toggleSuppliesBtn").style.backgroundColor = showSup ? "rgba(255, 205, 86, 0.8)" : "#e74c3c";
+    
+    if (chart) {
+      chart.setDatasetVisibility(1, showSup);
+      chart.update();
+    }
+  });
+  
+  const debounce = (func, delay) => {
+    let debounceTimer;
+    return function() {
+      const context = this;
+      const args = arguments;
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => func.apply(context, args), delay);
+    }
+  };
+  
+  document.querySelectorAll('input[id^="filter-"]').forEach(input => {
+    input.addEventListener("input", debounce(() => {
+      if (autoRefresh) refresh();
+    }, 300));
+  });
+
+  document.querySelectorAll('input[type="date"][id^="filter-"]').forEach(input => {
+    input.addEventListener("change", function() {
+      if (this.id.includes("start-date")) {
+        const endDateId = this.id.replace("start-date", "end-date");
+        const endDateInput = $(endDateId);
+        
+        if (endDateInput.value && new Date(endDateInput.value) < new Date(this.value)) {
+          endDateInput.value = this.value;
+          showNotification('End date adjusted to match start date', 'info');
+        }
+        
+        endDateInput.min = this.value;
+        
+        const dateGroup = this.closest('.date-group');
+        if (dateGroup) {
+          dateGroup.style.borderColor = '#0a4275';
+          dateGroup.style.boxShadow = '0 0 0 3px rgba(10, 66, 117, 0.1)';
+          setTimeout(() => {
+            dateGroup.style.borderColor = '';
+            dateGroup.style.boxShadow = '';
+          }, 1000);
+        }
+      }
+      
+      if (this.id.includes("end-date")) {
+        const startDateId = this.id.replace("end-date", "start-date");
+        const startDateInput = $(startDateId);
+        
+        if (startDateInput.value && new Date(startDateInput.value) > new Date(this.value)) {
+          startDateInput.value = this.value;
+          showNotification('Start date adjusted to match end date', 'info');
+        }
+      
+        startDateInput.max = this.value;
+        
+        const dateGroup = this.closest('.date-group');
+        if (dateGroup) {
+          dateGroup.style.borderColor = '#0a4275';
+          dateGroup.style.boxShadow = '0 0 0 3px rgba(10, 66, 117, 0.1)';
+          setTimeout(() => {
+            dateGroup.style.borderColor = '';
+            dateGroup.style.boxShadow = '';
+          }, 1000);
+        }
+      }
+      
+      if (autoRefresh) {
+        debounce(refresh, 300)();
+      }
+    });
+  });
+
+  document.querySelectorAll('.apply-filter-btn').forEach(btn => {
+    btn.addEventListener("click", function() {
+      const section = this.getAttribute('data-section');
+      refresh();
+      showNotification(`${section.charAt(0).toUpperCase() + section.slice(1)} filters applied`);
+      
+      this.classList.add('button-active');
+      setTimeout(() => {
+        this.classList.remove('button-active');
+      }, 300);
+    });
+  });
+
+  document.querySelectorAll('.clear-filter-btn').forEach(btn => {
+    btn.addEventListener("click", function() {
+      const section = this.getAttribute('data-section');
+      clearSectionFilters(section);
+      
+      this.classList.add('button-active');
+      setTimeout(() => {
+        this.classList.remove('button-active');
+      }, 300);
+    });
+  });
+  refresh();
+  
+  if (!document.querySelector('#notification-styles')) {
+    const style = document.createElement('style');
+    style.id = 'notification-styles';
+    style.textContent = `
+      .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        border-radius: 8px;
+        color: white;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        z-index: 1001;
+        animation: slideIn 0.3s ease-out forwards;
+        display: flex;
+        align-items: center;
+        max-width: 350px;
+      }
+      
+      .notification.success {
+        background-color: #2ecc71;
+      }
+      
+      .notification.error {
+        background-color: #e74c3c;
+      }
+      
+      .notification.info {
+        background-color: #3498db;
+      }
+      
+      .notification.fade-out {
+        animation: fadeOut 0.3s ease-out forwards;
+      }
+      
+      @keyframes slideIn {
+        0% {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        100% {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      
+      @keyframes fadeOut {
+        0% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+      
+      .button-active {
+        transform: scale(0.95);
+        opacity: 0.8;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  
+  $("togglePackagesBtn").style.backgroundColor = "rgba(54, 162, 235, 0.8)";
+  $("toggleSuppliesBtn").style.backgroundColor = "rgba(255, 205, 86, 0.8)";
+  
+  showNotification('Financial report loaded successfully');
 });
+
+
+// Populate location dropdown
+async function populateLocationDropdown() {
+  try {
+    const response = await fetch("/api/locations", {
+      method: "GET",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" }
+    });
+    const data = await response.json();
+
+    const filterDropdown = document.getElementById("location-filter");
+    
+    filterDropdown.innerHTML = '<option value="">-- Select Location --</option>';
+    
+    // Add new options based on fetched locations
+    data.forEach(loc => {
+      if (loc.location_id == 0 || loc.location_type == "WAREHOUSE"){
+        return;
+      }
+      const option = document.createElement("option");
+      option.value = loc.location_id;
+      option.textContent = `${loc.location_name} at ${loc.address}`;
+      
+      // Add to filter dropdown
+      filterDropdown.appendChild(option);
+    });
+  } catch (err) {
+    console.error("Failed to load locations:", err);
+  }
+}

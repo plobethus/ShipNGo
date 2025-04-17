@@ -15,19 +15,69 @@
   <section class="registration-container">
     <div class="login-title">Customer Registration</div>
     <form id="login-form">
-        <div style="display:flex; flex-direction:row; gap:16px;">
-      <input style="width:90%" type="text" id="Fname" name="Fname" placeholder="First Name (John)" required />
-      <input style="width:90%" type="text" id="Lname" name="Lname" placeholder="Last Name (Smith)" required />
+        <div style="display:flex; flex-direction:row; gap:16px;"> 
+      <input style="width:90%" type="text" id="Fname" name="Fname" placeholder="First Name" required />
+      <input style="width:90%" type="text" id="Lname" name="Lname" placeholder="Last Name" required />
         </div>
         <div style="display:flex; flex-direction:row; gap:24px;">
-            <input type="text" id="address" name="address" placeholder="Address (11111 Apple St.)" required />
-            <input type="text" id="city" name="city" placeholder="City (Houston)" required />
-            <input type="text" id="state" name="state" placeholder="State (TX)" required />
-            <input type="text" id="zipcode" name="zipcode" placeholder="Zipcode (22222)" required />
+            <input type="text" id="address" name="address" placeholder="Address" required />
+            <input type="text" id="city" name="city" placeholder="City" required />
+            <select id="state" name="state" required>
+                <option>AL</option>
+                <option>AK</option>
+                <option>AZ</option>
+                <option>AR</option>
+                <option>CA</option>
+                <option>CO</option>
+                <option>CT</option>
+                <option>DE</option>
+                <option>FL</option>
+                <option>GA</option>
+                <option>HI</option>
+                <option>ID</option>
+                <option>IL</option>
+                <option>IN</option>
+                <option>IA</option>
+                <option>KS</option>
+                <option>KY</option>
+                <option>LA</option>
+                <option>ME</option>
+                <option>MD</option>
+                <option>MA</option>
+                <option>MI</option>
+                <option>MN</option>
+                <option>MS</option>
+                <option>MO</option>
+                <option>MT</option>
+                <option>NE</option>
+                <option>NV</option>
+                <option>NH</option>
+                <option>NJ</option>
+                <option>NM</option>
+                <option>NY</option>
+                <option>NC</option>
+                <option>ND</option>
+                <option>OH</option>
+                <option>OK</option>
+                <option>OR</option>
+                <option>PA</option>
+                <option>RI</option>
+                <option>SD</option>
+                <option>TN</option>
+                <option>TX</option>
+                <option>UT</option>
+                <option>VT</option>
+                <option>VA</option>
+                <option>WA</option>
+                <option>WV</option>
+                <option>WI</option>
+                <option>WY</option>
+            </select>
+            <input type="text" id="zipcode" name="zipcode" placeholder="Zipcode" required />
         </div>
-      <input type="text" id="phone" name="phone" placeholder="Phone (1234567890)" required />
-      <input type="text" id="email" name="email" placeholder="Email (email@example.com)" required />
-      <input type="password" id="password" name="password" placeholder="Password (password)" required />
+      <input type="text" id="phone" name="phone" placeholder="Phone" required />
+      <input type="text" id="email" name="email" placeholder="Email" required />
+      <input type="password" id="password" name="password" placeholder="Password" required />
       <button type="submit" class="login-button">Register</button>
     </form>
     <p id="message"></p>
