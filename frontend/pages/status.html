@@ -21,12 +21,21 @@
 
     <!-- Filters -->
     <div class="filter-container">
-      <label for="dateFrom">From:</label>
-      <input type="date" id="dateFrom">
-      <label for="dateTo">To:</label>
-      <input type="date" id="dateTo">
-      <label>Locations:</label>
-      <div id="locationContainer" class="location-checkboxes"></div>
+      <div class="date-filters">
+        <label for="dateFrom">From:</label>
+        <input type="date" id="dateFrom">
+      </div>
+      
+      <div class="date-filters">
+        <label for="dateTo">To:</label>
+        <input type="date" id="dateTo">
+      </div>
+      
+      <div class="location-filter">
+        <label>Locations:</label>
+        <div id="locationContainer" class="location-checkboxes"></div>
+      </div>
+      
       <button id="applyFilters">Apply Filters</button>
     </div>
 
