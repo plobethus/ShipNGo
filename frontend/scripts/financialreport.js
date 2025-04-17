@@ -121,61 +121,78 @@ document.addEventListener("DOMContentLoaded", async () => {
     $("supply-total-container").innerHTML = `Total Supply Revenue: ${formatCurrency(supTotal)}`;
   }
 
-  function renderTables(){
-    // detect if any package filters are active
+  function renderTables() {
+    const $ = id => document.getElementById(id);
+  
+    // — Detect whether any package filters are active —
     const pkgActive = !!(
-      $("filter-package-name").value ||
-      $("filter-weight").value ||
-      $("filter-dim").value ||
-      $("filter-class").value ||
-      $("filter-cost").value ||
+      $("filter-package-name").value.trim() ||
+      $("filter-weight").value.trim() ||
+      $("filter-dim").value.trim() ||
+      $("filter-class").value.trim() ||
+      $("filter-cost").value.trim() ||
       $("filter-package-start-date").value ||
       $("filter-package-end-date").value
     );
-    // detect if any supply filters are active
+  
+    // — Detect whether any supply filters are active —
     const supActive = !!(
-      $("filter-supply-name").value ||
-      $("filter-item").value ||
+      $("filter-supply-name").value.trim() ||
+      $("filter-item").value.trim() ||
       $("filter-supply-start-date").value ||
       $("filter-supply-end-date").value ||
       $("location-filter").value
     );
-
-    const pkgList = pkgActive ? viewPkg : viewPkg.slice(0,10);
-    const supList = supActive ? viewSup : viewSup.slice(0,10);
-
-    // render packages
+  
+    // — Sort and slice packages —
+    const sortedPkg = viewPkg
+      .slice()
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    const pkgToShow = pkgActive ? sortedPkg : sortedPkg.slice(0, 10);
+  
+    // — Render package rows —
     const pkgBody = $("package-table");
-    pkgBody.innerHTML = pkgList.length
-      ? pkgList.map(p=>`
-          <tr>
-            <td>${p.package_id}</td>
-            <td>${p.name}</td>
-            <td>${p.weight}</td>
-            <td>${p.dimensions}</td>
-            <td>${p.shipping_class}</td>
-            <td>${formatCurrency(p.cost)}</td>
-            <td>${new Date(p.created_at).toLocaleDateString()}</td>
-          </tr>
-        `).join("")
-      : `<tr><td colspan="7" style="text-align:center">No package data</td></tr>`;
-
-    // render supplies
+    if (pkgToShow.length === 0) {
+      pkgBody.innerHTML = `<tr><td colspan="7" style="text-align:center">No package data</td></tr>`;
+    } else {
+      pkgBody.innerHTML = pkgToShow.map(p => `
+        <tr>
+          <td>${p.package_id}</td>
+          <td>${p.name}</td>
+          <td>${p.weight}</td>
+          <td>${p.dimensions}</td>
+          <td>${p.shipping_class}</td>
+          <td>${formatCurrency(p.cost)}</td>
+          <td>${new Date(p.created_at).toLocaleDateString()}</td>
+        </tr>
+      `).join("");
+    }
+  
+    // — Sort and slice supplies —
+    const sortedSup = viewSup
+      .slice()
+      .sort((a, b) => new Date(b.purchase_date) - new Date(a.purchase_date));
+    const supToShow = supActive ? sortedSup : sortedSup.slice(0, 10);
+  
+    // — Render supply rows —
     const supBody = $("supply-table");
-    supBody.innerHTML = supList.length
-      ? supList.map(s=>`
-          <tr>
-            <td>${s.supply_transaction_id}</td>
-            <td>${s.name}</td>
-            <td>${s.category}</td>
-            <td>${s.quantity}</td>
-            <td>${formatCurrency(s.total_cost)}</td>
-            <td>${new Date(s.purchase_date).toLocaleDateString()}</td>
-            <td>${s.location_name}</td>
-          </tr>
-        `).join("")
-      : `<tr><td colspan="7" style="text-align:center">No supply data</td></tr>`;
+    if (supToShow.length === 0) {
+      supBody.innerHTML = `<tr><td colspan="7" style="text-align:center">No supply data</td></tr>`;
+    } else {
+      supBody.innerHTML = supToShow.map(s => `
+        <tr>
+          <td>${s.supply_transaction_id}</td>
+          <td>${s.customer_name}</td>
+          <td>${s.category}</td>
+          <td>${s.quantity}</td>
+          <td>${formatCurrency(s.total_cost)}</td>
+          <td>${new Date(s.purchase_date).toLocaleDateString()}</td>
+          <td>${s.location_name || 'N/A'}</td>
+        </tr>
+      `).join("");
+    }
   }
+  
 
   function renderChart() {
     const start = customRange ? customRange.start : monday(weekOffset);
@@ -374,7 +391,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     else if (section === 'supply') {
       autoRefresh = false;
       
-      $("filter-name").value = '';
+      $("filter-supply-name").value = '';
       $("filter-item").value = '';
       
       const startInput = $("filter-supply-start-date");
