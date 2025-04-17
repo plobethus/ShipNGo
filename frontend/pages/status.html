@@ -2,132 +2,130 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ShipNGo - System Status Report</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
   <link rel="stylesheet" href="/styles/styles.css">
   <link rel="stylesheet" href="/styles/nav.css">
   <link rel="stylesheet" href="/styles/status.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 </head>
-<body style="margin: 0; padding: 0;">
+<body style="margin:0; padding:0;">
   <div id="header-include"></div>
   <script src="/scripts/header.js" defer></script>
 
   <div class="container">
-    <!-- Loader -->
-    <div class="loader" id="loader">
-      <div class="loader-spin"></div>
-    </div>
-    
-    <!-- Error message -->
-    <div class="error-message" id="errorMessage">
-      Unable to load status data. Please try again later.
+    <!-- Loader & Error -->
+    <div class="loader" id="loader"><div class="loader-spin"></div></div>
+    <div class="error-message" id="errorMessage">Unable to load status data. Please try again later.</div>
+
+    <!-- Filters -->
+    <div class="filter-container">
+      <label for="dateFrom">From:</label>
+      <input type="date" id="dateFrom">
+      <label for="dateTo">To:</label>
+      <input type="date" id="dateTo">
+      <label>Locations:</label>
+      <div id="locationContainer" class="location-checkboxes"></div>
+      <button id="applyFilters">Apply Filters</button>
     </div>
 
-    <div class="top-row">
-      <div class="clock-card">
-        <div class="card time">
-          <div class="card-icon">
-            <i class="far fa-clock"></i>
-          </div>
-          <h3>Current Time</h3>
-          <div class="time-display" id="time-display">--:--:--</div>
+    <!-- Location Details (NEW) -->
+    <div id="locationDetails" class="table-container" style="display:none; margin-bottom:30px;">
+      <h2 class="table-title"><i class="fas fa-building"></i>Location Details</h2>
+      <div id="locationDetailsBody"></div>
+    </div>
+
+    <!-- Top Row: Clock + Supplies Pie -->
+    <div class="top-row" style="display:flex; gap:20px; align-items:center; margin-bottom:30px;">
+      <div class="card time" style="flex:1">
+        <div class="card-icon"><i class="far fa-clock"></i></div>
+        <h3>Current Time</h3>
+        <div class="time-display" id="time-display">--:--:--</div>
+      </div>
+      <div id="suppliesChartCard" class="card supplies-pie" style="display:none; flex:1; text-align:center;">
+        <h3>PO Sales</h3>
+        <div class="chart-wrapper small" style="height:150px;">
+          <canvas id="chartSuppliesPie"></canvas>
         </div>
       </div>
     </div>
 
     <!-- Status Cards -->
     <div class="status-cards">
-      <div class="card shipped">
-        <div class="card-icon">
-          <i class="fas fa-box"></i>
-        </div>
-        <h3>SHIPPED TODAY</h3>
-        <div class="number" id="shippedCount">0</div>
-      </div>
-      
-      <div class="card delivered">
-        <div class="card-icon">
-          <i class="fas fa-check-circle"></i>
-        </div>
-        <h3>DELIVERED TODAY</h3>
-        <div class="number" id="deliveredCount">0</div>
-      </div>
-      
-      <div class="card active">
-        <div class="card-icon">
-          <i class="fas fa-truck"></i>
-        </div>
-        <h3>IN TRANSIT</h3>
-        <div class="number" id="activeCount">0</div>
-      </div>
-      
-      <div class="card delayed">
-        <div class="card-icon">
-          <i class="fas fa-exclamation-triangle"></i>
-        </div>
-        <h3>DELAYED</h3>
-        <div class="number" id="delayedCount">0</div>
-      </div>
+      <div class="card shipped"><div class="card-icon"><i class="fas fa-box"></i></div><h3>SHIPPED</h3><div class="number" id="shippedCount">0</div></div>
+      <div class="card delivered"><div class="card-icon"><i class="fas fa-check-circle"></i></div><h3>DELIVERED</h3><div class="number" id="deliveredCount">0</div></div>
+      <div class="card active"><div class="card-icon"><i class="fas fa-truck"></i></div><h3>IN TRANSIT</h3><div class="number" id="activeCount">0</div></div>
+      <div class="card delayed"><div class="card-icon"><i class="fas fa-exclamation-triangle"></i></div><h3>DELAYED</h3><div class="number" id="delayedCount">0</div></div>
     </div>
 
     <!-- Charts -->
     <div class="charts-section">
       <div class="chart-container">
-        <h2 class="chart-title">
-          <i class="fas fa-chart-bar"></i>
-          Daily Movement
-        </h2>
-        <div class="chart-wrapper">
-          <canvas id="chartShippedDelivered"></canvas>
-        </div>
+        <h2 class="chart-title"><i class="fas fa-chart-bar"></i>Daily Movement</h2>
+        <div class="chart-wrapper"><canvas id="chartShippedDelivered"></canvas></div>
       </div>
-      
       <div class="chart-container">
-        <h2 class="chart-title">
-          <i class="fas fa-chart-pie"></i>
-          Current Distribution
-        </h2>
-        <div class="chart-wrapper">
-          <canvas id="chartActiveDelayed"></canvas>
-        </div>
+        <h2 class="chart-title"><i class="fas fa-chart-pie"></i>Current Distribution</h2>
+        <div class="chart-wrapper"><canvas id="chartActiveDelayed"></canvas></div>
       </div>
     </div>
 
-    <!-- Tables -->
+    <!-- Top 5 Tables -->
     <div class="tables-section">
       <div class="table-container">
-        <h2 class="table-title">
-          <i class="fas fa-map-marker-alt"></i>
-          Top 5 Origins
-        </h2>
+        <h2 class="table-title"><i class="fas fa-map-marker-alt"></i>Top 5 Origins</h2>
         <table id="tableOrigins">
-          <thead>
-            <tr>
-              <th>Origin Address</th>
-              <th>Count</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
+          <thead><tr><th>Origin Address</th><th>Count</th></tr></thead><tbody></tbody>
         </table>
       </div>
-      
       <div class="table-container">
-        <h2 class="table-title">
-          <i class="fas fa-flag-checkered"></i>
-          Top 5 Destinations
-        </h2>
+        <h2 class="table-title"><i class="fas fa-flag-checkered"></i>Top 5 Destinations</h2>
         <table id="tableDestinations">
-          <thead>
-            <tr>
-              <th>Destination Address</th>
-              <th>Count</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
+          <thead><tr><th>Destination Address</th><th>Count</th></tr></thead><tbody></tbody>
         </table>
       </div>
+      <div class="table-container">
+        <h2 class="table-title"><i class="fas fa-info-circle"></i>Current Package Status</h2>
+        <table id="tableCurrentStatus">
+          <thead><tr><th>Package ID</th><th>Status</th><th>Location</th></tr></thead><tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Post‑Office Supplies (GROUPED) -->
+    <div id="suppliesSection" class="table-container" style="display:none;">
+      <h2 class="table-title"><i class="fas fa-boxes"></i>Post Office Supplies</h2>
+      <table id="tableSupplies">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock Qty</th>
+            <th>Total Sold</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Raw Data Tables -->
+    <div class="raw-section">
+      <h2 class="section-title"><i class="fas fa-database"></i>Raw Data Tables</h2>
+      <button class="raw-toggle" data-target="rawPackages">Packages ▼</button>
+      <div id="rawPackages" class="raw-table-container" style="display:none;"><table><thead></thead><tbody></tbody></table></div>
+
+      <button class="raw-toggle" data-target="rawTracking">Package Tracking Log ▼</button>
+      <div id="rawTracking" class="raw-table-container" style="display:none;"><table><thead></thead><tbody></tbody></table></div>
+
+      <button class="raw-toggle" data-target="rawLocations">Locations ▼</button>
+      <div id="rawLocations" class="raw-table-container" style="display:none;"><table><thead></thead><tbody></tbody></table></div>
+
+      <button class="raw-toggle" data-target="rawSuppliesRaw">Supplies ▼</button>
+      <div id="rawSuppliesRaw" class="raw-table-container" style="display:none;"><table><thead></thead><tbody></tbody></table></div>
+
+      <button class="raw-toggle" data-target="rawSupplyTransactions">Supply Transactions ▼</button>
+      <div id="rawSupplyTransactions" class="raw-table-container" style="display:none;"><table><thead></thead><tbody></tbody></table></div>
     </div>
 
     <!-- Footer -->
@@ -136,6 +134,6 @@
     </footer>
   </div>
 
-  <script src="/scripts/status.js"></script>
+  <script src="/scripts/status.js" defer></script>
 </body>
 </html>

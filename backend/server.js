@@ -179,11 +179,9 @@ const server = http.createServer(async (req, res) => {
         return;
       }
     }
-    else if (pathname.startsWith("/status")) {
-      if (req.method === "GET" && pathname === "/status") {
-        await statusRoutes.status(req, res);
-        return;
-      }
+    if (pathname === "/status" && req.method === "GET") {
+      await statusRoutes.status(req, res, parsedUrl.query);
+      return;
     }
       
     // Profile routes - added for customer profile management
