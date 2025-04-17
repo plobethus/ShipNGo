@@ -88,7 +88,13 @@ const server = http.createServer(async (req, res) => {
       pathname === "/pages/customer_registration.html" ||
       pathname === "/pages/trackingpage.html" ||
       pathname === "/pages/profile.html" ||  
+
+      pathname === "/pages/faq.html" ||
+      pathname === "/pages/billing.html" ||
+      pathname === "/pages/faq.html" ||
+
       pathname === "/pages/employee-profile.html" || 
+
       pathname.endsWith(".css") ||
       pathname.endsWith(".js") ||
       pathname.endsWith(".png") ||
@@ -173,11 +179,9 @@ const server = http.createServer(async (req, res) => {
         return;
       }
     }
-    else if (pathname.startsWith("/status")) {
-      if (req.method === "GET" && pathname === "/status") {
-        await statusRoutes.status(req, res);
-        return;
-      }
+    if (pathname === "/status" && req.method === "GET") {
+      await statusRoutes.status(req, res, parsedUrl.query);
+      return;
     }
       
     // Profile routes - added for customer profile management

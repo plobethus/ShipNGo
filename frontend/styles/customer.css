@@ -186,6 +186,16 @@ body {
   border-radius: 4px;
 }
 
+.package-status.scheduled {
+  background-color: grey;
+  color: white;
+}
+
+.package-status.lost {
+  background-color: red;
+  color: white;
+}
+
 .package-status.in-transit {
   background-color: #ffcc00;
   color: #004080;
