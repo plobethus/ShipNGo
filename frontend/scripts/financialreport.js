@@ -121,55 +121,60 @@ document.addEventListener("DOMContentLoaded", async () => {
     $("supply-total-container").innerHTML = `Total Supply Revenue: ${formatCurrency(supTotal)}`;
   }
 
-  function renderTables() {
+  function renderTables(){
+    // detect if any package filters are active
+    const pkgActive = !!(
+      $("filter-package-name").value ||
+      $("filter-weight").value ||
+      $("filter-dim").value ||
+      $("filter-class").value ||
+      $("filter-cost").value ||
+      $("filter-package-start-date").value ||
+      $("filter-package-end-date").value
+    );
+    // detect if any supply filters are active
+    const supActive = !!(
+      $("filter-supply-name").value ||
+      $("filter-item").value ||
+      $("filter-supply-start-date").value ||
+      $("filter-supply-end-date").value ||
+      $("location-filter").value
+    );
+
+    const pkgList = pkgActive ? viewPkg : viewPkg.slice(0,10);
+    const supList = supActive ? viewSup : viewSup.slice(0,10);
+
+    // render packages
     const pkgBody = $("package-table");
-    pkgBody.innerHTML = "";
-    
-    if (viewPkg.length === 0) {
-      pkgBody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:20px;">No package data matches your filters</td></tr>`;
-    } else {
-      viewPkg
-        .sort((a,b)=> new Date(b.created_at) - new Date(a.created_at))
-        .forEach(p => {
-          pkgBody.insertAdjacentHTML("beforeend", `
-            <tr>
-              <td>${p.package_id || 'N/A'}</td>
-              <td>${p.name || 'N/A'}</td>
-              <td>${p.weight || 'N/A'}</td>
-              <td>${p.dimensions || 'N/A'}</td>
-              <td>${p.shipping_class || 'N/A'}</td>
-              <td>${formatCurrency(p.cost)}</td>
-              <td>${new Date(p.created_at).toLocaleDateString()}</td>
-            </tr>`);
-        });
-    }
+    pkgBody.innerHTML = pkgList.length
+      ? pkgList.map(p=>`
+          <tr>
+            <td>${p.package_id}</td>
+            <td>${p.name}</td>
+            <td>${p.weight}</td>
+            <td>${p.dimensions}</td>
+            <td>${p.shipping_class}</td>
+            <td>${formatCurrency(p.cost)}</td>
+            <td>${new Date(p.created_at).toLocaleDateString()}</td>
+          </tr>
+        `).join("")
+      : `<tr><td colspan="7" style="text-align:center">No package data</td></tr>`;
 
+    // render supplies
     const supBody = $("supply-table");
-    supBody.innerHTML = "";
-
-    const location = document.getElementById("location-filter")?.value;
-    
-    if (viewSup.length === 0) {
-      supBody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;">No supply data matches your filters</td></tr>`;
-    } else {
-      viewSup
-        .sort((a,b)=> new Date(b.purchase_date) - new Date(a.purchase_date))
-        .forEach(s => {
-          if (location && s.location_id != location){
-            return;
-          }
-          supBody.insertAdjacentHTML("beforeend", `
-            <tr>
-              <td>${s.supply_transaction_id || 'N/A'}</td>
-              <td>${s.customer_name || 'N/A'}</td>
-              <td>${s.category || 'N/A'}</td>
-              <td>${s.quantity || 'N/A'}</td>
-              <td>${formatCurrency(s.total_cost)}</td>
-              <td>${new Date(s.purchase_date).toLocaleDateString()}</td>
-              <td>${s.location_name || "N/A"}</td>
-            </tr>`);
-        });
-    }
+    supBody.innerHTML = supList.length
+      ? supList.map(s=>`
+          <tr>
+            <td>${s.supply_transaction_id}</td>
+            <td>${s.name}</td>
+            <td>${s.category}</td>
+            <td>${s.quantity}</td>
+            <td>${formatCurrency(s.total_cost)}</td>
+            <td>${new Date(s.purchase_date).toLocaleDateString()}</td>
+            <td>${s.location_name}</td>
+          </tr>
+        `).join("")
+      : `<tr><td colspan="7" style="text-align:center">No supply data</td></tr>`;
   }
 
   function renderChart() {
