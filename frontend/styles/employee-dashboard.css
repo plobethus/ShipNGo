@@ -9,6 +9,11 @@
   border: 2px solid transparent;
 }
 
+.status-delayed {
+  border-color: yellow;
+}
+
+
 .status-pending {
   border-color: #f39c12;
 }
