@@ -292,7 +292,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             },
             y: { 
               beginAtZero: true, 
-              stacked: false, 
+              stacked: true, 
               grid: {
                 color: "rgba(0, 0, 0, 0.05)"
               },
