@@ -24,8 +24,8 @@ function initializeHeader() {
   const supportNav = document.getElementById("support-nav");
   const reportsNav = document.getElementById("reports-nav");
   const managerStatusLi = document.getElementById("manager-status");
+  const employeeViewBtn = document.getElementById("employee-view-btn");
 
-  // Find store link inside dropdown
   const storeLink = document.querySelector("#store + ul.dropdown a[href='/pages/store.html']");
 
   const authOnlyElements = document.querySelectorAll('.auth-only-element');
@@ -33,7 +33,6 @@ function initializeHeader() {
   const managerOnlyElements = document.querySelectorAll('.manager-only-element');
   const nonManagerElements = document.querySelectorAll('.non-manager-element');
 
-  // Update profile link based on role
   if (profileNavButton) {
     const profileLink = profileNavButton.querySelector('a');
     
@@ -57,7 +56,6 @@ function initializeHeader() {
     if (logoutBtn) logoutBtn.style.display = "inline-block";
 
     if (profileNavButton) {
-      // Show profile button for ALL logged in users
       profileNavButton.style.display = "block";
       profileNavButton.style.visibility = "visible";
       profileNavButton.classList.remove('auth-only-element');
@@ -70,14 +68,11 @@ function initializeHeader() {
       }
     });
 
-    // Handle role-specific elements
     if (role === "customer") {
-      // For customers
       customerOnlyElements.forEach(el => {
         el.style.display = "block";
       });
       
-      // Show the file claim item
       if (fileClaimItem) {
         fileClaimItem.style.display = "block";
         console.log("File Claim item made visible for customer");
@@ -88,7 +83,7 @@ function initializeHeader() {
         el.style.display = "none";
       });
       
-      // Show non-manager elements (like the Support dropdown)
+      // Show non-manager elements
       nonManagerElements.forEach(el => {
         el.style.display = "block";
       });
@@ -134,6 +129,25 @@ function initializeHeader() {
       if (routes && routes.parentNode) routes.parentNode.style.display = "block";
       if (managerStatusLi) managerStatusLi.style.display = "block";
       
+      // Initialize the employee view button for managers
+      if (employeeViewBtn) {
+        employeeViewBtn.style.display = "inline-block";
+        
+        // Add click event to store user's current role and set temp role
+        employeeViewBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          
+          // Store original role for returning later
+          sessionStorage.setItem("originalRole", role);
+          
+          // Temporarily set role to employee
+          sessionStorage.setItem("role", "employee");
+          
+          // Redirect to employee dashboard
+          window.location.href = "/pages/employee.html";
+        });
+      }
+      
       console.log("Manager navigation set up: hiding shipping/store, showing routes/status");
       
     } else if (role === "employee") {
@@ -163,6 +177,32 @@ function initializeHeader() {
       if (storeLink) {
         storeLink.href = "/pages/employee-store.html";
         console.log("Employee store link set to: /pages/employee-store.html");
+      }
+      
+      // Check if this is a manager viewing as employee
+      const originalRole = sessionStorage.getItem("originalRole");
+      if (originalRole === "manager") {
+        // Add a "Return to Manager" button
+        if (dashboardLink && dashboardLink.parentNode) {
+          const returnBtn = document.createElement("a");
+          returnBtn.id = "return-to-manager-btn";
+          returnBtn.href = "#";
+          returnBtn.className = "employee-view-btn";
+          returnBtn.textContent = "Return to Manager";
+          returnBtn.style.backgroundColor = "#cc0000";
+          
+          returnBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            sessionStorage.setItem("role", originalRole);
+
+            sessionStorage.removeItem("originalRole");
+
+            window.location.href = "/pages/manager.html";
+          });
+          
+          dashboardLink.parentNode.insertBefore(returnBtn, dashboardLink.nextSibling);
+        }
       }
       
       console.log("Employee navigation set up: hiding shipping, showing routes");
@@ -195,6 +235,11 @@ function initializeHeader() {
       profileNavButton.style.display = "none";
       profileNavButton.style.visibility = "hidden";
       profileNavButton.classList.add('auth-only-element');
+    }
+    
+    // Hide the employee view button when not logged in
+    if (employeeViewBtn) {
+      employeeViewBtn.style.display = "none";
     }
 
     authOnlyElements.forEach(el => {
