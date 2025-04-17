@@ -331,3 +331,117 @@ tr:hover td {
 @media (max-width: 576px) {
   .status-cards { grid-template-columns: 1fr; }
 }
+
+/* Filter Container Styles */
+.filter-container {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px 25px;
+  box-shadow: var(--box-shadow);
+  margin-bottom: 25px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 15px;
+  position: relative;
+}
+
+.filter-container label {
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin-right: 5px;
+}
+
+.filter-container input[type="date"] {
+  padding: 8px 12px;
+  border: 1px solid var(--gray);
+  border-radius: 6px;
+  background-color: white;
+  color: #333;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.filter-container input[type="date"]:hover,
+.filter-container input[type="date"]:focus {
+  border-color: var(--primary);
+  outline: none;
+}
+
+.location-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 10px;
+}
+
+.location-checkboxes label {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  background-color: var(--gray-light);
+  border-radius: 6px;
+  font-weight: normal;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.location-checkboxes label:hover {
+  background-color: rgba(26, 115, 232, 0.1);
+}
+
+.location-checkboxes input[type="checkbox"] {
+  margin-right: 6px;
+  accent-color: var(--primary);
+}
+
+.location-checkboxes label input:checked + span {
+  font-weight: 600;
+}
+
+#applyFilters {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+#applyFilters:hover {
+  background-color: var(--primary-dark);
+}
+
+#applyFilters::before {
+  content: '\f0b0';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  margin-right: 8px;
+}
+
+/* Responsive adjustments for filter container */
+@media (max-width: 768px) {
+  .filter-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .filter-container > * {
+    width: 100%;
+  }
+  
+  .location-checkboxes {
+    margin: 10px 0;
+  }
+  
+  #applyFilters {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+}

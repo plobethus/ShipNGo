@@ -67,6 +67,28 @@ document.addEventListener("DOMContentLoaded", () => {
   fetchStatusData();
 });
 
+// New function to create location checkboxes
+function createLocationCheckboxes(locations) {
+  const locDiv = document.getElementById("locationContainer");
+  locDiv.innerHTML = '';
+  
+  locations.forEach(loc => {
+    if (loc.location_id === 0) return;
+    
+    const lbl = document.createElement("label");
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.value = loc.location_id;
+    
+    const span = document.createElement("span");
+    span.textContent = `${loc.location_name} ${loc.location_type === 'POST_OFFICE' ? '(P)' : '(W)'}`;
+    
+    lbl.appendChild(checkbox);
+    lbl.appendChild(span);
+    locDiv.appendChild(lbl);
+  });
+}
+
 async function fetchStatusData() {
 
   document.getElementById("loader").style.display = "flex";
@@ -97,17 +119,9 @@ async function fetchStatusData() {
     document.getElementById("activeCount").textContent    = d.activeCount;
     document.getElementById("delayedCount").textContent   = d.delayedCount;
 
+    // Updated location checkbox creation
     if (!document.querySelectorAll("#locationContainer input").length) {
-      const locDiv = document.getElementById("locationContainer");
-      d.locations.forEach(loc => {
-        if (loc.location_id === 0) return;  
-        const lbl = document.createElement("label");
-        lbl.innerHTML = `
-          <input type="checkbox" value="${loc.location_id}">
-          ${loc.location_name} ${loc.location_type === 'POST_OFFICE' ? '(P)' : '(W)'}
-        `;
-        locDiv.append(lbl);
-      });
+      createLocationCheckboxes(d.locations);
     }
 
     const detailsDiv  = document.getElementById("locationDetails");
