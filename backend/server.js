@@ -202,8 +202,8 @@ else if (pathname.startsWith("/api/profile")) {
   }
 }
 else if (pathname.startsWith("/api/employee-profile")) {
-  // Ensure only customers can access profile routes
-  if (tokenData.role !== "employee") {
+  // Ensure only employees can access profile routes
+  if (!(tokenData.role === "employee" || tokenData.role === "manager")) {
     return sendJson(res, 403, { 
       success: false, 
       message: "Access denied. Employee access only." 

@@ -101,6 +101,13 @@
           <input type="text" id="filter-name" placeholder="Filter by Name">
           <input type="text" id="filter-item" placeholder="Filter by Item">
         </div>
+
+        <div class="filter-group">
+            <select id="location-filter">
+              <option value="">-- Select Location --</option>
+            </select>
+          </div>
+          
         
         <!-- Date range filters for supplies -->
         <div class="date-filter-container">
@@ -133,6 +140,7 @@
               <th>Quantity</th>
               <th>Total Cost</th>
               <th>Purchase Date</th>
+              <th>Location</th>
             </tr>
           </thead>
           <tbody id="supply-table"></tbody>

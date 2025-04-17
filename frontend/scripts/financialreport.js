@@ -1,6 +1,8 @@
 /* financialreport.js – Tables + Stacked/Goal Chart */
 document.addEventListener("DOMContentLoaded", async () => {
   // —— Helpers ——
+
+  await populateLocationDropdown();
   const $ = id => document.getElementById(id);
   const parseDate = v => v ? new Date(`${v}T00:00:00`) : null;
   const sameDay   = (a,b)=> a?.toDateString()===b?.toDateString();
@@ -145,6 +147,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const supBody = $("supply-table");
     supBody.innerHTML = "";
+
+    const location = document.getElementById("location-filter")?.value;
     
     if (viewSup.length === 0) {
       supBody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;">No supply data matches your filters</td></tr>`;
@@ -153,14 +157,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         .sort((a,b)=> new Date(b.purchase_date) - new Date(a.purchase_date))
         .slice(0,10)
         .forEach(s => {
+          if (location && s.location_id != location){
+            return;
+          }
           supBody.insertAdjacentHTML("beforeend", `
             <tr>
               <td>${s.supply_transaction_id || 'N/A'}</td>
-              <td>${s.name || 'N/A'}</td>
+              <td>${s.customer_name || 'N/A'}</td>
               <td>${s.category || 'N/A'}</td>
               <td>${s.quantity || 'N/A'}</td>
               <td>${formatCurrency(s.total_cost)}</td>
               <td>${new Date(s.purchase_date).toLocaleDateString()}</td>
+              <td>${s.location_name || "N/A"}</td>
             </tr>`);
         });
     }
@@ -597,3 +605,35 @@ document.addEventListener("DOMContentLoaded", async () => {
   
   showNotification('Financial report loaded successfully');
 });
+
+
+// Populate location dropdown
+async function populateLocationDropdown() {
+  try {
+    const response = await fetch("/api/locations", {
+      method: "GET",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" }
+    });
+    const data = await response.json();
+
+    const filterDropdown = document.getElementById("location-filter");
+    
+    filterDropdown.innerHTML = '<option value="">-- Select Location --</option>';
+    
+    // Add new options based on fetched locations
+    data.forEach(loc => {
+      if (loc.location_id == 0 || loc.location_type == "WAREHOUSE"){
+        return;
+      }
+      const option = document.createElement("option");
+      option.value = loc.location_id;
+      option.textContent = `${loc.location_name} at ${loc.address}`;
+      
+      // Add to filter dropdown
+      filterDropdown.appendChild(option);
+    });
+  } catch (err) {
+    console.error("Failed to load locations:", err);
+  }
+}

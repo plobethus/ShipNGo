@@ -9,6 +9,7 @@ async function getTrackingInfo(package_id) {
         w.address AS location_address,
         w.location_type as location_type,
         w.location_name as location_name,
+        w.location_id as location_id,
         th.status,
         th.changed_at
       FROM package_tracking_log th
@@ -30,7 +31,8 @@ async function updateTracking(package_id, location_id, status, employee_id, date
   const lastKnown = latest[0] || {};
 
   const finalLocation = location_id ?? lastKnown.location ?? null;
-  const finalStatus = status ?? lastKnown.status ?? null;
+  const finalStatus = ((status === "In Transit" && lastKnown.location === 0) ? "Scheduled" : status) ?? lastKnown.status ?? null;
+
 
   const [result] = await db.execute(
     `INSERT INTO package_tracking_log  (package_id, location, status, changed_at, employee_id)  VALUES (?, ?, ?, COALESCE(?, NOW()), ?)`,
