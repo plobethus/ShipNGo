@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // Supply filters
-    const sName = $("filter-name").value.trim().toLowerCase();
+    const sName = $("filter-supply-name").value.trim().toLowerCase();
     const sItem = $("filter-item").value.trim().toLowerCase();
     const sStartDate = parseDate($("filter-supply-start-date").value.trim());
     const sEndDate = parseDate($("filter-supply-end-date").value.trim());
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       
       if (!sStartDate && !sEndDate && (d < start || d > end)) return false;
       
-      if(sName && !(s.name||"").toLowerCase().includes(sName)) return false;
+      if(sName && !(s.customer_name||"").toLowerCase().includes(sName)) return false;
       if(sItem && !(s.category||"").toLowerCase().includes(sItem)) return false;
       return true;
     });
@@ -122,57 +122,77 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function renderTables() {
+    const $ = id => document.getElementById(id);
+  
+    // — Detect whether any package filters are active —
+    const pkgActive = !!(
+      $("filter-package-name").value.trim() ||
+      $("filter-weight").value.trim() ||
+      $("filter-dim").value.trim() ||
+      $("filter-class").value.trim() ||
+      $("filter-cost").value.trim() ||
+      $("filter-package-start-date").value ||
+      $("filter-package-end-date").value
+    );
+  
+    // — Detect whether any supply filters are active —
+    const supActive = !!(
+      $("filter-supply-name").value.trim() ||
+      $("filter-item").value.trim() ||
+      $("filter-supply-start-date").value ||
+      $("filter-supply-end-date").value ||
+      $("location-filter").value
+    );
+  
+    // — Sort and slice packages —
+    const sortedPkg = viewPkg
+      .slice()
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    const pkgToShow = pkgActive ? sortedPkg : sortedPkg.slice(0, 10);
+  
+    // — Render package rows —
     const pkgBody = $("package-table");
-    pkgBody.innerHTML = "";
-    
-    if (viewPkg.length === 0) {
-      pkgBody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:20px;">No package data matches your filters</td></tr>`;
+    if (pkgToShow.length === 0) {
+      pkgBody.innerHTML = `<tr><td colspan="7" style="text-align:center">No package data</td></tr>`;
     } else {
-      viewPkg
-        .sort((a,b)=> new Date(b.created_at) - new Date(a.created_at))
-        .slice(0,10)
-        .forEach(p => {
-          pkgBody.insertAdjacentHTML("beforeend", `
-            <tr>
-              <td>${p.package_id || 'N/A'}</td>
-              <td>${p.name || 'N/A'}</td>
-              <td>${p.weight || 'N/A'}</td>
-              <td>${p.dimensions || 'N/A'}</td>
-              <td>${p.shipping_class || 'N/A'}</td>
-              <td>${formatCurrency(p.cost)}</td>
-              <td>${new Date(p.created_at).toLocaleDateString()}</td>
-            </tr>`);
-        });
+      pkgBody.innerHTML = pkgToShow.map(p => `
+        <tr>
+          <td>${p.package_id}</td>
+          <td>${p.name}</td>
+          <td>${p.weight}</td>
+          <td>${p.dimensions}</td>
+          <td>${p.shipping_class}</td>
+          <td>${formatCurrency(p.cost)}</td>
+          <td>${new Date(p.created_at).toLocaleDateString()}</td>
+        </tr>
+      `).join("");
     }
-
+  
+    // — Sort and slice supplies —
+    const sortedSup = viewSup
+      .slice()
+      .sort((a, b) => new Date(b.purchase_date) - new Date(a.purchase_date));
+    const supToShow = supActive ? sortedSup : sortedSup.slice(0, 10);
+  
+    // — Render supply rows —
     const supBody = $("supply-table");
-    supBody.innerHTML = "";
-
-    const location = document.getElementById("location-filter")?.value;
-    
-    if (viewSup.length === 0) {
-      supBody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;">No supply data matches your filters</td></tr>`;
+    if (supToShow.length === 0) {
+      supBody.innerHTML = `<tr><td colspan="7" style="text-align:center">No supply data</td></tr>`;
     } else {
-      viewSup
-        .sort((a,b)=> new Date(b.purchase_date) - new Date(a.purchase_date))
-        .slice(0,10)
-        .forEach(s => {
-          if (location && s.location_id != location){
-            return;
-          }
-          supBody.insertAdjacentHTML("beforeend", `
-            <tr>
-              <td>${s.supply_transaction_id || 'N/A'}</td>
-              <td>${s.customer_name || 'N/A'}</td>
-              <td>${s.category || 'N/A'}</td>
-              <td>${s.quantity || 'N/A'}</td>
-              <td>${formatCurrency(s.total_cost)}</td>
-              <td>${new Date(s.purchase_date).toLocaleDateString()}</td>
-              <td>${s.location_name || "N/A"}</td>
-            </tr>`);
-        });
+      supBody.innerHTML = supToShow.map(s => `
+        <tr>
+          <td>${s.supply_transaction_id}</td>
+          <td>${s.customer_name}</td>
+          <td>${s.category}</td>
+          <td>${s.quantity}</td>
+          <td>${formatCurrency(s.total_cost)}</td>
+          <td>${new Date(s.purchase_date).toLocaleDateString()}</td>
+          <td>${s.location_name || 'N/A'}</td>
+        </tr>
+      `).join("");
     }
   }
+  
 
   function renderChart() {
     const start = customRange ? customRange.start : monday(weekOffset);
@@ -371,7 +391,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     else if (section === 'supply') {
       autoRefresh = false;
       
-      $("filter-name").value = '';
+      $("filter-supply-name").value = '';
       $("filter-item").value = '';
       
       const startInput = $("filter-supply-start-date");
