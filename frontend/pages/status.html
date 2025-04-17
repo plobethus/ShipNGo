@@ -39,7 +39,6 @@
       <button id="applyFilters">Apply Filters</button>
     </div>
 
-    <!-- Location Details (NEW) -->
     <div id="locationDetails" class="table-container" style="display:none; margin-bottom:30px;">
       <h2 class="table-title"><i class="fas fa-building"></i>Location Details</h2>
       <div id="locationDetailsBody"></div>
@@ -94,12 +93,6 @@
           <thead><tr><th>Destination Address</th><th>Count</th></tr></thead><tbody></tbody>
         </table>
       </div>
-      <div class="table-container">
-        <h2 class="table-title"><i class="fas fa-info-circle"></i>Current Package Status</h2>
-        <table id="tableCurrentStatus">
-          <thead><tr><th>Package ID</th><th>Status</th><th>Location</th></tr></thead><tbody></tbody>
-        </table>
-      </div>
     </div>
 
     <!-- Post‑Office Supplies (GROUPED) -->
@@ -110,11 +103,24 @@
           <tr>
             <th>Category</th>
             <th>Price</th>
-            <th>Stock Qty</th>
+            <th>Stock Qty</th>
             <th>Total Sold</th>
           </tr>
         </thead>
         <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- Current Package Status-->
+    <div class="section-header">
+      <h2 class="table-title"><i class="fas fa-info-circle"></i>Current Package Status</h2>
+      <button id="toggleCurrentStatus" class="toggle-button">
+        <i class="fas fa-eye-slash"></i> Hide
+      </button>
+    </div>
+    <div id="currentStatusContainer" class="table-container" style="margin-bottom:35px;">
+      <table id="tableCurrentStatus">
+        <thead><tr><th>Package ID</th><th>Status</th><th>Location</th></tr></thead><tbody></tbody>
       </table>
     </div>
 
@@ -136,12 +142,13 @@
       <button class="raw-toggle" data-target="rawSupplyTransactions">Supply Transactions ▼</button>
       <div id="rawSupplyTransactions" class="raw-table-container" style="display:none;"><table><thead></thead><tbody></tbody></table></div>
     </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <p>© 2025 ShipNGo Inc. All Rights Reserved. Last updated: <span id="lastUpdated"></span></p>
-    </footer>
   </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <p>© 2025 ShipNGo Inc. All Rights Reserved. Last updated: <span id="lastUpdated"></span></p>
+    </div>
+  </footer>
 
   <script src="/scripts/status.js" defer></script>
 </body>

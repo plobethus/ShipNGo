@@ -445,3 +445,117 @@ tr:hover td {
     margin-top: 10px;
   }
 }
+
+/* Enhanced styling for the current package status table */
+#tableCurrentStatus {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+/* Styling for the section header with toggle button */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  border-radius: 10px 10px 0 0;
+  padding: 20px 25px 10px 25px;
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.05) inset;
+}
+
+.section-header .table-title {
+  margin-bottom: 0;
+}
+
+.toggle-button {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toggle-button:hover {
+  background-color: var(--primary-dark);
+}
+
+.toggle-button i {
+  font-size: 14px;
+}
+
+#currentStatusContainer {
+  border-radius: 0 0 10px 10px;
+  margin-top: 0;
+  transition: all 0.3s ease;
+}
+
+.footer {
+  width: 100%;
+  background-color: #004080;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  margin-top: 40px;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+  border-top: 1px solid var(--gray);
+}
+
+.footer-content {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 14px;
+}
+
+#tableCurrentStatus th,
+#tableCurrentStatus td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid var(--gray);
+}
+
+#tableCurrentStatus th {
+  background-color: rgba(26, 115, 232, 0.15);
+  color: var(--primary-dark);
+  font-weight: 600;
+}
+
+#tableCurrentStatus th:nth-child(1) {
+  width: 15%;
+}
+
+#tableCurrentStatus th:nth-child(2) {
+  width: 40%;
+}
+
+#tableCurrentStatus th:nth-child(3) {
+  width: 45%;
+}
+
+#tableCurrentStatus tr:last-child td {
+  border-bottom: none;
+}
+
+#tableCurrentStatus tr:hover td {
+  background-color: rgba(26, 115, 232, 0.05);
+}
+
+@media (max-width: 992px) {
+  #tableCurrentStatus {
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+  }
+}
