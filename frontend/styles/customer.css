@@ -206,6 +206,11 @@ body {
   color: white;
 }
 
+.package-status.delayed{
+  background-color: yellow;
+  color: #004080;
+}
+
 .package-status.pending {
   background-color: #FF9800;
   color: white;

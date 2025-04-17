@@ -63,11 +63,12 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.textContent = btn.textContent.replace(showing ? '▲' : '▼', showing ? '▼' : '▲');
     });
   });
-
+  
+  window.toggleInitialized = false;
+  
   fetchStatusData();
 });
 
-// New function to create location checkboxes
 function createLocationCheckboxes(locations) {
   const locDiv = document.getElementById("locationContainer");
   locDiv.innerHTML = '';
@@ -119,7 +120,6 @@ async function fetchStatusData() {
     document.getElementById("activeCount").textContent    = d.activeCount;
     document.getElementById("delayedCount").textContent   = d.delayedCount;
 
-    // Updated location checkbox creation
     if (!document.querySelectorAll("#locationContainer input").length) {
       createLocationCheckboxes(d.locations);
     }
@@ -269,9 +269,50 @@ function populateSimpleTable(id, rows) {
 
 function populateCurrentStatus(id, rows) {
   const tb = document.querySelector(`#${id} tbody`);
-  tb.innerHTML = rows.length
-    ? rows.map(r=>`<tr><td>${r.package_id}</td><td>${r.current_status}</td><td>${r.current_location}</td></tr>`).join('')
-    : `<tr><td colspan="3">No data</td></tr>`;
+  
+  if (!rows.length) {
+    tb.innerHTML = `<tr><td colspan="3">No data</td></tr>`;
+    return;
+  }
+  
+  const sortedRows = [...rows].sort((a, b) => {
+    if (a.current_status !== b.current_status) {
+      return a.current_status.localeCompare(b.current_status);
+    }
+    return a.current_location.localeCompare(b.current_location);
+  });
+  
+  tb.innerHTML = sortedRows.map(r => 
+    `<tr>
+      <td>${r.package_id}</td>
+      <td>${r.current_status}</td>
+      <td>${r.current_location}</td>
+    </tr>`
+  ).join('');
+  
+  if (!window.toggleInitialized) {
+    initializeToggleButton();
+    window.toggleInitialized = true;
+  }
+}
+
+function initializeToggleButton() {
+  const toggleBtn = document.getElementById('toggleCurrentStatus');
+  const container = document.getElementById('currentStatusContainer');
+  
+  if (!toggleBtn || !container) return;
+  
+  toggleBtn.addEventListener('click', function() {
+    const isVisible = container.style.display !== 'none';
+    
+    if (isVisible) {
+      container.style.display = 'none';
+      toggleBtn.innerHTML = '<i class="fas fa-eye"></i> Show';
+    } else {
+      container.style.display = 'block';
+      toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Hide';
+    }
+  });
 }
 
 function populateRawTable(tableId, rows) {

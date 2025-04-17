@@ -164,6 +164,7 @@ function getStatusClass(status) {
     case "In Transit": return "status-in-transit";
     case "Delivered": return "status-delivered";
     case "Lost" : return "status-lost";
+    case "Delayed" : return "status-delayed";
     default: return "";
   }
 }
@@ -197,6 +198,10 @@ function updateDashboardStats(packages) {
   const lostPackages = packages.filter(pkg => 
     pkg.latest_status === "Lost"
   ).length;
+
+  const delayedPackages = packages.filter(pkg => 
+    pkg.latest_status === "Delayed"
+  ).length;
   
   // Update UI with values
   document.getElementById("total-packages-count").textContent = totalPackages;
@@ -205,6 +210,7 @@ function updateDashboardStats(packages) {
   document.getElementById("in-transit-packages-count").textContent = inTransitPackages;
   document.getElementById("delivered-packages-count").textContent = deliveredPackages;
   document.getElementById("lost-packages-count").textContent = lostPackages;
+  document.getElementById("delayed-packages-count").textContent = delayedPackages;
 }
 
 // Edit package function
