@@ -4,14 +4,13 @@
 nav {
   display: flex;
   align-items: center;
-  justify-content: space-between;  /* brand/logo on left, everything else on right */
+  justify-content: space-between;
   background-color: #004080;
   padding: 20px 40px;
   color: white;
   flex-wrap: wrap;
 }
 
-/* Split nav into left and right sections */
 .nav-left {
   display: flex;
   align-items: center;
@@ -32,6 +31,20 @@ nav {
   text-decoration: none;
 }
 
+/* Employee View button styling */
+.employee-view-btn {
+  background-color: #0080c0;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.employee-view-btn:hover {
+  background-color: #0099e6;
+}
 
 /* Logo or brand text, e.g. ShipNGo */
 nav .navbar {
@@ -68,21 +81,20 @@ nav ul {
   align-items: center;
 
   gap: 30px; 
-  align-items: center;     /* space between items */
+  align-items: center;
 
 }
 
 nav ul li {
-  position: relative; /* needed for dropdown positioning */
+  position: relative; 
 }
 
-/* Links in the nav items */
 nav ul li a {
   color: #fff;
   text-decoration: none;
   font-weight: bold;
-  display: block;      /* ensures the link covers the li's area */
-  padding: 5px 0;      /* slight vertical padding */
+  display: block;      
+  padding: 5px 0;      
 }
 
 
@@ -117,12 +129,10 @@ nav ul li:hover .dropdown {
 }
 
 
-/* The login container for login/logout buttons */
 .login {
-  margin-left: 10px; /* Space between profile button and login buttons */
+  margin-left: 10px; 
 }
 
-/* Style for both login (a) and logout (button) */
 .login a,
 .login button {
   background-color: #ffcc00;
@@ -151,7 +161,6 @@ nav ul li:hover .dropdown {
 }
 
 
-/* Auth-only elements should be hidden by default */
 .auth-only-element {
   display: none !important;
   visibility: hidden;
@@ -182,6 +191,3 @@ nav ul li:hover .dropdown {
   font-size: 1.1rem;
   margin-right: 8px;
 }
-
-
-
