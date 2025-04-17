@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // Supply filters
-    const sName = $("filter-name").value.trim().toLowerCase();
+    const sName = $("filter-supply-name").value.trim().toLowerCase();
     const sItem = $("filter-item").value.trim().toLowerCase();
     const sStartDate = parseDate($("filter-supply-start-date").value.trim());
     const sEndDate = parseDate($("filter-supply-end-date").value.trim());
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       
       if (!sStartDate && !sEndDate && (d < start || d > end)) return false;
       
-      if(sName && !(s.name||"").toLowerCase().includes(sName)) return false;
+      if(sName && !(s.customer_name||"").toLowerCase().includes(sName)) return false;
       if(sItem && !(s.category||"").toLowerCase().includes(sItem)) return false;
       return true;
     });
@@ -130,7 +130,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     } else {
       viewPkg
         .sort((a,b)=> new Date(b.created_at) - new Date(a.created_at))
-        .slice(0,10)
         .forEach(p => {
           pkgBody.insertAdjacentHTML("beforeend", `
             <tr>
@@ -155,7 +154,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     } else {
       viewSup
         .sort((a,b)=> new Date(b.purchase_date) - new Date(a.purchase_date))
-        .slice(0,10)
         .forEach(s => {
           if (location && s.location_id != location){
             return;
