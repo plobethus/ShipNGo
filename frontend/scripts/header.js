@@ -19,6 +19,7 @@ function initializeHeader() {
   const profileNavButton = document.getElementById("profile-nav-button");
   const shipping = document.getElementById("shipping");
   const store = document.getElementById("store");
+  const manageEmployees = document.getElementById("manage-employees");
   const routes = document.getElementById("routes");
   const fileClaimItem = document.getElementById("file-claim-item");
   const supportNav = document.getElementById("support-nav");
@@ -91,9 +92,10 @@ function initializeHeader() {
       if (supportNav) supportNav.style.display = "flex";
       if (reportsNav) reportsNav.style.display = "none";
       
-      // Show shipping and store, hide routes for customers
+      // Show shipping and store, hide manage employees for customers
       if (shipping && shipping.parentNode) shipping.parentNode.style.display = "block";
       if (store && store.parentNode) store.parentNode.style.display = "block";
+      if (manageEmployees && manageEmployees.parentNode) manageEmployees.parentNode.style.display = "none";
       if (routes && routes.parentNode) routes.parentNode.style.display = "none";
       if (managerStatusLi) managerStatusLi.style.display = "none";
       
@@ -123,9 +125,10 @@ function initializeHeader() {
       if (supportNav) supportNav.style.display = "none";
       if (reportsNav) reportsNav.style.display = "flex";
       
-      // Hide shipping and store, show routes and status
+      // Hide shipping and store, show manage employees, routes and status
       if (shipping && shipping.parentNode) shipping.parentNode.style.display = "none";
       if (store && store.parentNode) store.parentNode.style.display = "none";
+      if (manageEmployees && manageEmployees.parentNode) manageEmployees.parentNode.style.display = "block";
       if (routes && routes.parentNode) routes.parentNode.style.display = "block";
       if (managerStatusLi) managerStatusLi.style.display = "block";
       
@@ -148,7 +151,7 @@ function initializeHeader() {
         });
       }
       
-      console.log("Manager navigation set up: hiding shipping/store, showing routes/status");
+      console.log("Manager navigation set up: hiding shipping/store, showing manage employees/routes/status");
       
     } else if (role === "employee") {
       // For employees
@@ -167,8 +170,9 @@ function initializeHeader() {
       if (supportNav) supportNav.style.display = "flex";
       if (reportsNav) reportsNav.style.display = "none";
       
-      // Hide shipping, show routes, keep store for employees
+      // Hide shipping and manage employees, show routes, keep store for employees
       if (shipping && shipping.parentNode) shipping.parentNode.style.display = "none";
+      if (manageEmployees && manageEmployees.parentNode) manageEmployees.parentNode.style.display = "none";
       if (routes && routes.parentNode) routes.parentNode.style.display = "block";
       if (store && store.parentNode) store.parentNode.style.display = "block";
       if (managerStatusLi) managerStatusLi.style.display = "none";
@@ -205,7 +209,7 @@ function initializeHeader() {
         }
       }
       
-      console.log("Employee navigation set up: hiding shipping, showing routes");
+      console.log("Employee navigation set up: hiding shipping/manage employees, showing routes");
     }
 
     if (dashboardLink) {
@@ -270,7 +274,8 @@ function initializeHeader() {
       fileClaimItem.style.display = "none";
     }
     
-    // Hide routes and status when not logged in
+    // Hide manage employees, routes and status when not logged in
+    if (manageEmployees && manageEmployees.parentNode) manageEmployees.parentNode.style.display = "none";
     if (routes && routes.parentNode) routes.parentNode.style.display = "none";
     if (managerStatusLi) managerStatusLi.style.display = "none";
     
