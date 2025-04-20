@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     
     // Calculate total cost of approved packages
     const approvedClaims = claimsData.filter(claim => 
-      claim.refund_status === "Approved" && claim.package_id
+      claim.refund_status === "Approved" && claim.package_id && claim.issue_type.toLowerCase() === "lost"
     );
     
     let totalApprovedCost = 0;
