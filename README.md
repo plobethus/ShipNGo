@@ -17,20 +17,41 @@ This is the backend and frontend for shipngo, created with html,css, javascript 
 ShipNGo/
 │
 ├── backend/             
-│   ├── server.js                
-│   ├── routes/
-│   ├── controllers/
-│   ├── config/
-│   └── .env                    
+│   ├── server.js       server file           
+│   ├── routes/         routes to controllers
+│   ├── controllers/    sql queries
+│   ├── db.js/          database variables
+│   ├── helpers.js/     json configuration
+│   └── .env            file for database connection        
 │
 ├── frontend/                    
-│   ├── index.html
-│   ├── pages/
-│   ├── scripts/
-│   ├── styles/
-│   └── includes/
+│   ├── index.html      homepage
+│   ├── pages/          pages throughout website
+│   ├── scripts/        scripts that connect to backend
+│   ├── styles/         make the pages beutiful
+│   └── includes/       for our header
 │
 ├── .gitignore
 ├── README.md
 └── package.json                
 ```
+
+## Instructions To Setup locally
+
+### 1. Clone using SSH
+
+```bash
+git clone git@github.com:plobethus/ShipNGo.git
+```
+### 2. Place populated .env file in backend folder
+
+### 3. Running Project
+
+```bash
+cd ShipNGo
+cd backend
+npm start
+```
+### 4. Open in browser
+http://localhost:8080/
+
