@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employee Management Dashboard - ShipNGo</title>  
+  <link rel="stylesheet" href="../styles/nav.css" />
+  <link rel="stylesheet" href="../styles/styles.css" />
+  <link rel="stylesheet" href="../styles/employee-dashboard.css" />
+  <script src="../scripts/employees.js" defer></script>
+</head>
+<body>
+  <div id="header-include"></div>
+  <script src="/scripts/header.js" defer></script>
+
+  <div class="page-content">
+    <h1 class="dashboard-title">Employee Management Dashboard</h1>
+    
+    <!-- Stats Dashboard -->
+    <div class="stats-dashboard">
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-title">Total Employees</div>
+          <div class="stat-value" id="total-employees-count">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Managers</div>
+          <div class="stat-value" id="managers-count">-</div>
+        </div>
+       
+      </div>
+    </div>
+  
+    <!-- Filter Controls -->
+    <div class="employee-controls">
+      <div class="control-container">
+        <div class="filter-group">
+          <label for="role-filter">Filter by Role:</label>
+          <input type="text" id="role-filter" placeholder="Enter role" />
+        </div>
+        <div class="filter-group">
+          <label for="location-selector">Filter by Location:</label>
+          <select id="location-selector">
+            <option value="">All Locations</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <button id="add-new-employee-btn">Add New Employee</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Employees Table -->
+    <div class="employee-container">
+      <h2>All Employees</h2>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Employee ID</th>
+              <th>Name</th>
+              <th>Address</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>SSN</th>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Manager</th>
+              <th>Location</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="employee-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; 2025 ShipNGo Courier. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <!-- Modal for Editing Employee -->
+  <div id="edit-employee-modal" class="modal-backdrop hidden">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3>Edit Employee</h3>
+        <button class="close-btn" id="close-edit-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Employee ID:</strong> <span id="edit-employee-id">N/A</span></p>
+        <label for="edit-name">Name:</label>
+        <input type="text" id="edit-name" placeholder="Enter name" />
+        <label for="edit-address">Address:</label>
+        <input type="text" id="edit-address" placeholder="Enter address" />
+        <label for="edit-phone">Phone:</label>
+        <input type="text" id="edit-phone" placeholder="Enter phone" />
+        <label for="edit-email">Email:</label>
+        <input type="email" id="edit-email" placeholder="Enter email" />
+        <label for="edit-ssn">SSN:</label>
+        <input type="text" id="edit-ssn" placeholder="Enter SSN" />
+        <label for="edit-username">Username:</label>
+        <input type="text" id="edit-username" placeholder="Enter username" />
+        <label for="edit-password">Password:</label>
+        <input type="password" id="edit-password" placeholder="Enter new password" />
+        <label for="edit-role">Role:</label>
+        <select id="edit-role">
+          <option value="">-- Select Role --</option>
+          <option value="employee">Employee</option>
+          <option value="manager">Manager</option>
+        </select>
+        <label for="edit-manager-dropdown">Manager:</label>
+        <select id="edit-manager-dropdown">
+          <option value="">-- Select Manager --</option>
+        </select>
+        <label for="edit-location-dropdown">Location:</label>
+        <select id="edit-location-dropdown">
+          <option value="">-- Select Location --</option>
+        </select>
+        <div class="modal-actions">
+          <button id="save-edit-employee" class="save-btn">Save</button>
+          <button id="cancel-edit-employee" class="cancel-btn">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Adding Employee -->
+  <div id="add-employee-modal" class="modal-backdrop hidden">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3>Add New Employee</h3>
+        <button class="close-btn" id="close-add-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <label for="add-name">Name:</label>
+        <input type="text" id="add-name" placeholder="Enter name" />
+        <label for="add-address">Address:</label>
+        <input type="text" id="add-address" placeholder="Enter address" />
+        <label for="add-phone">Phone:</label>
+        <input type="text" id="add-phone" placeholder="Enter phone" />
+        <label for="add-email">Email:</label>
+        <input type="email" id="add-email" placeholder="Enter email" />
+        <label for="add-ssn">SSN:</label>
+        <input type="text" id="add-ssn" placeholder="Enter SSN" />
+        <label for="add-username">Username:</label>
+        <input type="text" id="add-username" placeholder="Enter username" />
+        <label for="add-password">Password:</label>
+        <input type="password" id="add-password" placeholder="Enter password" />
+        <label for="add-role">Role:</label>
+        <select id="add-role">
+          <option value="">-- Select Role --</option>
+          <option value="employee">Employee</option>
+          <option value="manager">Manager</option>
+        </select>
+        <label for="add-manager-dropdown">Manager:</label>
+        <select id="add-manager-dropdown">
+          <option value="">-- Select Manager --</option>
+        </select>
+        <label for="add-location-dropdown">Location:</label>
+        <select id="add-location-dropdown">
+          <option value="">-- Select Location --</option>
+        </select>
+        <div class="modal-actions">
+          <button id="save-add-employee" class="save-btn">Add</button>
+          <button id="cancel-add-employee" class="cancel-btn">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

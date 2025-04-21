@@ -74,7 +74,7 @@ function createLocationCheckboxes(locations) {
   locDiv.innerHTML = '';
   
   locations.forEach(loc => {
-    if (loc.location_id === 0) return;
+    if (loc.location_id === 10) return;
     
     const lbl = document.createElement("label");
     const checkbox = document.createElement("input");

@@ -41,10 +41,13 @@ const financeRoutes = require("./routes/financialreport");
 
 const locatoinsRoutes = require("./routes/locations")
 
+const employeesRoutes = require("./routes/employees");
+
 
 const server = http.createServer(async (req, res) => {
   try {
     const parsedUrl = url.parse(req.url, true);
+    req.query = parsedUrl.query;
     const pathname = parsedUrl.pathname;
 
     // ---- Public Routes (no login required) ----
@@ -228,6 +231,30 @@ else if (pathname.startsWith("/api/employee-profile")) {
     else if (pathname.startsWith("/api/checkout")) {
       if (req.method === "POST" && pathname === "/api/checkout") {
         await shopRoutes.checkout(req, res, parsedUrl.query);
+        return;
+      }
+    }
+    else if ((tokenData.role == "manager" || tokenData.role == "employee") && pathname === "/api/employees" && req.method === "GET") {
+      await employeesRoutes.getAllEmployees(req, res);
+      return;
+    }
+    else if ((tokenData.role == "manager") && pathname === "/api/employees" && req.method === "POST") {
+      await employeesRoutes.createEmployee(req, res);
+      return;
+    }
+    else if (pathname.startsWith("/api/employees/")) {
+      const parts = pathname.split("/");
+      const id = parts[3];
+      if ((tokenData.role == "manager" || tokenData.role == "employee") && req.method === "GET") {
+        await employeesRoutes.getEmployeeById(req, res, id);
+        return;
+      }
+      if ((tokenData.role == "manager") && req.method === "PUT") {
+        await employeesRoutes.updateEmployee(req, res, id);
+        return;
+      }
+      if ((tokenData.role == "manager") && req.method === "DELETE") {
+        await employeesRoutes.deleteEmployee(req, res, id);
         return;
       }
     }

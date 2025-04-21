@@ -643,7 +643,7 @@ async function populateLocationDropdown() {
     
     // Add new options based on fetched locations
     data.forEach(loc => {
-      if (loc.location_id == 0 || loc.location_type == "WAREHOUSE"){
+      if (loc.location_id == 10 || loc.location_type == "WAREHOUSE"){
         return;
       }
       const option = document.createElement("option");
