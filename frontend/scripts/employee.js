@@ -63,7 +63,7 @@ async function populateLocationDropdown() {
       const option = document.createElement("option");
       option.value = loc.location_id;
       
-      if (loc.location_id == 0){
+      if (loc.location_id == 10){
         option.textContent = "Awaiting drop off";
       } else{
         option.textContent = `${loc.location_name} - ${loc.location_type} at ${loc.address}`;

@@ -101,8 +101,42 @@ async function changeEmployeePassword(employeeId, currentPassword, newPassword) 
   return result.affectedRows > 0;
 }
 
+
+async function createEmployee(username, password, name, address, phone, email, ssn, employement_location, employee_role, manager_id) {
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const sql = `
+      INSERT INTO employees (
+        username, password, name, address, phone, email,
+        ssn, employment_location, employee_role, manager_id
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    const values = [
+      username,
+      hashedPassword,
+      name,
+      address,
+      phone,
+      email,
+      ssn,
+      employment_location,
+      employee_role,
+      manager_id
+    ];
+
+    const [result] = await db.execute(sql, values);
+    return result.insertId; 
+  } catch (error) {
+    console.error("Error creating employee:", error);
+    throw error;
+  }
+}
+
 module.exports = {
   getEmployeeProfile,
   updateEmployeeProfile,
-  changeEmployeePassword
+  changeEmployeePassword,
+  createEmployee
 };

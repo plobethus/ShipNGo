@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.getElementById("tracking-status").textContent = latest.status;
 
 
-    if (latest.location_id == 0){
+    if (latest.location_id == 10){
       document.getElementById("warehouse").textContent = "Awaiting drop off";
 
     } else{
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
       
 
-      if (entry.location_id == 0){
+      if (entry.location_id == 10){
         timelineItem.innerHTML = `
         <div class="timeline-content">
           <div class="timeline-date">${new Date(entry.changed_at).toLocaleString()}</div>

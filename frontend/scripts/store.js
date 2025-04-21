@@ -41,7 +41,7 @@ async function populateLocationDropdownForStore() {
     const dropdown = document.getElementById("location-selector");
     // Start with a default option.
     data.forEach(loc => {
-      if (loc.location_id == 0 || loc.location_type == "WAREHOUSE") {
+      if (loc.location_id == 10 || loc.location_type == "WAREHOUSE") {
         return;
       }
       const option = document.createElement("option");

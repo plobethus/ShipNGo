@@ -46,12 +46,14 @@
           </select>
         </div>
         <div class="filter-group">
-          <label for="city-filter">Filter by City:</label>
-          <input type="text" id="city-filter" placeholder="Enter city" />
-        </div>
-        <div class="filter-group">
           <label for="state-filter">Filter by State:</label>
           <input type="text" id="state-filter" placeholder="Enter state" />
+        </div>
+        <div class="filter-group">
+          <label for="manager-filter">Filter by Manager:</label>
+          <select id="manager-filter">
+            <option value="">All Managers</option>
+          </select>
         </div>
         <div class="filter-group">
           <button id="add-new-location-btn">Add New Location</button>
@@ -72,6 +74,7 @@
               <th>State</th>
               <th>Zip Code</th>
               <th>Employees</th>
+              <th>Manager</th>
               <th>Status</th>
               <th>Hours</th>
               <th>Actions</th>
@@ -108,8 +111,6 @@
           <option value="WAREHOUSE">Warehouse</option>
         </select>
 
-
-
         <label for="edit-state">State:</label>
         <input type="text" id="edit-state" placeholder="Enter state" />
 
@@ -118,6 +119,11 @@
 
         <label for="edit-employees">Number of Employees:</label>
         <input type="number" id="edit-employees" placeholder="Enter employee count" />
+
+        <label for="edit-manager-dropdown">Manager:</label>
+        <select id="edit-manager-dropdown">
+          <option value="">-- Select Manager --</option>
+        </select>
 
         <label for="edit-status">Status:</label>
         <select id="edit-status">
@@ -155,12 +161,9 @@
 
         <label for="add-location-type">Type:</label>
         <select id="add-location-type">
-          <option value="Post Office">Post Office</option>
-          <option value="Warehouse">Warehouse</option>
+          <option value="POST_OFFICE">Post Office</option>
+          <option value="WAREHOUSE">Warehouse</option>
         </select>
-
-        <label for="add-city">City:</label>
-        <input type="text" id="add-city" placeholder="Enter city" />
 
         <label for="add-state">State:</label>
         <input type="text" id="add-state" placeholder="Enter state" />
@@ -171,16 +174,21 @@
         <label for="add-employees">Number of Employees:</label>
         <input type="number" id="add-employees" placeholder="Enter employee count" />
 
+        <label for="add-manager-dropdown">Manager:</label>
+        <select id="add-manager-dropdown">
+          <option value="">-- Select Manager --</option>
+        </select>
+
         <label for="add-status">Status:</label>
         <select id="add-status">
           <option value="Active">Active</option>
           <option value="Inactive">Inactive</option>
         </select>
 
-        <label for="add-open-time">Opening Time:</label>
+        <label for="add-opening-time">Opening Time:</label>
         <input type="time" id="add-open-time" />
 
-        <label for="add-close-time">Closing Time:</label>
+        <label for="add-closing-time">Closing Time:</label>
         <input type="time" id="add-close-time" />
 
         <label for="add-address">Address:</label>
