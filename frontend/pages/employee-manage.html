@@ -35,19 +35,68 @@
     <div class="employee-controls">
       <div class="control-container">
         <div class="filter-group">
-          <label for="role-filter">Filter by Role:</label>
-          <input type="text" id="role-filter" placeholder="Enter role" />
+          <label for="id-filter">Employee ID:</label>
+          <input type="text" id="id-filter" placeholder="Filter by ID" />
         </div>
+      
         <div class="filter-group">
-          <label for="location-selector">Filter by Location:</label>
+          <label for="name-filter">Name:</label>
+          <input type="text" id="name-filter" placeholder="Filter by name" />
+        </div>
+      
+        <div class="filter-group">
+          <label for="address-filter">Address:</label>
+          <input type="text" id="address-filter" placeholder="Filter by address" />
+        </div>
+      
+        <div class="filter-group">
+          <label for="phone-filter">Phone:</label>
+          <input type="text" id="phone-filter" placeholder="Filter by phone" />
+        </div>
+      
+        <div class="filter-group">
+          <label for="email-filter">Email:</label>
+          <input type="text" id="email-filter" placeholder="Filter by email" />
+        </div>
+      
+        <div class="filter-group">
+          <label for="ssn-filter">SSN:</label>
+          <input type="text" id="ssn-filter" placeholder="Filter by SSN" />
+        </div>
+      
+        <div class="filter-group">
+          <label for="username-filter">Username:</label>
+          <input type="text" id="username-filter" placeholder="Filter by username" />
+        </div>
+      
+        <div class="filter-group">
+          <label for="role-filter">Role:</label>
+          <select id="role-filter">
+            <option value="">All Roles</option>
+            <option value="employee">Employee</option>
+            <option value="manager">Manager</option>
+          </select>
+        </div>
+      
+        <div class="filter-group">
+          <label for="manager-filter">Manager:</label>
+          <select id="manager-filter">
+            <option value="">All Managers</option>
+          </select>
+        </div>
+      
+        <div class="filter-group">
+          <label for="location-selector">Location:</label>
           <select id="location-selector">
             <option value="">All Locations</option>
           </select>
         </div>
+      
         <div class="filter-group">
           <button id="add-new-employee-btn">Add New Employee</button>
         </div>
       </div>
+      
     </div>
 
     <!-- Employees Table -->

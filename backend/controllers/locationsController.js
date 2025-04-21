@@ -55,8 +55,8 @@ async function createLocation(data) {
     is_active,
     state,
     zip_code,
-    open_time,
-    close_time,
+    opening_time,
+    closing_time,
     address,
     location_type
   } = data;
@@ -66,7 +66,7 @@ async function createLocation(data) {
       (manager_id, location_name, num_employees, is_active, state, zip_code, opening_time, closing_time, address, location_type)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
-  const values = [manager_id || null, name, num_employees, is_active, state, zip_code, open_time, close_time, address, location_type];
+  const values = [manager_id || null, name, num_employees, is_active, state, zip_code, opening_time, closing_time, address, location_type];
   const [result] = await db.execute(sql, values);
   return result.insertId;
 }

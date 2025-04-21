@@ -1,27 +1,30 @@
 // /backend/controllers/employeesController.js
 const db = require("../db");
 const bcrypt = require("bcryptjs");
-const { createEmployee: createEmpInProfile } = require("./profileController");
+const { createEmployee: createEmpInProfile } = require("./employeeProfileController");
 
 async function getAllEmployees(filters) {
     let sql = `
     SELECT
       e.employee_id, e.name, e.address, e.phone, e.email,
       e.ssn, e.username, e.employee_role, e.manager_id,
+      m.name AS manager_name,
       e.employment_location AS location_id,
       l.location_name
     FROM employees e
     LEFT JOIN locations l
       ON e.employment_location = l.location_id
+    LEFT JOIN employees m
+  ON e.manager_id = m.employee_id
   `;
   const params = [];
   const conds = [];
   if (filters.role) {
-    conds.push("employee_role LIKE ?");
+    conds.push("e.employee_role LIKE ?");
     params.push(`%${filters.role}%`);
   }
   if (filters.location) {
-    conds.push("employment_location = ?");
+    conds.push("e.employment_location = ?");
     params.push(filters.location);
   }
   if (conds.length) sql += " WHERE " + conds.join(" AND ");
@@ -34,11 +37,13 @@ async function getEmployeeById(id) {
     SELECT
       e.employee_id, e.name, e.address, e.phone, e.email,
       e.ssn, e.username, e.employee_role, e.manager_id,
+      m.name AS manager_name,
       e.employment_location AS location_id,
       l.location_name
     FROM employees e
     LEFT JOIN locations l
       ON e.employment_location = l.location_id
+    LEFT JOIN employees m ON e.manager_id = m.employee_id
     WHERE e.employee_id = ?
   `;
   const [rows] = await db.execute(sql, [id]);
@@ -46,7 +51,6 @@ async function getEmployeeById(id) {
 }
 
 async function createEmployee(data) {
-  // delegate hashing/insert to your existing profileController.createEmployee
   return await createEmpInProfile(
     data.username,
     data.password,

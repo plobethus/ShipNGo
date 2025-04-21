@@ -1,23 +1,37 @@
 // /ShipNGo-frontend/scripts/employees.js
 
 document.addEventListener("DOMContentLoaded", () => {
-  // 1) Populate all location selects (filter + modals)
   loadLocationOptions();
   loadManagerOptions();
 
-  // 2) Wire up filters
-  document.getElementById("role-filter")
-    .addEventListener("input", debounce(loadEmployees, 500));
-  document.getElementById("location-selector")
-    .addEventListener("change", loadEmployees);
+  [
+    "id-filter",
+    "name-filter",
+    "address-filter",
+    "phone-filter",
+    "email-filter",
+    "ssn-filter",
+    "username-filter"
+  ].forEach(id => {
+    document.getElementById(id)
+      .addEventListener("input", debounce(loadEmployees, 300));
+  });
 
-  // 3) Show Add modal
+  [
+    "role-filter",
+    "manager-filter",
+    "location-selector"
+  ].forEach(id => {
+    document.getElementById(id)
+      .addEventListener("change", loadEmployees);
+  });
+
+
   document.getElementById("add-new-employee-btn")
     .addEventListener("click", () => {
       document.getElementById("add-employee-modal").classList.remove("hidden");
     });
 
-  // 4) Close modals
   ["close-edit-modal", "cancel-edit-employee"].forEach(id =>
     document.getElementById(id)
       .addEventListener("click", () =>
@@ -31,13 +45,11 @@ document.addEventListener("DOMContentLoaded", () => {
       )
   );
 
-  // 5) Save actions
   document.getElementById("save-edit-employee")
     .addEventListener("click", saveEditedEmployee);
   document.getElementById("save-add-employee")
     .addEventListener("click", saveNewEmployee);
 
-  // 6) Initial fetch
   loadEmployees();
 });
 
@@ -119,18 +131,48 @@ async function loadEmployees() {
   });
 
   try {
-    const res = await fetch(`/api/employees?${params}`, {
-      credentials: "include"
+    const res = await fetch(`/api/employees`, { credentials: "include" });
+    const { success, data: allEmps } = await res.json();
+    if (!success) throw new Error();
+
+    const nameF  = document.getElementById("name-filter").value.toLowerCase();
+    const emailF = document.getElementById("email-filter").value.toLowerCase();
+    const roleF = document.getElementById("role-filter").value;
+    const locF   = document.getElementById("location-selector").value;
+    const ssnF   = document.getElementById("ssn-filter").value;  
+    const idF    = document.getElementById("id-filter").value;
+    const addrF   = document.getElementById("address-filter").value.toLowerCase();
+    const phoneF  = document.getElementById("phone-filter").value;
+    const userF   = document.getElementById("username-filter").value.toLowerCase();
+    const mgrF    = document.getElementById("manager-filter").value;
+
+
+    const emps = allEmps.filter(e => {
+      const matchesName  = !nameF  || e.name.toLowerCase().includes(nameF);
+      const matchesEmail = !emailF || e.email.toLowerCase().includes(emailF);
+      const matchesRole = !roleF || e.employee_role === roleF;
+      const matchesLoc   = !locF   || (e.employment_location == locF);
+      const ssnStr = e.ssn != null ? String(e.ssn) : "";
+      const matchesSSN   = !ssnF || ssnStr.includes(ssnF);
+
+      const idStr   = e.employee_id != null ? String(e.employee_id) : "";
+      const matchesID  = !idF   || idStr.includes(idF);
+
+
+      const matchesAddr = !addrF   || e.address.toLowerCase().includes(addrF);
+      const matchesPhone= !phoneF  || String(e.phone).includes(phoneF);
+      const matchesUser = !userF   || e.username.toLowerCase().includes(userF);
+      const matchesMgr  = !mgrF    || String(e.manager_id) === mgrF;
+
+      return matchesName && matchesEmail && matchesRole && matchesLoc && matchesSSN && matchesID && matchesAddr && matchesPhone && matchesUser && matchesMgr;
     });
-    const { success, data: emps, message } = await res.json();
-    if (!success) throw new Error(message);
 
     updateStats(emps);
     populateTable(emps);
 
   } catch (err) {
     console.error("Error loading employees:", err);
-  }
+}
 }
 
 function updateStats(emps) {
@@ -161,7 +203,7 @@ function populateTable(emps) {
       <td>${e.ssn}</td>
       <td>${e.username}</td>
       <td>${e.employee_role}</td>
-      <td>${e.manager_id ?? '—'}</td>
+      <td>${e.manager_name ?? '—'}</td>
       <td>${e.location_name || e.employment_location}</td>
       <td>
         <button onclick="editEmployee(${e.employee_id})">Edit</button>
@@ -186,7 +228,7 @@ async function editEmployee(id) {
     document.getElementById("edit-username").value          = e.username || "";
     document.getElementById("edit-password").value          = "";
     document.getElementById("edit-role").value              = e.employee_role || "";
-    document.getElementById("edit-manager-id").value        = e.manager_id ?? "";
+    document.getElementById("edit-manager-dropdown").value   = e.manager_id || "";
     document.getElementById("edit-location-dropdown").value = e.employment_location || "";
 
     document.getElementById("edit-employee-modal")
@@ -208,7 +250,7 @@ async function saveEditedEmployee() {
     username:            document.getElementById("edit-username").value,
     password:            document.getElementById("edit-password").value,
     employee_role:       document.getElementById("edit-role").value,
-    manager_id:          document.getElementById("edit-manager-id").value || null,
+    manager_id:          document.getElementById("edit-manager-dropdown").value || null,
     employment_location: document.getElementById("edit-location-dropdown").value
   };
 
@@ -240,7 +282,7 @@ async function saveNewEmployee() {
     username:            document.getElementById("add-username").value,
     password:            document.getElementById("add-password").value,
     employee_role:       document.getElementById("add-role").value,
-    manager_id:          document.getElementById("add-manager-id").value || null,
+    manager_id:          document.getElementById("edit-manager-dropdown").value || null,
     employment_location: document.getElementById("add-location-dropdown").value
   };
 
