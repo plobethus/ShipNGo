@@ -1,4 +1,6 @@
 # Welcome to ShipNGo!! 
+to visit our web, click on this link: https://shipngo-g9cpbhdvfhgca3cb.northcentralus-01.azurewebsites.net
+
 We have implemented a full stack website project, it is a post office/courier service that helps cosutmer ship items and buy items all around the world! 
 
 This is the backend and frontend for shipngo, created with technologies:
@@ -18,7 +20,8 @@ Modify a shipment status, edit their profile, restock store, delete shipments
 Manager: 
 modify claims report, look at the 3 reports, update claims status, add/remove employees, edit their profile, anything an employee can do
 
-
+## details for our files: 
+https://docs.google.com/document/d/1a3xp7fVdMwedBqV2qzvCY40iEtPJcbEq28Ns6vjPJZs/edit?usp=sharing
 
 ## Links
 - [website](https://shipngo-g9cpbhdvfhgca3cb.northcentralus-01.azurewebsites.net)
