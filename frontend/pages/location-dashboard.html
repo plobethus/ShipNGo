@@ -38,23 +38,59 @@
     <div class="location-controls">
       <div class="control-container">
         <div class="filter-group">
-          <label for="location-type-filter">Filter by Location Type:</label>
-          <select id="location-type-filter">
+          <label for="location-id-filter">Location ID:</label>
+          <input type="text" id="location-id-filter" placeholder="Filter by ID" />
+        </div>
+        
+        <div class="filter-group">
+          <label for="name-filter">Name:</label>
+          <input type="text" id="name-filter" placeholder="Filter by name" />
+        </div>
+        <div class="filter-group">
+          <label for="type-filter">Type:</label>
+          <select id="type-filter">
             <option value="">All Types</option>
-            <option value="Post Office">Post Office</option>
-            <option value="Warehouse">Warehouse</option>
+            <option value="POST_OFFICE">Post Office</option>
+            <option value="WAREHOUSE">Warehouse</option>
           </select>
         </div>
+        
         <div class="filter-group">
-          <label for="state-filter">Filter by State:</label>
-          <input type="text" id="state-filter" placeholder="Enter state" />
+          <label for="state-filter">State:</label>
+          <input type="text" id="state-filter" placeholder="Filter by state" />
         </div>
+        
         <div class="filter-group">
-          <label for="manager-filter">Filter by Manager:</label>
+          <label for="zip-filter">Zip Code:</label>
+          <input type="text" id="zip-filter" placeholder="Filter by zip code" />
+        </div>
+        
+        <div class="filter-group">
+          <label for="employees-filter">Employees:</label>
+          <input type="text" id="employees-filter" placeholder="Filter by # employees" />
+        </div>
+        
+        <div class="filter-group">
+          <label for="manager-filter">Manager:</label>
           <select id="manager-filter">
             <option value="">All Managers</option>
           </select>
         </div>
+        
+        <div class="filter-group">
+          <label for="status-filter">Status:</label>
+          <select id="status-filter">
+            <option value="">All Statuses</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="hours-filter">Hours:</label>
+          <input type="text" id="hours-filter" placeholder="e.g. 09:00 or 17:30" />
+        </div>
+        
         <div class="filter-group">
           <button id="add-new-location-btn">Add New Location</button>
         </div>

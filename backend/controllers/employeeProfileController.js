@@ -121,7 +121,7 @@ async function createEmployee(username, password, name, address, phone, email, s
       phone,
       email,
       ssn,
-      employment_location,
+      employement_location,
       employee_role,
       manager_id
     ];
